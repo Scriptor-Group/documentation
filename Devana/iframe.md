@@ -58,7 +58,7 @@ Refer to the "Advanced Usage" section in the README for more details on these fe
 
 One common use case for Devana's IFrame integration is to embed it as a chatbot that opens in the corner of your application when a button is clicked. This provides users with instant access to an AI assistant for support or guidance.
 
-To implement this, follow the steps outlined in the "Devana IFrame as a Chatbot Integration Guide" section of the README. It includes the necessary HTML, CSS, and JavaScript code snippets to create a functional chatbot.
+To implement this, follow the steps outlined in the "[Devana IFrame as a Chatbot Integration Guide](./iframeIntegration.md)" section of the README. It includes the necessary HTML, CSS, and JavaScript code snippets to create a functional chatbot.
 
 ## Support and Feedback
 
@@ -67,5 +67,3 @@ If you encounter any issues during the integration process or have any questions
 We value your feedback and are continuously working to improve Devana's capabilities. If you have any suggestions or feature requests, please let us know.
 
 Happy integrating with Devana!
-
-[^1^]: [Devana IFrame Documentation](./iframe.md)
