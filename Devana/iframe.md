@@ -69,5 +69,3 @@ We value your feedback and are continuously working to improve Devana's capabili
 Happy integrating with Devana!
 
 [^1^]: [Devana IFrame Documentation](./iframe.md)
-
-Let me know if you have any further questions or if there's anything else I can assist you with!
