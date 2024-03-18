@@ -1,33 +1,43 @@
-# Devana IFrame Documentation
+# Devana IFrame Integration Documentation
 
-Welcome to the Devana IFrame documentation. This guide will help you integrate Devana's AI capabilities into your web application using an IFrame. Before starting, ensure that you have an account on [Devana](https://app.devana.ai) and an API account. Follow the step-by-step instructions below:
+Welcome to the Devana IFrame Integration Documentation. This guide will walk you through the process of integrating Devana's powerful AI capabilities into your web application using an IFrame. 
 
-## Step 1: Set Up Your Devana Account
-To use Devana's services, you first need to have an active account. If you don't have one, visit [Devana](https://app.devana.ai) to create an account. 
+Devana is a cutting-edge AI platform that allows you to create intelligent agents and seamlessly embed them into your applications. By following this documentation, you will be able to harness the power of Devana's AI to enhance your user experience and provide advanced features like real-time assistance, personalized recommendations, and more.
 
-![Account Creation Step](./assets/AccountCreation.png)
+## Prerequisites
 
-## Step 2: Obtain an API Account
-Having an API account is vital as it enables you to access and interact with the various Devana APIs. If you do not have an API account, navigate to the API account section on the Devana website to create one.
+Before getting started, ensure that you have the following:
 
-![API Account Creation Step](./assets/APIAccountCreation.png)
+1. An active account on [Devana](https://app.devana.ai). If you don't have one, visit the website and sign up for an account.
+2. An API account. This is necessary to access and interact with Devana's APIs. If you don't have an API account, navigate to the API account section on the Devana website and create one.
 
-## Step 3: Create a Public Agent
-Next, you must create an agent and make it public using the Devana interface. This public agent will be the primary actor for your IFrame.
+## Step-by-Step Integration
+
+Follow these steps to integrate Devana into your web application using an IFrame:
+
+### Step 1: Create a Public Agent
+
+1. Log in to your Devana account.
+2. Create a new agent using the Devana interface.
+3. Configure the agent according to your requirements.
+4. Make the agent public. This will allow it to be accessed via the IFrame.
 
 ![Agent Creation Step](./assets/AgentCreation.png)
 
-## Step 4: Retrieve Agent Link
-Once your public agent is set up, retrieve the agent's link. You will use this link to connect the agent to your website.
+### Step 2: Retrieve the Agent Link
+
+1. Once your public agent is set up, navigate to the agent's settings.
+2. Copy the agent's unique link. You will use this link to connect the agent to your website.
 
 ![Agent Link Step](./assets/GetPublicLink.png)
 
-## Step 5: Embed the Agent Link in an IFrame
-Finally, add the agent's link to an IFrame on your website. The format of the URL should be: `https://app.devana.ai/chat/{ID}/`, where `{ID}` is replaced by your agent's unique ID.
+### Step 3: Embed the Agent Link in an IFrame
 
-![Agent Link Step](./assets/AgentLink.png)
+1. In your web application's HTML code, add an IFrame element.
+2. Set the `src` attribute of the IFrame to the agent's link you retrieved in the previous step.
+3. Specify the desired width and height of the IFrame to fit your application's layout.
 
-Here is a sample code for embedding the IFrame:
+Here's an example of how to embed the IFrame:
 
 ```html
 <iframe src="https://app.devana.ai/chat/{ID}/" width="500" height="600"></iframe>
@@ -35,74 +45,29 @@ Here is a sample code for embedding the IFrame:
 
 Remember to replace `{ID}` with your agent's unique ID.
 
-And that's it! You have successfully integrated a Devana agent into your web application using an IFrame. If you encounter any issues, please refer back to this documentation or contact our support team.
+### Step 4: Customize the Integration (Optional)
 
-# Devana IFrame as a Chatbot Integration Guide
+Devana offers advanced customization options to enhance the integration experience. Some of the key features include:
 
-This guide provides an example of how to integrate Devana's IFrame as a chatbot that opens in the corner of your application upon clicking a button. This feature enriches user experience by providing immediate access to an AI assistant. The example uses a combination of HTML, CSS, and JavaScript.
+- **Query Metadata**: Attach metadata to your chats to track and analyze user interactions in detail. Append `metadata={JSON}` to the IFrame URL, replacing `{JSON}` with stringified JSON data.
+- **Preprompt**: Set an additional context for the AI using the `preprompt={TEXT}` query parameter. Replace `{TEXT}` with the desired context or initial message.
 
-## Step 1: HTML Structure
+Refer to the "Advanced Usage" section in the README for more details on these features.
 
-The first step involves creating an HTML structure for the chatbot button and the IFrame. Add the following HTML code to your application:
+## Example: Devana IFrame as a Chatbot
 
-```HTML
-<button id="open-chatbot">Open Chatbot</button>
+One common use case for Devana's IFrame integration is to embed it as a chatbot that opens in the corner of your application when a button is clicked. This provides users with instant access to an AI assistant for support or guidance.
 
-<div id="chatbot-container" style="display: none;">
-    <div id="chatbot-header">
-        <h4>Devana Chatbot</h4>
-        <button id="close-chatbot">X</button>
-    </div>
-    <iframe src="https://app.devana.ai/chat/{ID}/" width="100%" height="100%" id="devana-chatbot"></iframe>
-</div>
-```
+To implement this, follow the steps outlined in the "Devana IFrame as a Chatbot Integration Guide" section of the README. It includes the necessary HTML, CSS, and JavaScript code snippets to create a functional chatbot.
 
-Replace `{ID}` in the iframe URL with your unique agent's ID.
+## Support and Feedback
 
-## Step 2: CSS Styling
+If you encounter any issues during the integration process or have any questions, please refer to the documentation or reach out to our support team at support@devana.ai. We are here to assist you and ensure a smooth integration experience.
 
-Add the following CSS to your application to position the chatbot and button correctly:
+We value your feedback and are continuously working to improve Devana's capabilities. If you have any suggestions or feature requests, please let us know.
 
-```CSS
-#chatbot-container {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 300px;
-    height: 500px;
-    border: 1px solid black;
-    background-color: white;
-    z-index: 1000;
-}
+Happy integrating with Devana!
 
-#chatbot-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-bottom: 1px solid #ddd;
-}
+[^1^]: [Devana IFrame Documentation](./iframe.md)
 
-#open-chatbot {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-}
-```
-
-## Step 3: JavaScript Event Handlers
-
-To make the chatbot open and close upon clicking the appropriate button, you need to add JavaScript event handlers. Add the following JavaScript code to your application:
-
-```JavaScript
-document.getElementById('open-chatbot').addEventListener('click', function() {
-    document.getElementById('chatbot-container').style.display = 'block';
-});
-
-document.getElementById('close-chatbot').addEventListener('click', function() {
-    document.getElementById('chatbot-container').style.display = 'none';
-});
-```
-This code will create a button on your application that, when clicked, opens an IFrame at the bottom right of your application. You can close the chatbot by clicking the "X" button.
-
-And that's it! You have successfully integrated a Devana agent in the form of a chatbot into your web application. If you encounter any issues, please refer back to this documentation or contact our support team.
+Let me know if you have any further questions or if there's anything else I can assist you with!
