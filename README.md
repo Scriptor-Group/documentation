@@ -1,4 +1,4 @@
-# Scriptor Artis Documentation 
+# Scriptor Artis – Documentation 
 
 Welcome to the comprehensive documentation related to the Scriptor Artis projects, Devana.ai, and Clavus.io. This extensive guide aims to assist you in the effective utilization of our various APIs. 
 
