@@ -1,5 +1,8 @@
 # API Publique (Agents)
 
+> [!NOTE]  
+> Cette documentation est une version à jour de la version PDF du **30 novembre 2023**.
+
 Pour chaque agent, vous avez la possibilité d'y ajouter une clé d'agent public. Cette clé d'agent public permet de gérer l'intégration de votre agent dans votre application. Cette clé d'API permet dans un premier temps la création de tokens pour vos utilisateurs lors du chargement de la page.
 
 ## Endpoints
