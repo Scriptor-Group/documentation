@@ -5,6 +5,9 @@
 
 Pour chaque agent, vous avez la possibilité d'y ajouter une clé d'agent public. Cette clé d'agent public permet de gérer l'intégration de votre agent dans votre application. Cette clé d'API permet dans un premier temps la création de tokens pour vos utilisateurs lors du chargement de la page.
 
+![690shots_so](https://github.com/Scriptor-Group/documentation/assets/4999786/0fb66e04-1fd0-4f8e-8946-93b3b51f969f)
+
+
 ## Endpoints
 
 ### `GET /v1/chat/conversation/public/message/token`
