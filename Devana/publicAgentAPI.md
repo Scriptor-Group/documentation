@@ -7,7 +7,6 @@ Pour chaque agent, vous avez la possibilité d'y ajouter une clé d'agent public
 
 ![690shots_so](https://github.com/Scriptor-Group/documentation/assets/4999786/0fb66e04-1fd0-4f8e-8946-93b3b51f969f)
 
-
 ## Endpoints
 
 ### `GET /v1/chat/conversation/public/message/token`
@@ -28,12 +27,13 @@ Génère un jeton d'accès pour une nouvelle conversation publique associée à 
 - `404 Not Found` : La clé API ou le modèle spécifié n'a pas été trouvé.
 
 Payload d'exemple :
+
 ```json
 {
-    "token": "ae7e783c-7578-4a28-80fb-23c59f21d072"
+  "token": "ae7e783c-7578-4a28-80fb-23c59f21d072"
 }
 ```
-  
+
 ### `GET /v1/chat/conversation/public/messages/:token`
 
 Récupère les messages d'une conversation publique à l'aide d'un jeton de sécurité.
@@ -50,53 +50,53 @@ Récupère les messages d'une conversation publique à l'aide d'un jeton de séc
 
 ```json
 {
-    "messages": [
-        {
-            "id": "cluosj5hh0000ab6adugihwih",
-            "message": {
-                "role": "system",
-                "content": ""
-            },
-            "created": 1712450027141,
-            "model": "GPT4",
-            "conversation_id": "cluosj5hh0000ab6adugihwih",
-            "usage": {
-                "prompt_tokens": 0,
-                "total_tokens": 0,
-                "completion_tokens": 0
-            }
-        },
-        {
-            "id": "cluosrb2f0004a3ha8eut3hx0",
-            "message": {
-                "role": "user",
-                "content": "Que propose Devana ?"
-            },
-            "created": 1712450407619,
-            "model": "MIXTRAL_8X7B_DEVANA",
-            "conversation_id": "cluosj5hh0000ab6adugihwih",
-            "usage": {
-                "prompt_tokens": 0,
-                "total_tokens": 5,
-                "completion_tokens": 0
-            }
-        },
-        {
-            "id": "cluosrb2p0006a3ha0xtf2ncu",
-            "message": {
-                "role": "assistant",
-                "content": "Devana est une intelligence artificielle conçue pour optimiser et augmenter vos connaissances. Elle propose diverses fonctionnalités telles qu'une aide à la rédaction respectant les critères techniques, scientifiques ou journalistiques, une recherche d'informations avec des sources citées et vérifiables, une analyse de documents complexes, et un système de fact-checking en temps réel. Devana est également capable d'accéder à vos informations IT à tout moment et n'importe où, de structurer des documents et de les mettre aux normes, de rechercher et d'analyser de la jurisprudence, des lois et des doctrines juridiques, de traduire, résumer et expliquer des articles, des études et des documents académiques, et bien plus encore. Elle s'adapte à vos besoins et à votre niveau d'usage, que ce soit pour un usage personnel, éducatif ou professionnel."
-            },
-            "created": 1712450407633,
-            "model": "MIXTRAL_8X7B_DEVANA",
-            "conversation_id": "cluosj5hh0000ab6adugihwih",
-            "usage": {
-                "prompt_tokens": 0,
-                "total_tokens": 254,
-                "completion_tokens": 0
-            }
-        }
-    ]
+  "messages": [
+    {
+      "id": "cluosj5hh0000ab6adugihwih",
+      "message": {
+        "role": "system",
+        "content": ""
+      },
+      "created": 1712450027141,
+      "model": "GPT4",
+      "conversation_id": "cluosj5hh0000ab6adugihwih",
+      "usage": {
+        "prompt_tokens": 0,
+        "total_tokens": 0,
+        "completion_tokens": 0
+      }
+    },
+    {
+      "id": "cluosrb2f0004a3ha8eut3hx0",
+      "message": {
+        "role": "user",
+        "content": "Que propose Devana ?"
+      },
+      "created": 1712450407619,
+      "model": "MIXTRAL_8X7B_DEVANA",
+      "conversation_id": "cluosj5hh0000ab6adugihwih",
+      "usage": {
+        "prompt_tokens": 0,
+        "total_tokens": 5,
+        "completion_tokens": 0
+      }
+    },
+    {
+      "id": "cluosrb2p0006a3ha0xtf2ncu",
+      "message": {
+        "role": "assistant",
+        "content": "Devana est une intelligence artificielle conçue pour optimiser et augmenter vos connaissances. Elle propose diverses fonctionnalités telles qu'une aide à la rédaction respectant les critères techniques, scientifiques ou journalistiques, une recherche d'informations avec des sources citées et vérifiables, une analyse de documents complexes, et un système de fact-checking en temps réel. Devana est également capable d'accéder à vos informations IT à tout moment et n'importe où, de structurer des documents et de les mettre aux normes, de rechercher et d'analyser de la jurisprudence, des lois et des doctrines juridiques, de traduire, résumer et expliquer des articles, des études et des documents académiques, et bien plus encore. Elle s'adapte à vos besoins et à votre niveau d'usage, que ce soit pour un usage personnel, éducatif ou professionnel."
+      },
+      "created": 1712450407633,
+      "model": "MIXTRAL_8X7B_DEVANA",
+      "conversation_id": "cluosj5hh0000ab6adugihwih",
+      "usage": {
+        "prompt_tokens": 0,
+        "total_tokens": 254,
+        "completion_tokens": 0
+      }
+    }
+  ]
 }
 ```
 
@@ -113,15 +113,21 @@ Envoie un message à une conversation publique.
 - `client_token` (obligatoire) : Le jeton client permettant d'authentifier la requête.
 - `messages` (obligatoire) : Le contenu du message à envoyer.
 - `stream` (optionnel) : Indique si la réponse doit être retournée en mode flux (stream).
+- `custom` (optionnel) : Un objet JSON permettant de personnaliser le comportement de l'API.
 
 ```json
 {
-    "client_token": "ae7e783c-7578-4a28-80fb-23c59f21d072",
-    "messages": [{
-        "role": "user",
-        "content": "Que propose Devana ?"
-    }],
-    "stream": true
+  "client_token": "ae7e783c-7578-4a28-80fb-23c59f21d072",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Que propose Devana ?"
+    }
+  ],
+  "stream": true,
+  "custom": {
+    "disableIdentityFromLevel": true
+  }
 }
 ```
 
@@ -131,7 +137,8 @@ Envoie un message à une conversation publique.
 - `403 Forbidden` : Accès refusé si le jeton client n'est pas valide ou a été utilisé de manière suspecte.
 - `429 Too Many Requests` : Trop de requêtes ont été effectuées en peu de temps.
 
-__stream__
+**stream**
+
 ```
 Exemple
 de
