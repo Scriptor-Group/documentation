@@ -113,7 +113,7 @@ Envoie un message à une conversation publique.
 - `client_token` (obligatoire) : Le jeton client permettant d'authentifier la requête.
 - `messages` (obligatoire) : Le contenu du message à envoyer.
 - `stream` (optionnel) : Indique si la réponse doit être retournée en mode flux (stream).
-- `custom` (optionnel) : Un objet JSON permettant de personnaliser le comportement de l'API.
+- `custom` (optionnel) : Un objet permettant de personnaliser le comportement de l'API, vous pouvez en savoir plus sur les arguments dans la section [Argument Custom](#argument-custom).
 
 ```json
 {
@@ -145,6 +145,20 @@ de
 reponse
 [DONE]
 ```
+
+## Argument Custom
+
+L'objet `custom` a comme arguments :
+
+- `disableAutomaticIdentity` (booléen, optionnel) :
+  - **Description** : Ce paramètre permet de désactiver le pré-prompt de Devana qui se base sur le niveau de l'agent.
+  - **Valeur par défaut** : `false`
+  - **Exemple d'utilisation** :
+    ```json
+    {
+      "disableAutomaticIdentity": true
+    }
+    ```
 
 ## Sécurité
 
