@@ -126,7 +126,7 @@ Envoie un message à une conversation publique.
   ],
   "stream": true,
   "custom": {
-    "disableIdentityFromLevel": true
+    "disableAutomaticIdentity": true
   }
 }
 ```
