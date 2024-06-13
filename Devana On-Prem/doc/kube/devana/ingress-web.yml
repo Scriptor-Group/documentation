@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devana-production-ingress
+  namespace: devana-production
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1000m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+spec:
+  rules:
+  # Devana.ai
+  - host: app.devana.ai
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: devana-front-service
+            port:
+              number: 80
+  - host: api.devana.ai
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: devana-api-service
+            port:
+              number: 80
+  - host: ws.devana.ai
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: devana-api-service
+            port:
+              number: 5001
+  tls:
+  - hosts:
+    - app.devana.ai
+    secretName: devana-front-tls
+  - hosts:
+    - api.devana.ai
+    secretName: devana-api-tls
+  - hosts:
+    - "ws.devana.ai"
+    secretName: ws-devana-ai-tls
+  

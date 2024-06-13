@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devana-front
+  namespace: devana-production
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: devana-front
+  template:
+    metadata:
+      labels:
+        app: devana-front
+
+    spec:
+      containers:
+        - name: devana-front
+          image: registry.devana.ai/devana/front:latest
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 60
+            periodSeconds: 5
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "0.8"
+              memory: "1024Mi"
+            requests:
+              cpu: "0.02"
+              memory: "108Mi"
+          env:
+            - name: NEXTAUTH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: NEXTAUTH_URL
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: NEXTAUTH_SECRET
+            - name: ENABLE_OPENREPLAY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: ENABLE_OPENREPLAY
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: JWT_SECRET_KEY
+            - name: ADPUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: ADPUB_TOKEN
+            - name: GITHUB_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: GITHUB_ID
+            - name: GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: GITHUB_SECRET
+            - name: GOOGLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: GOOGLE_ID
+            - name: GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: GOOGLE_SECRET
+            - name: GOOGLE_TRANSLATE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: GOOGLE_TRANSLATE_API_KEY
+            - name: FACEBOOK_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: FACEBOOK_ID
+            - name: FACEBOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana-production
+                  key: FACEBOOK_SECRET
+      imagePullSecrets:
+        - name: devana-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devana-front-service
+  namespace: devana-production
+spec:
+  selector:
+    app: devana-front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+# ---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: devana-front-hpa
+#   namespace: devana-production
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: devana-front
+#   minReplicas: 2
+#   maxReplicas: 4
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target: 
+#           type: Utilization
+#           averageUtilization: 70
+#     - type: Resource
+#       resource:
+#         name: memory
+#         target:
+#           type: Utilization
+#           averageUtilization: 75

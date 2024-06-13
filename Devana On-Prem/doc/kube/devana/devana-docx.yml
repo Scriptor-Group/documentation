@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devana-docx-deployment
+  namespace: devana-production
+  labels:
+    app: devana-docx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: devana-docx
+      tier: docx
+  template:
+    metadata:
+      labels:
+        app: devana-docx
+        tier: docx
+    spec:
+      containers:
+        - name: devana-docx
+          image: registry.devana.ai/devana/pdfdocx:latest
+          env:
+            - name: NODE_ENV
+              value: "production"
+          ports:
+            - containerPort: 4667
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1Gi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+      imagePullSecrets:
+        - name: devana-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devana-docx-service
+  namespace: devana-production
+spec:
+  selector:
+    app: devana-docx
+    tier: docx
+  ports:
+    - protocol: TCP
+      port: 4667
+      targetPort: 4667
