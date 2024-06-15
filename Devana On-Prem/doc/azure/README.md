@@ -80,10 +80,10 @@ Les Instances de conteneur vont contenir des `Docker` permettant :
 3. L'hébergement de la base de données vectorielle
 4. L'hébergement du service Redis
 
-> [!NOTE] Informations
+> [!NOTE]
 > Les Instances de conteneur ne sont pas auto-scalées.
 
-> [!WARNING] Important
+> [!WARNING]
 > Attention, Azure demande le nom de l'image Docker à utiliser. Nous vous recommandons d'utiliser le nommage suivant : `registry.devana.ai/devana/<nom-de-l-image>:<version>`. Cette règle ne s'applique pas pour la création des `Application Conteneur` où vous devez utiliser la structure `devana/<nom-de-l-image>:<version>`.
 
 #### Initialisation de la base de données
