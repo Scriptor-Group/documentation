@@ -24,7 +24,7 @@ Le cluster Kubernetes est au cœur de l'infrastructure et gère les différents 
 
 ## Réseau
 
-
+![Infrastructure](./assets/on-prem-network.png)
 
 ## Compatibilité
 
