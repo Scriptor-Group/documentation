@@ -198,6 +198,23 @@ Après la création de votre conteneur, pensez à définir un réplicat de minim
 | GOOGLE_APPLICATION_PRIVATE_KEY | Clé ou "EMPTY"                |
 | GOOGLE_APPLICATION_PRIVATE_KEY | Clé ou "EMPTY"                |
 
+##### Variables pour les connecteurs
+
+
+| Variable                | Description                                               | Notes                                |
+|-------------------------|-----------------------------------------------------------|--------------------------------------|
+| `GOOGLE_CLIENT_ID`      | L'identifiant client de votre application Google Drive     |                                      |
+| `GOOGLE_CLIENT_SECRET`  | Le secret client de votre application Google Drive         |                                      |
+| `DROPBOX_CLIENT_ID`     | L'identifiant client de votre application Dropbox          |                                      |
+| `DROPBOX_CLIENT_SECRET` | Le secret client de votre application Dropbox              |                                      |
+| `MICROSOFT_CLIENT_ID`   | L'identifiant client de votre application Microsoft OneDrive|                                      |
+| `MICROSOFT_CLIENT_SECRET`| Le secret client de votre application Microsoft OneDrive  |                                      |
+| `OAUTH_CALLBACK_URI`    | L'URL de redirection pour gérer l'authentification         |                                      |
+| `JIRA_CLIENT_ID`        | L'identifiant client de votre application Jira             |                                      |
+| `JIRA_CLIENT_SECRET`    | Le secret client de votre application Jira                 |                                      |
+| `SHAREPOINT_LIBRARY`    | Tableau de bibliothèque Sharepoint à scopé pour les sites Sharepoint                            | Exemple: `["Documents", "Site Pages", "Pages"]` |
+
+
 ##### Ports à ouvrir
 
 | Port | Type | Description |
