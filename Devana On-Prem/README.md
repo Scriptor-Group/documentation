@@ -91,6 +91,25 @@ Pour garantir des performances optimales de l'application Devana, il est importa
 
 Ces recommandations sont données à titre indicatif et peuvent varier en fonction de votre charge de travail et du nombre d'utilisateurs. Il est conseillé de surveiller régulièrement les performances de votre application et d'ajuster les ressources en conséquence.
 
+## Test de performance
+Nous avons utilisé un script Python avec Selenium et du multithreading pour réaliser un test de charge basé sur un navigateur web. Ce script nous fournit le taux de réussite, le temps moyen de connexion ainsi que le temps moyen pour recevoir une réponse. Ce test a été effectué sur une base de connaissances comprenant des informations sur Devana de manière générale, avec un agent connecté à cette base et à GPT4O-Mini. Le parcours utilisateur simulé consistait à accéder à Devana, se connecter, sélectionner un agent, puis envoyer et recevoir une question/réponse.
+
+- Taux de réussite : le pourcentage de threads ayant réussi à accomplir les tâches imposées, à savoir :
+  - 10 secondes d'attente maximum après avoir cliqué sur le bouton de connexion.
+  - 5 secondes d'attente maximum entre chaque page.
+  - 30 secondes d'attente maximum pour que l'agent retourne une réponse après une question.
+- Temps moyen pour se connecter : la moyenne du temps nécessaire pour que les threads passent de l'initialisation à l'état connecté.
+- Temps moyen pour recevoir une réponse : la moyenne du temps pris par les threads pour compléter le parcours utilisateur, c'est-à-dire recevoir une réponse de l'agent.
+
+Pour obtenir un taux de réussite de 100%, avec un décalage de 1s entre le début de chaque thread, le nombre maximum de threads est de 25, soit 25 utilisateurs simultanés. Pour augmenter ce nombre, il suffit de multiplier les conteneurs.
+
+```
+--- Résumé des métriques ---
+Temps moyen pour le login : 12.06 secondes
+Temps moyen pour recevoir une réponse : 36.20 secondes
+Pourcentage de succès : 100.00%
+```
+
 ## Détails des Données Collectées pour la Vérification de Licence et la Maintenance
 
 Dans le cadre de l'utilisation de Devana on-prem, notre serveur de licence collecte automatiquement certaines métriques de votre système toutes les 5 minutes. Ces données sont essentielles pour assurer la conformité avec le contrat de licence et faciliter la maintenance proactive. Les métriques recueillies incluent :
