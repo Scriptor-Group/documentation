@@ -48,9 +48,10 @@
 - [ ] Parfois (le bug se produit de manière aléatoire)
 - [ ] Rarement (le bug se produit rarement)
 
-### Tentatives de Résolution
+### Compte rendu de tentative de résolution
 
 - [Décrire les étapes que vous avez essayé pour résoudre le problème]
+- [Décrire l'hypothèse de la nature du bug]
 
 ### Informations Complémentaires
 
