@@ -14,6 +14,7 @@
 
 - **Titre :** [Titre concis décrivant le bug]
 - **Date du problème :** [Date et heure à laquelle le problème a été rencontré]
+- **Référent(s) :** [Nom(s) du ou des personnes en charge du rapport]
 
 ### Étapes pour Reproduire
 
