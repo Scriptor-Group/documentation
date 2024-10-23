@@ -168,7 +168,7 @@ sudo systemctl restart pdf-conversion-service
 
 1. **Accéder au tableau de bord**
 ```
-http://votre-domaine/health-dashboard
+http://votre-domaine-front/health/
 ```
 
 ## Bonnes pratiques
