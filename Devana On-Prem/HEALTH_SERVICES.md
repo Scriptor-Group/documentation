@@ -192,5 +192,4 @@ http://votre-domaine-front/health/
 
 Pour obtenir de l'aide supplémentaire ou signaler des problèmes :
 - Créer une issue dans le dépôt
-- Contact : support@votre-domaine.com
-- Support d'urgence : +33-X-XX-XX-XX-XX
+- Contact : support@devana.ai
