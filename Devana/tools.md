@@ -67,7 +67,7 @@ Voici une description des différents champs :
 
 - **Clé API** : La clé API. Exemple pour le type `Headers` : `Bearer API_KEY`.
 
-- **Méthode HTTP** : La méthode HTTP à utiliser pour la requête, elle peut être `GET`, `POST`, `PUT`, `DELETE`, etc.
+- **Méthode HTTP** : La méthode HTTP à utiliser pour la requête, elle peut être `GET` et `POST`.
 
 - **Confirmation d'Exécution** : une option permettant d’activer une validation d'exécution du tool. Ce mécanisme de confirmation permet d’exiger une validation manuelle avant d’exécuter un tool client, notamment pour les actions sensibles ou critiques.
 
