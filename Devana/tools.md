@@ -173,6 +173,61 @@ const CustomTool = (tool: CustomTool) => {
   }
 };
 ``` 
+
+### Exemple d'une implémentation complète
+Implémentation complète d'un tool basique dans un serveur expressjs
+
+```typescript
+import express from "express";
+import { z } from "zod";
+
+const app = express();
+app.use(express.json());
+
+// Exemple de tool : Récupération de données à partir d'une API externe
+const GetDataTool = {
+  name: "GetDataTool",
+  description: "Tool pour récupérer des données à partir d'une API externe",
+  schema: z.object({
+    query: z.string().describe("Les paramètres de la requête à exécuter."),
+  }),
+  func: async (params) => {
+    try {
+      const finalUrl = `https://api.example.com/data?query=${encodeURIComponent(
+        params.query
+      )}`;
+      const response = await fetch(finalUrl, {
+        method: "GET",
+      });
+
+      const data = await response.json();
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error };
+    }
+  },
+};
+
+// Route dynamique pour exécuter les tools
+app.post("/tool", async (req, res) => {
+  try {
+    // Validation des données d'entrée avec Zod
+    const validatedParams = GetDataTool.schema.parse(req.body);
+
+    // Exécution de la fonction principale du tool
+    const result = await GetDataTool.func(validatedParams);
+
+    return res.json(result);
+  } catch (error) {
+    return res.json({ success: false, error });
+  }
+});
+
+// Lancer le serveur
+app.listen(3000, () => {
+  console.log(`Serveur en cours d'exécution sur le port 3000`);
+});
+```
 #### Gestion des Retours et Erreurs
 
 Une fois la validation effectuée, les tools renvoient leurs résultats sous forme de données JSON ou d’objets spécifiques. En cas d’erreur, des messages d'erreur standardisés sont générés pour faciliter le débogage. Par exemple :
