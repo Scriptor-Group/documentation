@@ -5,16 +5,17 @@
 - [1. Introduction](#1-introduction)
 - [2. Architecture et Fonctionnement des Tools](#2-architecture-et-fonctionnement-des-tools)
   - [Types de Tools](#types-de-tools)
-  - [Configuration et utilisation des Tools](#configuration-et-utilisation-des-tools)
-    - [Création d'un Tool](#création-dun-tool)
+  - [Configuration et utilisation des Tools](#configuration-et-utilisation-des-tools-sur-devana)
+    - [Création d'un Tool](#création-dun-tool-sur-devana)
     - [Informations supplémentaires](#informations-supplémentaires)
 - [3. Mise en Œuvre Technique des Tools](#3-mise-en-œuvre-technique-des-tools)
   - [Structure d'un Tool](#structure-dun-tool)
   - [Schéma de Validation](#schéma-de-validation)
     - [Fonctionnement des Schémas Zod](#fonctionnement-des-schémas-zod)
     - [Exemple de Schéma Zod](#exemple-de-schéma-zod)
-  - [La Propriété `func` dans un Tool](#la-propriété-func-dans-un-tool-personnalisé)
+  - [La Propriété `func` dans un Tool](#la-propriété-func-dans-un-tool)
     - [Exemple de `func` dans un Tool](#exemple-de-func-dans-un-tool)
+    - [Exemple d'une implémentation complète](#exemple-dune-implémentation-complète)
   - [Gestion des Retours et Erreurs](#gestion-des-retours-et-erreurs)
 
 ## 1. Introduction
@@ -94,7 +95,11 @@ Vous pouvez alors renseigner le nombre maximum d'appels pour les tools.
 
 ![Paramètres tools maximum](assets/params_tools_max.png)
 
+##### Ajout du header `x-user-id` lors de l'utilisation des tools personnalisés
 
+Lorsque qu'un agent utilise un custom, l'application ajoute automatiquement le header suivant à la requête envoyée au service cible :
+
+**Header** x-user-id : Ce header est automatiquement rempli avec l'identifiant unique (cuid) de l'utilisateur qui communique avec l'agent.
 
 ## 3. Mise en Œuvre Technique des Tools
 
