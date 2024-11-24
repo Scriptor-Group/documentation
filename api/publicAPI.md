@@ -24,15 +24,6 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "chatVersion": "string",
         "model": "string",
         "publicChat": "boolean",
-        "MyIAsPublicAPIKeys": [
-          {
-            "name": "string",
-            "active": "boolean",
-            "apiKey": "string",
-            "createdAt": "timestamp",
-            "updatedAt": "timestamp"
-          }
-        ],
         "createdAt": "timestamp",
         "updatedAt": "timestamp"
       }
