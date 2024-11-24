@@ -1,4 +1,3 @@
-# Mise à jour des images
 
 ## 📦 Version 1.51 (24/06/2024)
 
