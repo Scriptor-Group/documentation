@@ -1,16 +1,21 @@
-Voici la documentation augmentée avec plus de détails sur le déploiement des services de Devana sur Kubernetes :
+# Documentation de Déploiement Devana sur Kubernetes
 
-# Déploiement
+Ce document détaille le processus complet de déploiement des services Devana sur Kubernetes.
 
-Comment déployer les services de Devana sur Kubernetes.
+## Table des matières
+- [Prérequis](#prérequis)
+- [Configuration des Variables d'Environnement](#configuration-des-variables-denvironnement)
+- [Déploiement](#déploiement)
+- [Vérification](#vérification)
+- [Accès aux Services](#accès-aux-services)
 
 ## Prérequis
 
 ### Créer le Secret Docker Registry
 
-Exécutez la commande suivante pour créer un secret nommé `regcred` (vous pouvez changer le nom si nécessaire) :
+Exécutez la commande suivante pour créer un secret nommé `regcred` :
 
-```
+```bash
 kubectl create secret docker-registry regcred \
   --docker-server=registry.devana.ai \
   --docker-username=<YOUR_USERNAME> \
@@ -19,119 +24,221 @@ kubectl create secret docker-registry regcred \
   --namespace=<NAMESPACE>
 ```
 
-Remplacez `<YOUR_USERNAME>`, `<YOUR_PASSWORD>` et `<YOUR_EMAIL>` par vos identifiants de connexion au registre Docker de Devana (contactez le support technique de Devana si vous ne les avez pas).
-
-Remplacez `<NAMESPACE>` par le namespace dans lequel vous souhaitez déployer les services de Devana.
+Remplacez les valeurs `<YOUR_USERNAME>`, `<YOUR_PASSWORD>`, `<YOUR_EMAIL>` et `<NAMESPACE>` par vos informations d'identification pour le registre Docker de Devana.
 
 ### Créer le Cluster Issuer
 
-Exécutez la commande suivante pour créer un Cluster Issuer nommé `letsencrypt-prod` :
+Pour configurer les certificats SSL, créez un Cluster Issuer :
 
-```
+```bash
 kubectl apply -f issuer/letsencrypt-prod-issuer.yaml
 ```
 
-Assurez-vous d'avoir le fichier `letsencrypt-prod-issuer.yaml` dans le répertoire `issuer/`.
+## Configuration des Variables d'Environnement
 
-### Personnaliser les fichiers de configuration
+### Configuration Générale
+- `LICENCE` : Licence de l'API Devana
+- `PORT` : Port d'écoute de l'API
+- `APPLICATION_URL` : URL principale de l'application
+- `CLIENT_URI` : URI du client
+- `API_URI` : URI de l'API
+- `API_CORE_KEY` : Clé API core
+- `JWT_SECRET_KEY` : Clé secrète pour la signature des tokens JWT
+- `GRAPHQL_INTROSPECTION` : Active/désactive l'introspection GraphQL
+- `ENABLE_SYNC_ACCOUNTS` : Active/désactive la synchronisation des comptes
+- `HOSTED_BY_DEVANA` : Indique si l'instance est hébergée par Devana
+- `RUN_CRON` : Active/désactive les tâches cron
 
-Personnalisez les fichiers de configuration des services de Devana en fonction de vos besoins. Vous pouvez modifier les variables d'environnement, les volumes, les ressources, etc.
+### Services de Traitement
+- `PDF_TO_WORD_SERVER` : URL du service de conversion PDF vers Word
+- `IMAGE_TO_IMAGE_SERVER` : URL du service de traitement d'images
+- `TEXT_TO_IMAGE_SERVER` : URL du service de génération d'images
 
-Vous trouverez le fichier de secrets dans `secrets/secrets.yaml`. Assurez-vous de mettre à jour les valeurs des secrets avec les informations appropriées.
+### Base de Données et Stockage
+- `DATABASE_URL` : URL de connexion à la base de données
+- `CHROMA_HOST` : Hôte du service Chroma
+- `CHROMA_API_KEY` : Clé API pour Chroma
+- `REDIS_HOST` : Hôte Redis
+- `REDIS_PORT` : Port Redis
+- `REDIS_PASSWORD` : Mot de passe Redis
+- `MEILI_HOST` : Hôte MeiliSearch
+- `MEILI_MASTER_KEY` : Clé maître MeiliSearch
+
+### Services IA et ML
+- `EMBEDDING` : Type d'embedding à utiliser
+- `OPENAI_API_KEY` : Clé API OpenAI
+- `ANTHROPIC_API_KEY` : Clé API Anthropic
+- `MISTRAL_API_KEY` : Clé API Mistral
+- `GROQ_API_KEY` : Clé API Groq
+- `GEMINI_API_KEY` : Clé API Gemini
+- `DEVANA_EMBEDDINGS_HOST` : Hôte des embeddings Devana
+- `DEVANA_EMBEDDINGS_INDEX_HOST` : Hôte d'index des embeddings
+- `DEVANA_EMBEDDINGS_APIKEY` : Clé API embeddings
+- `DEVANA_EMBEDDINGS_INDEX_APIKEY` : Clé API index embeddings
+
+### Configuration AWS
+- `AWS_BEDROCK_ACCESS_KEY_ID` : ID de clé d'accès AWS Bedrock
+- `AWS_BEDROCK_SECRET_ACCESS_KEY` : Clé secrète AWS Bedrock
+- `AWS_S3_ACCESS_KEY_ID` : ID de clé d'accès AWS S3
+- `AWS_S3_SECRET_ACCESS_KEY` : Clé secrète AWS S3
+
+### Authentification et OAuth
+- `NEXTAUTH_URL` : URL NextAuth
+- `NEXTAUTH_SECRET` : Secret NextAuth
+- `GITHUB_ID` : ID client GitHub
+- `GITHUB_SECRET` : Secret client GitHub
+- `GOOGLE_ID` : ID client Google
+- `GOOGLE_SECRET` : Secret client Google
+- `GOOGLE_CLIENT_ID` : ID client Google (OAuth)
+- `GOOGLE_CLIENT_SECRET` : Secret client Google (OAuth)
+- `FACEBOOK_ID` : ID client Facebook
+- `FACEBOOK_SECRET` : Secret client Facebook
+- `DROPBOX_CLIENT_ID` : ID client Dropbox
+- `DROPBOX_CLIENT_SECRET` : Secret client Dropbox
+- `MICROSOFT_CLIENT_ID` : ID client Microsoft
+- `MICROSOFT_CLIENT_SECRET` : Secret client Microsoft
+- `MICROSOFT_TENANT_ID` : ID tenant Microsoft
+- `OAUTH_CALLBACK_URI` : URI de callback OAuth
+- `JIRA_CLIENT_ID` : ID client Jira
+- `JIRA_CLIENT_SECRET` : Secret client Jira
+
+### Services API et Traduction
+- `DEEPL_KEY` : Clé API DeepL
+- `GOOGLE_TRANSLATE_API_KEY` : Clé API Google Translate
+- `SEARCH_API_KEY` : Clé API de recherche
+- `CRAWLBASE_TOKEN` : Token Crawlbase
+- `TOKEN_METRICS` : Métriques de token
+- `APIDECK_API_KEY` : Clé API Apideck
+- `APIDECK_APP_ID` : ID d'application Apideck
+
+### Paiement et Communication
+- `STRIPE_SECRET_KEY` : Clé secrète Stripe
+- `STRIPE_WEBHOOK_SECRET` : Secret webhook Stripe
+- `MAILJET_TEMPLATE_ID` : ID template Mailjet
+- `MAILJET_APIKEY_PUBLIC` : Clé API publique Mailjet
+- `MAILJET_APIKEY_PRIVATE` : Clé API privée Mailjet
+
+### Configuration Frontend
+- `NEXT_PUBLIC_API_URL` : URL API publique
+- `NEXT_PUBLIC_GRAPHQL_URL` : URL GraphQL publique
+- `NEXT_PUBLIC_WS_URL` : URL WebSocket publique
+- `NEXT_PUBLIC_FRONTEND_URL` : URL frontend publique
+- `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` : Clé publique Stripe
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` : Clé API Google Maps
+- `ENABLE_OPENREPLAY` : Active/désactive OpenReplay
+
+### Monitoring et Debug
+- `SENTRY_DSN` : DSN Sentry
+- `ADPUB_TOKEN` : Token AdPub
+- `KUBE_CONFIG` : Configuration Kubernetes
+- `KUBE_NAMESPACE` : Namespace Kubernetes
 
 ## Déploiement
 
-### Secrets
+### 1. Déploiement des Secrets
 
-Pour déployer les secrets de Devana, exécutez la commande suivante :
+Appliquez la configuration des secrets :
 
-```
+```bash
 kubectl apply -f secrets/secrets.yaml
 ```
 
-Assurez-vous d'avoir le fichier `secrets.yaml` dans le répertoire `secrets/`.
+### 2. Déploiement de l'API
 
-### API
+Déployez le service API :
 
-Pour déployer le service API de Devana, exécutez la commande suivante :
-
-```
+```bash
 kubectl apply -f api/api-deployment.yaml
 ```
 
-Assurez-vous d'avoir le fichier `api-deployment.yaml` dans le répertoire `api/`.
+### 3. Déploiement des Services Additionnels
 
-Liste des variables d'environnement disponibles pour le service API :
-- `LICENCE` : La licence de l'API Devana.
-- `PORT` : Le port sur lequel l'API doit écouter.
-- `EMBEDDING` : Le type d'embedding à utiliser (par exemple, "openai", "cohere", etc.).
-- `APPLICATION_URL` : L'URL de l'application Devana.
-- `API_URI` : L'URI de l'API Devana.
-- `PDF_TO_WORD_SERVER` : L'URL du serveur de conversion PDF vers Word.
-- `JWT_SECRET_KEY` : La clé secrète utilisée pour signer les jetons JWT.
-- `DATABASE_URL` : L'URL de la base de données.
-- `CHROMA_HOST` : L'hôte du service Chroma.
-- `REDIS_HOST` : L'hôte du service Redis.
-- `REDIS_PORT` : Le port du service Redis.
-- `REDIS_PASSWORD` : Le mot de passe du service Redis.
-- `OPENAI_API_KEY` : La clé API d'OpenAI.
-- `DEEPL_KEY` : La clé API de DeepL.
-- `ANTHROPIC_API_KEY` : La clé API d'Anthropic.
-- `MISTRAL_API_KEY` : La clé API de Mistral.
-- `GROQ_API_KEY` : La clé API de Groq.
-- `GEMINI_API_KEY` : La clé API de Gemini.
-- `MAILJET_TEMPLATE_ID` : L'ID du modèle Mailjet.
-- `MAILJET_APIKEY_PUBLIC` : La clé API publique de Mailjet.
-- `MAILJET_APIKEY_PRIVATE` : La clé API privée de Mailjet.
-- `AWS_BEDROCK_ACCESS_KEY_ID` : L'ID de clé d'accès AWS Bedrock.
-- `AWS_BEDROCK_SECRET_ACCESS_KEY` : La clé d'accès secrète AWS Bedrock.
-- `AWS_S3_ACCESS_KEY_ID` : L'ID de clé d'accès AWS S3.
-- `AWS_S3_ENPOINT` : Le point de terminaison AWS S3.
-- `AWS_S3_REGION` : La région AWS S3.
-- `AWS_S3_SECRET_ACCESS_KEY` : La clé d'accès secrète AWS S3.
-- `SEARCH_API_KEY` : La clé API de recherche.
-- `CRAWLBASE_TOKEN` : Le jeton Crawlbase.
-- `TOKEN_METRICS` : Les métriques de jeton.
-- `GOOGLE_APPLICATION_CLIENT_EMAIL` : L'e-mail du client d'application Google.
-- `GOOGLE_APPLICATION_PRIVATE_KEY` : La clé privée de l'application Google.
-- `CLIENT_URI` : L'URI du client.
-- `GOOGLE_CLIENT_ID` : L'ID client Google.
-- `GOOGLE_CLIENT_SECRET` : Le secret client Google.
-- `DROPBOX_CLIENT_ID` : L'ID client Dropbox.
-- `DROPBOX_CLIENT_SECRET` : Le secret client Dropbox.
-- `MICROSOFT_CLIENT_ID` : L'ID client Microsoft.
-- `MICROSOFT_CLIENT_SECRET` : Le secret client Microsoft.
-- `OAUTH_CALLBACK_URI` : L'URI de rappel OAuth.
-- `MICROSOFT_TENANT_ID` : L'ID de locataire Microsoft.
+Déployez les autres services nécessaires dans l'ordre suivant :
 
-### Autres services
-
-Suivez les mêmes étapes pour déployer les autres services de Devana, tels que le service d'authentification, le service de stockage, etc. Assurez-vous d'avoir les fichiers de déploiement correspondants dans leurs répertoires respectifs.
+```bash
+kubectl apply -f database/
+kubectl apply -f redis/
+kubectl apply -f storage/
+kubectl apply -f worker/
+```
 
 ## Vérification
 
-Une fois le déploiement terminé, vous pouvez vérifier l'état des pods en exécutant la commande suivante :
+Vérifiez l'état des pods :
 
-```
+```bash
 kubectl get pods -n <NAMESPACE>
 ```
 
-Remplacez `<NAMESPACE>` par le namespace dans lequel vous avez déployé les services de Devana.
+Vérifiez les logs des pods en cas d'erreur :
 
-Assurez-vous que tous les pods sont dans l'état "Running" et qu'il n'y a pas d'erreurs.
-
-## Accès aux services
-
-Pour accéder aux services déployés, vous pouvez utiliser les commandes `kubectl port-forward` ou créer des services Kubernetes de type LoadBalancer ou NodePort.
-
-Par exemple, pour accéder au service API en utilisant `port-forward`, exécutez la commande suivante :
-
+```bash
+kubectl logs <POD_NAME> -n <NAMESPACE>
 ```
+
+## Accès aux Services
+
+### Port-Forward Local
+
+Pour accéder localement aux services :
+
+```bash
+# API
 kubectl port-forward svc/api 8080:80 -n <NAMESPACE>
+
+# Base de données
+kubectl port-forward svc/postgres 5432:5432 -n <NAMESPACE>
+
+# Redis
+kubectl port-forward svc/redis 6379:6379 -n <NAMESPACE>
 ```
 
-Remplacez `<NAMESPACE>` par le namespace dans lequel vous avez déployé les services de Devana.
+### Configuration des Ingress
 
-Vous pouvez maintenant accéder à l'API Devana à l'adresse `http://localhost:8080`.
+Pour exposer les services publiquement, assurez-vous que vos ingress sont correctement configurés dans le fichier `ingress/ingress.yaml` et appliquez-les :
 
-N'hésitez pas à personnaliser davantage la documentation en fonction des spécificités de votre environnement et des services de Devana que vous déployez.
+```bash
+kubectl apply -f ingress/ingress.yaml
+```
+
+## Support et Maintenance
+
+### Logs et Monitoring
+
+Consultez les logs des services :
+
+```bash
+kubectl logs -f deployment/api -n <NAMESPACE>
+```
+
+### Mise à jour des Services
+
+Pour mettre à jour un service :
+
+```bash
+kubectl rollout restart deployment <SERVICE_NAME> -n <NAMESPACE>
+```
+
+### Scaling
+
+Pour ajuster le nombre de réplicas :
+
+```bash
+kubectl scale deployment <SERVICE_NAME> --replicas=<NUMBER> -n <NAMESPACE>
+```
+
+## Résolution des Problèmes Courants
+
+1. **Problème de Secret Registry**
+   - Vérifiez les credentials du registry
+   - Recréez le secret avec les bonnes informations
+
+2. **Problèmes de Connection à la Base de Données**
+   - Vérifiez la variable DATABASE_URL
+   - Assurez-vous que le service de base de données est en cours d'exécution
+
+3. **Erreurs de Certificats SSL**
+   - Vérifiez la configuration du Cluster Issuer
+   - Assurez-vous que les domaines sont correctement configurés
+
+Pour toute assistance supplémentaire, contactez le support technique de Devana.
