@@ -15,7 +15,7 @@ Authorization: Bearer VOTRE_TOKEN
 ### Endpoint
 
 ```
-POST /v1/completions
+POST /v1/chat/completions
 ```
 
 ### Corps de la Requête
@@ -48,7 +48,7 @@ POST /v1/completions
 ### Exemple de Requête
 
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -176,7 +176,7 @@ L'API inclut une limitation de débit basée sur l'utilisateur :
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -223,7 +223,7 @@ curl -X POST https://api.example.com/v1/completions \
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -242,7 +242,7 @@ curl -X POST https://api.example.com/v1/completions \
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -274,7 +274,7 @@ data: [DONE]
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -294,7 +294,7 @@ curl -X POST https://api.example.com/v1/completions \
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -316,7 +316,7 @@ curl -X POST https://api.example.com/v1/completions \
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -347,7 +347,7 @@ curl -X POST https://api.example.com/v1/completions \
 
 ### Requête
 ```bash
-curl -X POST https://api.example.com/v1/completions \
+curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
