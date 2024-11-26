@@ -1,4 +1,6 @@
-# 🤖 Devana.ai Documentation
+![Devana](https://app.devana.ai/static/logo-small.png)
+
+# Documentation
 
 Welcome to the official documentation for Devana.ai - Your Enterprise AI Copilot Platform. This repository contains comprehensive documentation for all Devana.ai services and features.
 
