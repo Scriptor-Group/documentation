@@ -9,7 +9,7 @@ Welcome to the official documentation for Devana.ai - Your Enterprise AI Copilot
 Devana.ai is an advanced AI platform that enables organizations to:
 - Deploy custom AI assistants
 - Integrate AI capabilities into existing applications
-10	- Control and monitor AI usage in enterprise environments
+	- Control and monitor AI usage in enterprise environments
 - Ensure data privacy and security compliance
 
 ## 📚 Documentation Sections
@@ -52,10 +52,6 @@ For technical support:
 - Review the documentation in this repository
 - Submit issues through the appropriate channels
 - Contact our support team for enterprise-specific questions
-
-## 📜 License
-
-The documentation in this repository is provided under appropriate licensing terms. Please refer to the license file for details.
 
 ---
 For the latest updates and features, visit [devana.ai](https://www.devana.ai)
