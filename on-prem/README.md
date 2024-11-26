@@ -1,5 +1,3 @@
-![Devana](https://app.devana.ai/static/logo-small.png)
-
 # Devana On-Premise
 
 Bienvenue dans la documentation expliquant le fonctionnement du on-premise de Devana. Cette documentation est divisée en plusieurs parties, que vous pouvez retrouver ci-dessous.
