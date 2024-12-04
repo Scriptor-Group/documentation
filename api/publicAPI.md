@@ -62,7 +62,7 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 #### Récupérer les informations d'une base de connaissances
 - **URL** : `GET /v1/folders/:id`
 - **Paramètres** :
-  - `id` : Identifiant unique de la base de connaissances (CUID).
+  - `id` : Identifiant unique de la base de connaissances.
 - **Description** : Retourne les informations d'une base de connaissances spécifique.
 - **Réponse** :
   ```json
