@@ -196,8 +196,6 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 403 : Accès non autorisé.
   - 500 : Erreur interne du serveur.  
 
----
-
 ### Récupérer les conversations d'un agent
 - **URL** : `GET /v1/agents/:id/conversations`
 - **Paramètres** :
@@ -219,6 +217,11 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
     
   }
   ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Agent non trouvé.
+  - 500 : Erreur interne du serveur.
 
 ### Ajouter des fichiers à un agent
 - **URL** : `POST /v1/agents/:id/files`
@@ -237,6 +240,13 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
     "data": ["string"]
   }
   ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Agent non trouvé.
+  - 500 : Erreur interne du serveur.
+
+---
 
 ### **v1/conversations**
 #### Récupérer les métriques d'une conversation
