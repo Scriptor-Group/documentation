@@ -23,8 +23,10 @@ graph TD
         PS[PostgreSQL Server]
         RD[Redis]
         S3[Bucket S3]
+        LLM[Serveur LLM]
+        VS[Serveur Vision]
+        ES[Serveur Embedding]
     end
-
     %% Kubernetes Components
     subgraph Kubernetes["Cluster Kubernetes"]
         %% Deployments rangés horizontalement
@@ -36,82 +38,71 @@ graph TD
             D4[deploy-parser]
             D5[deploy-meilisearch]
         end
-
         %% Pods alignés avec leurs deployments
         P1[pod-api]
         P2[pod-frontend]
         P3[pod-vectordb]
         P4[pod-parser]
         P5[pod-meilisearch]
-
         %% Applications
         API[API]
         FE[Front-end]
         VDB[Vectorial DB]
         DP[Document parser]
         MS[Meilisearch]
-
         %% Services
         SVC1[svc-api]
         SVC2[svc-frontend]
         SVC3[svc-vectordb]
         SVC4[svc-parser]
         SVC5[svc-meilisearch]
-
         %% Ingress et SSL
         ING[Ingress]
         SSL[SSL Termination]
     end
-
     %% Users à droite
     U[User]
     AT[Agent Teams]
-
     %% Connexions verticales pour deployments et pods
     D1 --> P1
     D2 --> P2
     D3 --> P3
     D4 --> P4
     D5 --> P5
-
     %% Connexions pods vers applications
     P1 --> API
     P2 --> FE
     P3 --> VDB
     P4 --> DP
     P5 --> MS
-
     %% Connexions applications vers services
     API --> SVC1
     FE --> SVC2
     VDB --> SVC3
     DP --> SVC4
     MS --> SVC5
-
     %% Connexions vers Ingress
     SVC1 --> ING
     SVC2 --> ING
     ING --> SSL
-
     %% Connexions externes vers API
     PS -.-> API
     RD -.-> API
     S3 -.-> API
-
+    LLM -.-> API
+    VS -.-> API
+    ES -.-> API
     %% Connexions inter-services
     API --> VDB
     API --> DP
     API --> MS
     FE --> API
-
     %% Connexions utilisateurs
     U --> SSL
     AT --> SSL
-
     %% Styles
     style External fill:#f5f5f5
     style Kubernetes fill:#f0f8ff
-
     %% Direction générale du graphe
     direction TB
 ```
