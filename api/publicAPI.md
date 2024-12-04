@@ -194,6 +194,46 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 
 ---
 
+### Récupérer les conversations d'un agent
+- **URL** : `GET /v1/agents/:id/conversations`
+- **Paramètres** :
+  - `id` : Identifiant unique de l'agent.
+- **Description** : Retourne les conversations associées à un agent spécifique.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": 
+      [
+        {
+          "id": "string",
+          "date": "timestamp",
+          "message": "string",
+          "model": "string",
+        }
+      ]
+    
+  }
+  ```
+
+### Ajouter des fichiers à un agent
+- **URL** : `POST /v1/agents/:id/files`
+- **Paramètres** :
+  - `id` : Identifiant unique de l'agent.
+- **Body** :
+  ```json
+  {
+    "filesIds": ["string"]
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": ["string"]
+  }
+  ```
+
 ### **v1/conversations**
 #### Récupérer les métriques d'une conversation
 - **URL** : `GET /v1/conversations/:id/metrics`
