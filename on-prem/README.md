@@ -16,13 +16,177 @@ Bienvenue dans la documentation expliquant le fonctionnement du on-premise de De
 
 Voici un diagramme expliquant l'architecture de l'infrastructure Devana pour le on-premise :
 
-![Infrastructure](./assets/on-prem-kube.png)
+```mermaid
+graph TD
+    %% External Services
+    subgraph External["Services Externes"]
+        PS[PostgreSQL Server]
+        RD[Redis]
+        S3[Bucket S3]
+    end
+
+    %% Kubernetes Components
+    subgraph Kubernetes["Cluster Kubernetes"]
+        %% Deployments rangés horizontalement
+        subgraph Deployments
+            direction LR
+            D1[deploy-api]
+            D2[deploy-frontend]
+            D3[deploy-vectordb]
+            D4[deploy-parser]
+            D5[deploy-meilisearch]
+        end
+
+        %% Pods alignés avec leurs deployments
+        P1[pod-api]
+        P2[pod-frontend]
+        P3[pod-vectordb]
+        P4[pod-parser]
+        P5[pod-meilisearch]
+
+        %% Applications
+        API[API]
+        FE[Front-end]
+        VDB[Vectorial DB]
+        DP[Document parser]
+        MS[Meilisearch]
+
+        %% Services
+        SVC1[svc-api]
+        SVC2[svc-frontend]
+        SVC3[svc-vectordb]
+        SVC4[svc-parser]
+        SVC5[svc-meilisearch]
+
+        %% Ingress et SSL
+        ING[Ingress]
+        SSL[SSL Termination]
+    end
+
+    %% Users à droite
+    U[User]
+    AT[Agent Teams]
+
+    %% Connexions verticales pour deployments et pods
+    D1 --> P1
+    D2 --> P2
+    D3 --> P3
+    D4 --> P4
+    D5 --> P5
+
+    %% Connexions pods vers applications
+    P1 --> API
+    P2 --> FE
+    P3 --> VDB
+    P4 --> DP
+    P5 --> MS
+
+    %% Connexions applications vers services
+    API --> SVC1
+    FE --> SVC2
+    VDB --> SVC3
+    DP --> SVC4
+    MS --> SVC5
+
+    %% Connexions vers Ingress
+    SVC1 --> ING
+    SVC2 --> ING
+    ING --> SSL
+
+    %% Connexions externes vers API
+    PS -.-> API
+    RD -.-> API
+    S3 -.-> API
+
+    %% Connexions inter-services
+    API --> VDB
+    API --> DP
+    API --> MS
+    FE --> API
+
+    %% Connexions utilisateurs
+    U --> SSL
+    AT --> SSL
+
+    %% Styles
+    style External fill:#f5f5f5
+    style Kubernetes fill:#f0f8ff
+
+    %% Direction générale du graphe
+    direction TB
+```
 
 Le cluster Kubernetes est au cœur de l'infrastructure et gère les différents services de l'application Devana. Il communique avec la base de données PostgreSQL pour la persistance des données, avec le serveur de fichiers S3 pour le stockage des fichiers, et avec le serveur Redis pour la mise en cache et la gestion des sessions. Concernant Redis, vous pouvez également utiliser un cluster Redis si vous souhaitez l'heberger directement dans kubernetes.
 
 ## Réseau
 
-![Reseau](./assets/on-prem-network.png)
+```mermaid
+flowchart LR
+    %% Styles personnalisés
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
+    classDef container fill:#e9ecef,stroke:#666,stroke-width:2px
+    classDef nginx fill:#e9ecef,stroke-dasharray: 5 5,stroke:#666,stroke-width:2px
+    classDef user fill:#48cae4,color:white,stroke:#333,stroke-width:2px
+    classDef envBuildtime stroke:#ff4d4d,color:#ff4d4d,stroke-width:2px
+    classDef envRuntime stroke:#1E90FF,color:#1E90FF,stroke-width:2px
+    classDef port fill:#fff,stroke:#333,stroke-width:1px,color:#333
+    
+    %% Utilisateurs
+    Users((Utilisateurs)):::user
+    
+    %% Conteneur Front
+    subgraph Front["Frontend"]
+        direction TB
+        Client["Client NextJS"]
+        Serveur["Serveur NextJS"]
+    end
+    
+    %% Conteneur API
+    subgraph Api["Backend"]
+        direction TB
+        GraphQL["API GraphQL"]
+        WS["WebSocket Server"]
+    end
+    
+    %% Nginx reverse proxy
+    subgraph Nginx["NGINX Reverse Proxy"]
+        direction TB
+        RouterNginx["Router & SSL Termination"]
+    end
+    
+    %% Ports et protocoles
+    Port1[HTTP:3000]:::port
+    Port2[HTTP]:::port
+    Port3[HTTP:4666]:::port
+    Port4[HTTP:5001]:::port
+    Port5[HTTPS]:::port
+    Port6[HTTPS/graphql]:::port
+    Port7[HTTPS/ws]:::port
+    
+    %% Variables d'environnement
+    EnvNext["NEXTAUTH_URL"]:::envBuildtime
+    EnvNginx["NGINX_HOST"]:::envRuntime
+    EnvFront["FRONT"]:::envRuntime
+    EnvGraphQL["BACK_GRAPHQL"]:::envRuntime
+    EnvWS["BACK_WS"]:::envRuntime
+    
+    %% Connexions
+    Client --> EnvNext --> Port1 --> RouterNginx
+    Serveur --> EnvNginx --> Port2 --> RouterNginx
+    RouterNginx --> Port3 --> GraphQL
+    RouterNginx --> Port4 --> WS
+    
+    Users --> Port5 & Port6 & Port7 --> RouterNginx
+    
+    RouterNginx -.- EnvFront --> Front
+    RouterNginx -.- EnvGraphQL --> GraphQL
+    RouterNginx -.- EnvWS --> WS
+
+    %% Styles des conteneurs
+    style Front fill:#f5f5f5,stroke:#333,stroke-width:2px
+    style Api fill:#f5f5f5,stroke:#333,stroke-width:2px
+    style Nginx fill:#f5f5f5,stroke-dasharray: 5 5,stroke:#666
+```
 
 ## Compatibilité
 
