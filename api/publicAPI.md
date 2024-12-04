@@ -35,6 +35,169 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 
 ---
 
+### **v1/folders**
+#### Récupérer la liste des bases de connaissances
+- **URL** : `GET /v1/folders`
+- **Description** : Retourne la liste des bases de connaissances associées à l'utilisateur.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+        "name": "string",
+        "description": "string",
+        "words": "number",
+        "chunkSize": "number",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    ]
+  }
+  ```
+- **Erreurs possibles** :
+  - 500 : Erreur interne du serveur.
+
+#### Récupérer les informations d'une base de connaissances
+- **URL** : `GET /v1/folders/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la base de connaissances (CUID).
+- **Description** : Retourne les informations d'une base de connaissances spécifique.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "id": "string",
+      "name": "string",
+      "description": "string",
+      "words": "number",
+      "chunkSize": "number",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
+
+#### Créer une base de connaissances
+- **URL** : `POST /v1/folders`
+- **Description** : Crée une nouvelle base de connaissances.
+- **Body** :
+  ```json
+  {
+    "name": "string",
+    "description": "string" | null,
+    "chunkSize": "number" | null
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "id": "string",
+      "name": "string",
+      "description": "string",
+      "words": "number",
+      "chunkSize": "number",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 500 : Erreur interne du serveur.
+
+#### Mettre à jour une base de connaissances
+- **URL** : `PUT /v1/folders/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la base de connaissances.
+- **Description** : Met à jour une base de connaissances existante.
+- **Body** :
+  ```json
+  {
+    "name": "string" | null,
+    "description": "string" | null,
+    "chunkSize": "number" | null
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "id": "string",
+      "name": "string",
+      "description": "string",
+      "words": "number",
+      "chunkSize": "number",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
+
+#### Supprimer une base de connaissances.
+- **URL** : `DELETE /v1/folders/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la base de connaissances.
+- **Description** : Supprime une base de connaissances spécifique.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "message": "string"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
+
+#### Sauvegarder des fichiers dans une base de connaissances
+- **URL** : `POST /v1/folders/:id/files`
+- **Paramètres** :
+  - `id` : Identifiant unique de la base de connaissances.
+- **Description** : Sauvegarder des fichiers dans une base de connaissances.
+- **Body** :
+  ```json
+  {
+    "filesIds": ["string"]
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": ["string"]
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
+---
+
 ### **v1/conversations**
 #### Récupérer les métriques d'une conversation
 - **URL** : `GET /v1/conversations/:id/metrics`
