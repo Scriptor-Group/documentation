@@ -580,7 +580,7 @@ Toutes les réponses suivent un format uniforme :
         "name": "string",
         "error": "string" | null,
         "payload": "string" | null,
-        "status": "IN_PROGRESS" | "COMPLETED" | "FAILED",
+        "status": "IN_PROGRESS" | "PENDING",
         "progress": "number",
         "instanceId": "string",
         "hidden": "boolean",
