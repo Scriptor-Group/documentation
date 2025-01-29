@@ -468,7 +468,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
       "id": "string",
       "name": "string",
       "size": "number",
-      "mimetype": "string"
+      "mimetype": "string",
+      "jobsId": "string"
     }
   }
   ```
