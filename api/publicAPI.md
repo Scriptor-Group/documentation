@@ -561,3 +561,32 @@ Toutes les réponses suivent un format uniforme :
 - `404 Not Found` : Ressource non trouvée.
 - `409 Conflict` : Conflit lors du traitement.
 - `500 Internal Server Error` : Erreur interne du serveur.
+
+### v1/jobs
+#### Récupérer les jobs en cours d'un utilisateur
+- **URL** : `GET /v1/jobs/:targetId?`
+- **Paramètres** :
+  - `targetId` : Identifiant unique du jobs (optionnel).
+- **Description** : Retourne les jobs en cours d'un utilisateur.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+        "targetId": "string",
+        "userId": "string",
+        "name": "string",
+        "error": "string" | null,
+        "payload": "string" | null,
+        "status": "IN_PROGRESS" | "COMPLETED" | "FAILED",
+        "progress": "number",
+        "instanceId": "string",
+        "hidden": "boolean",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    ]
+  }
+  ```
