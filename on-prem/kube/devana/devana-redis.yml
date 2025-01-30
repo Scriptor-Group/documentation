@@ -2,29 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis-devana
-  namespace: devana-production
-  labels:
-    app: devana-redis
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: devana-redis
-      tier: redis
   template:
     metadata:
       labels:
         app: devana-redis
-        tier: redis
     spec:
       containers:
         - name: redis
-          image: redis
-          command: ["redis-server"]
-          args: ["--requirepass", "default-redis-password"]  # Use a secret for REDIS_PASSWORD
-          ports:
-            - containerPort: 6379
-              name: redis
           resources:
             limits:
               cpu: "0.5"
@@ -32,16 +21,27 @@ spec:
             requests:
               cpu: "0.1"
               memory: "256Mi"
+          image: redis
+          ports:
+            - containerPort: 6379
+          command: ["redis-server"]
+          args:
+            - "--requirepass"
+            - "$(REDIS_PASSWORD)"
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: REDIS_PASSWORD
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: devana-redis-service
-  namespace: devana-production
 spec:
   selector:
     app: devana-redis
-    tier: redis
   ports:
     - protocol: TCP
       port: 6379
