@@ -24,7 +24,7 @@ Assurez-vous que votre CLI (kubectl ou oc) est configurée pour se connecter à 
 
 ### Créer le Secret Docker Registry
 
-Exécutez la commande suivante pour créer un stockage des secrets imag pul
+Exécutez la commande suivante pour créer un secret permettant de récupérer les images depuis le registre Devana :
 
 ```bash
 kubectl create secret docker-registry devana-registry \
