@@ -2,9 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devana-meilisearch
-  namespace: devana-production
-  labels:
-    app: devana
 spec:
   replicas: 1
   selector:
@@ -14,11 +11,9 @@ spec:
     metadata:
       labels:
         app: devana-meilisearch
-        tier: devana-meilisearch
     spec:
       containers:
         - name: devana-meilisearch
-          image: getmeili/meilisearch:v1.9
           resources:
             limits:
               cpu: "4"
@@ -26,26 +21,26 @@ spec:
             requests:
               cpu: "100m"
               memory: "256Mi"
+          image: getmeili/meilisearch:v1.9
           ports:
             - containerPort: 7700
           env:
             - name: MEILI_MASTER_KEY
               value: "EXAMPLE_MASTER_KEY"
           volumeMounts:
-            - name: meilisearch-volume-staging-mount
+            - name: meilisearch-volume
               mountPath: /meili_data
+      volumes:
+        - name: meilisearch-volume
+          persistentVolumeClaim:
+            claimName: meilisearch
       imagePullSecrets:
         - name: registry-secret-scriptor
-      volumes:
-        - name: meilisearch-volume-staging-mount
-          persistentVolumeClaim:
-            claimName: meilisearch-pvc-staging
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: meilisearch-pvc-staging
-  namespace: devana-production
+  name: meilisearch
 spec:
   accessModes:
     - ReadWriteOnce
@@ -58,11 +53,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: devana-meilisearch-service
-  namespace: devana-production
 spec:
   selector:
     app: devana-meilisearch
-    tier: devana-meilisearch
   ports:
     - protocol: TCP
       port: 7700

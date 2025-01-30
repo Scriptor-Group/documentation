@@ -7,24 +7,36 @@ Ce document détaille le processus complet de déploiement des services Devana s
 - [Configuration des Variables d'Environnement](#configuration-des-variables-denvironnement)
 - [Déploiement](#déploiement)
 - [Vérification](#vérification)
-- [Accès aux Services](#accès-aux-services)
+- [Résolution des Problèmes Courants](#résolution-des-problèmes-courants)
 
 ## Prérequis
 
+### Technologies nécessaires
+Pour déployer Devana sur un cluster Kubernetes ou OpenShift, vous devez disposer du CLI approprié :
+
+- kubectl pour Kubernetes
+- oc pour OpenShift
+Assurez-vous que votre CLI (kubectl ou oc) est configurée pour se connecter à votre cluster et que vous disposez des autorisations nécessaires (souvent un compte administrateur ou un compte avec des droits suffisants sur le namespace ciblé).
+
+:warning: Pour le cas d'OpenShift, il faut au préalable autoriser la politique de sécurité `anyuid` dans votre projet. Cela peut se faire avec la commande suivante : 
+
+`oc adm policy add-scc-to-user anyuid -z default -n $(oc project -q)`
+
 ### Créer le Secret Docker Registry
 
-Exécutez la commande suivante pour créer un secret nommé `regcred` :
+Exécutez la commande suivante pour créer un secret permettant de récupérer les images depuis le registre Devana :
 
 ```bash
-kubectl create secret docker-registry regcred \
+kubectl create secret docker-registry devana-registry \
   --docker-server=registry.devana.ai \
   --docker-username=<YOUR_USERNAME> \
   --docker-password=<YOUR_PASSWORD> \
-  --docker-email=<YOUR_EMAIL> \
-  --namespace=<NAMESPACE>
 ```
 
-Remplacez les valeurs `<YOUR_USERNAME>`, `<YOUR_PASSWORD>`, `<YOUR_EMAIL>` et `<NAMESPACE>` par vos informations d'identification pour le registre Docker de Devana.
+Remplacez les valeurs `<YOUR_USERNAME>` et `<YOUR_PASSWORD>` par vos informations d'identification pour le registre Docker de Devana.
+
+>**Remarque :**
+>- Si vous utilisez OpenShift, la même commande oc apply -f ... peut s’utiliser.
 
 ### Créer le Cluster Issuer
 
@@ -143,23 +155,32 @@ Appliquez la configuration des secrets :
 kubectl apply -f secrets/secrets.yaml
 ```
 
-### 2. Déploiement de l'API
-
-Déployez le service API :
-
-```bash
-kubectl apply -f api/api-deployment.yaml
-```
-
-### 3. Déploiement des Services Additionnels
+### 2. Déploiement des Services Additionnels
 
 Déployez les autres services nécessaires dans l'ordre suivant :
 
 ```bash
-kubectl apply -f database/
-kubectl apply -f redis/
-kubectl apply -f storage/
-kubectl apply -f worker/
+kubectl apply -f devana/devana-meilisearch.yml
+kubectl apply -f devana/devana-redis.yml
+kubectl apply -f devana/devana-postgres.yml
+kubectl apply -f devana/devana-docx.yml
+kubectl apply -f devana/devana-vectors.yml
+```
+
+### 3. Déploiement de l'API
+
+Déployez le service API :
+
+```bash
+kubectl apply -f devana/devana-api.yml
+```
+
+### 4. Déploiement du Front-End
+
+Déployez le service Front-End :
+
+```bash
+kubectl apply -f devana/devana-front.yml
 ```
 
 ## Vérification
@@ -167,64 +188,13 @@ kubectl apply -f worker/
 Vérifiez l'état des pods :
 
 ```bash
-kubectl get pods -n <NAMESPACE>
+kubectl get pods
 ```
 
 Vérifiez les logs des pods en cas d'erreur :
 
 ```bash
-kubectl logs <POD_NAME> -n <NAMESPACE>
-```
-
-## Accès aux Services
-
-### Port-Forward Local
-
-Pour accéder localement aux services :
-
-```bash
-# API
-kubectl port-forward svc/api 8080:80 -n <NAMESPACE>
-
-# Base de données
-kubectl port-forward svc/postgres 5432:5432 -n <NAMESPACE>
-
-# Redis
-kubectl port-forward svc/redis 6379:6379 -n <NAMESPACE>
-```
-
-### Configuration des Ingress
-
-Pour exposer les services publiquement, assurez-vous que vos ingress sont correctement configurés dans le fichier `ingress/ingress.yaml` et appliquez-les :
-
-```bash
-kubectl apply -f ingress/ingress.yaml
-```
-
-## Support et Maintenance
-
-### Logs et Monitoring
-
-Consultez les logs des services :
-
-```bash
-kubectl logs -f deployment/api -n <NAMESPACE>
-```
-
-### Mise à jour des Services
-
-Pour mettre à jour un service :
-
-```bash
-kubectl rollout restart deployment <SERVICE_NAME> -n <NAMESPACE>
-```
-
-### Scaling
-
-Pour ajuster le nombre de réplicas :
-
-```bash
-kubectl scale deployment <SERVICE_NAME> --replicas=<NUMBER> -n <NAMESPACE>
+kubectl logs <POD_NAME>
 ```
 
 ## Résolution des Problèmes Courants
@@ -240,5 +210,9 @@ kubectl scale deployment <SERVICE_NAME> --replicas=<NUMBER> -n <NAMESPACE>
 3. **Erreurs de Certificats SSL**
    - Vérifiez la configuration du Cluster Issuer
    - Assurez-vous que les domaines sont correctement configurés
+
+4. **Problème avec la license devana**
+   - Assurez-vous d'avoir autorisé la connection vers `l.devana.ai`
+   - Vérifiez que votre clé de license est valide ainsi que présente et à jour dans le secret registry `secret-devana`.
 
 Pour toute assistance supplémentaire, contactez le support technique de Devana.
