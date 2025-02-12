@@ -159,14 +159,7 @@ Le cluster Kubernetes est au cœur de l'infrastructure et gère les différents 
 
 ```mermaid
 flowchart LR
-    %% Styles personnalisés
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
-    classDef container fill:#e9ecef,stroke:#666,stroke-width:2px
-    classDef nginx fill:#e9ecef,stroke-dasharray: 5 5,stroke:#666,stroke-width:2px
-    classDef user fill:#48cae4,color:white,stroke:#333,stroke-width:2px
-    classDef envBuildtime stroke:#ff4d4d,color:#ff4d4d,stroke-width:2px
-    classDef envRuntime stroke:#1E90FF,color:#1E90FF,stroke-width:2px
-    classDef port fill:#fff,stroke:#333,stroke-width:1px,color:#333
+   
     
     %% Utilisateurs
     Users((Utilisateurs)):::user
@@ -219,10 +212,7 @@ flowchart LR
     RouterNginx -.- EnvGraphQL --> GraphQL
     RouterNginx -.- EnvWS --> WS
 
-    %% Styles des conteneurs
-    style Front fill:#f5f5f5,stroke:#333,stroke-width:2px
-    style Api fill:#f5f5f5,stroke:#333,stroke-width:2px
-    style Nginx fill:#f5f5f5,stroke-dasharray: 5 5,stroke:#666
+
 ```
 
 ## Compatibilité
