@@ -18,92 +18,141 @@ Voici un diagramme expliquant l'architecture de l'infrastructure Devana pour le 
 
 ```mermaid
 graph TD
-    %% External Services
+    %% Définition des sous-graphes
     subgraph External["Services Externes"]
-        PS[PostgreSQL Server]
-        RD[Redis]
-        S3[Bucket S3]
-        LLM[Serveur LLM]
-        VS[Serveur Vision]
-        ES[Serveur Embedding]
-    end
-    %% Kubernetes Components
-    subgraph Kubernetes["Cluster Kubernetes"]
-        %% Deployments rangés horizontalement
-        subgraph Deployments
-            direction LR
-            D1[deploy-api]
-            D2[deploy-frontend]
-            D3[deploy-vectordb]
-            D4[deploy-parser]
-            D5[deploy-meilisearch]
+        subgraph Databases["Bases de données"]
+            PS[PostgreSQL]
+            RD[Redis]
         end
-        %% Pods alignés avec leurs deployments
-        P1[pod-api]
-        P2[pod-frontend]
-        P3[pod-vectordb]
-        P4[pod-parser]
-        P5[pod-meilisearch]
-        %% Applications
-        API[API]
-        FE[Front-end]
-        VDB[Vectorial DB]
-        DP[Document parser]
-        MS[Meilisearch]
-        %% Services
-        SVC1[svc-api]
-        SVC2[svc-frontend]
-        SVC3[svc-vectordb]
-        SVC4[svc-parser]
-        SVC5[svc-meilisearch]
-        %% Ingress et SSL
+        subgraph AI["Services IA"]
+            LLM[LLM Server]
+            VS[Vision Server]
+            ES[Embedding Server]
+        end
+        S3[S3 Bucket]
+    end
+
+    subgraph Kubernetes["Cluster Kubernetes"]
+        subgraph MessageBroker["Message Broker"]
+            RMQD[deploy-rabbitmq]
+            RMQP[pod-rabbitmq]
+            RMQ[RabbitMQ]
+        end
+
+        subgraph Core["Services Principaux"]
+            subgraph FrontendStack["Frontend"]
+                D2[deploy-frontend]
+                P2[pod-frontend]
+                FE[Frontend App]
+                SVC2[svc-frontend]
+            end
+
+            subgraph APIStack["API"]
+                D1[deploy-api]
+                P1[pod-api]
+                API[API Service]
+                SVC1[svc-api]
+            end
+        end
+
+        subgraph Search["Services de Recherche"]
+            subgraph VectorDB["Base Vectorielle"]
+                D3[deploy-vectordb]
+                P3[pod-vectordb]
+                VDB[Vector DB]
+                SVC3[svc-vectordb]
+            end
+
+            subgraph SearchEngine["Moteur de Recherche"]
+                D5[deploy-meilisearch]
+                P5[pod-meilisearch]
+                MS[Meilisearch]
+                SVC5[svc-meilisearch]
+            end
+        end
+
+        subgraph Parser["Service Parser"]
+            D4[deploy-parser]
+            P4[pod-parser]
+            DP[Odin]
+            SVC4[svc-parser]
+        end
+
         ING[Ingress]
         SSL[SSL Termination]
     end
-    %% Users à droite
-    U[User]
-    AT[Agent Teams]
-    %% Connexions verticales pour deployments et pods
-    D1 --> P1
+
+    %% Users
+    subgraph Users["Utilisateurs"]
+        U[Users]
+        AT[Teams Agents]
+    end
+
+    %% Connexions dans MessageBroker
+    RMQD --> RMQP
+    RMQP --> RMQ
+
+    %% Connexions Frontend
     D2 --> P2
-    D3 --> P3
-    D4 --> P4
-    D5 --> P5
-    %% Connexions pods vers applications
-    P1 --> API
     P2 --> FE
-    P3 --> VDB
-    P4 --> DP
-    P5 --> MS
-    %% Connexions applications vers services
-    API --> SVC1
     FE --> SVC2
+
+    %% Connexions API
+    D1 --> P1
+    P1 --> API
+    API --> SVC1
+
+    %% Connexions VectorDB
+    D3 --> P3
+    P3 --> VDB
     VDB --> SVC3
-    DP --> SVC4
+
+    %% Connexions Meilisearch
+    D5 --> P5
+    P5 --> MS
     MS --> SVC5
-    %% Connexions vers Ingress
-    SVC1 --> ING
-    SVC2 --> ING
-    ING --> SSL
-    %% Connexions externes vers API
+
+    %% Connexions Parser
+    D4 --> P4
+    P4 --> DP
+    DP --> SVC4
+
+    %% Connexions Message Queue
+    API --> RMQ
+    RMQ --> DP
+
+    %% Connexions vers External Services
     PS -.-> API
     RD -.-> API
     S3 -.-> API
     LLM -.-> API
     VS -.-> API
     ES -.-> API
+
     %% Connexions inter-services
     API --> VDB
-    API --> DP
     API --> MS
     FE --> API
+
+    %% Connexions Ingress
+    SVC1 --> ING
+    SVC2 --> ING
+    ING --> SSL
+
     %% Connexions utilisateurs
     U --> SSL
     AT --> SSL
+
     %% Styles
-    style External fill:#f5f5f5
-    style Kubernetes fill:#f0f8ff
-    %% Direction générale du graphe
+    classDef external fill:#f5f5f5,stroke:#333,stroke-width:2px
+    classDef kubernetes fill:#f0f8ff,stroke:#333,stroke-width:2px
+    classDef service fill:#fff,stroke:#333,stroke-width:1px
+    
+    class External external
+    class Kubernetes kubernetes
+    class API,FE,VDB,MS,DP,RMQ service
+
+    %% Direction générale
     direction TB
 ```
 
@@ -198,7 +247,7 @@ Avant de procéder à l'installation de Devana, assurez-vous que votre infrastru
 
 Pour garantir des performances optimales de l'application Devana, il est important de dimensionner correctement les ressources allouées à chaque pod. Voici quelques recommandations pour les principaux composants :
 
-### Document parser
+### Odin (Ex: Document parser)
 
 - CPU : **4 vCPU** (selon la quantité de documents à traiter)
 - RAM : **4 Go**
@@ -224,13 +273,36 @@ Pour garantir des performances optimales de l'application Devana, il est importa
 
 > Nous recommandons d'utiliser un réplica set de minimum 2 pods pour garantir la haute disponibilité.
 
-### Vectorial DB
+Je vais vous donner les recommandations minimales pour RabbitMQ en production, en suivant le même format que les autres services :
+
+### RabbitMQ
+- CPU : **2 vCPU**
+- RAM : **4 Go**
+- Disque : **8 Go**
+
+Cette configuration minimale est basée sur :
+- Le traitement d'environ 1000-2000 messages/seconde
+- Une taille moyenne de message de 1 KB
+- Une rétention courte des messages (pas d'accumulation)
+
+Si vous prévoyez :
+- Un plus grand volume de messages
+- Des messages plus volumineux
+- Une rétention plus longue
+- Des pics de charge importants
+
+Il faudra augmenter les ressources en conséquence, particulièrement :
+- La RAM (jusqu'à 8-16 Go)
+- Le CPU (jusqu'à 4-8 vCPU)
+- Le stockage (selon la politique de rétention)
+
+### BDD Vectorielle
 
 - CPU : 4 vCPU (selon la taille de votre base de données)
-- RAM : 8 Go
+- RAM : 8 Go (selon la quantitée de données)
 - Disque : 100 Go (selon la taille de votre base de données)
 
-> Vous devez lancer un seul pod pour le service de Vectorial DB.
+> Vous devez lancer un seul pod pour le service de la base de données vectorielle.
 
 ### Redis*
 
