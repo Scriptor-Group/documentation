@@ -32,7 +32,7 @@ graph TD
         S3[S3 Bucket]
     end
 
-    subgraph Kubernetes["Cluster Kubernetes"]
+    subgraph Kubernetes["Cluster Kubernetes/OpenShift"]
         subgraph MessageBroker["Message Broker"]
             RMQD[deploy-rabbitmq]
             RMQP[pod-rabbitmq]
@@ -143,10 +143,7 @@ graph TD
     U --> SSL
     AT --> SSL
 
-    %% Styles
-    classDef external fill:#f5f5f5,stroke:#333,stroke-width:2px
-    classDef kubernetes fill:#f0f8ff,stroke:#333,stroke-width:2px
-    classDef service fill:#fff,stroke:#333,stroke-width:1px
+ 
     
     class External external
     class Kubernetes kubernetes
@@ -237,6 +234,7 @@ Le on-premise de Devana est compatible avec les principales plateformes de cloud
 
 Pour chaque plateforme, il est nécessaire de respecter les prérequis suivants :
 - Un cluster Kubernetes (version 1.19 ou supérieure) avec au moins 3 nœuds
+- Un cluster OpenShift
 - Une base de données PostgreSQL (version 12 ou supérieure)
 - Un serveur de fichiers S3 compatible
 - Un serveur Redis (version 6 ou supérieure)
