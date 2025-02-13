@@ -245,7 +245,7 @@ Odin est un multi-container pod, il est donc important de répartir les ressourc
 ### Meilisearch
 [Pour plus d'informations](https://www.meilisearch.com/docs/learn/resources/faq#faq)
 - CPU : 2 vCPU (peu impactant sur la vitesse, mais plus de cœurs permettent de gérer plus de requêtes simultanément)
-- RAM : 8 Go (plus la RAM est élevée, plus les performances sont optimisées)
+- RAM : 4 Go (plus la RAM est élevée, plus les performances sont optimisées)
 - Disque : 50 Go (minimum 10x la taille du dataset, SSD recommandé)
 
 
