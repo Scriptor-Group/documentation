@@ -2,6 +2,8 @@
 
 Ce document détaille le processus complet de déploiement des services Devana sur Kubernetes.
 
+:warning: les services ne sont pas encore à jour pour prendre en compte l'ajout prochain de Odin aka le nouveau micro-service de parsing de documents.
+
 ## Table des matières
 - [Prérequis](#prérequis)
 - [Configuration des Variables d'Environnement](#configuration-des-variables-denvironnement)
