@@ -9,6 +9,11 @@
   ```json
   {
     "success": true,
+    "data": {
+      "id": "string",
+      "like": "boolean",
+      "dislike": "boolean",
+    }
   }
   ```
 - **Erreurs possibles** :
@@ -27,6 +32,11 @@
   ```json
   {
     "success": true,
+    "data": {
+      "id": "string",
+      "like": "boolean",
+      "dislike": "boolean",
+    }
   }
   ```
 - **Erreurs possibles** :
@@ -51,6 +61,10 @@
   ```json
   {
     "success": true,
+    "data": {
+      "id": "string",
+      "comment": "string",
+    }
   }
   ```
 - **Erreurs possibles** :
@@ -71,7 +85,7 @@
     "data": {
         "like": "boolean",
         "dislike": "boolean",
-        "comment": ""
+        "comment": "string"
     }
   }
   ```
@@ -81,11 +95,11 @@
   - 404 : Message non trouvé.
   - 500 : Erreur interne du serveur.
 
-## Supprimer une interaction
-- **URL** : `DELETE /v1/interactions/:interactionId`
+## Supprimer une interaction à un message
+- **URL** : `DELETE /v1/interactions/:messageId`
 - **Paramètres** :
-  - `interactionId` : Identifiant unique de l'interaction.
-- **Description** : Supprime une interaction spécifique (like, dislike et commentaire).
+  - `messageId` : Identifiant unique du message.
+- **Description** : Supprime une interaction spécifique (like, dislike et commentaire) à un message.
 - **Réponse** :
   ```json
   {
