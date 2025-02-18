@@ -11,7 +11,8 @@
     "success": true,
     "data": {
       "id": "string",
-      "fiability": "string",
+      "like": "boolean",
+      "dislike": "boolean",
     }
   }
   ```
@@ -33,7 +34,8 @@
     "success": true,
     "data": {
       "id": "string",
-      "fiability": "string",
+      "like": "boolean",
+      "dislike": "boolean",
     }
   }
   ```
@@ -83,7 +85,7 @@
     "data": {
         "like": "boolean",
         "dislike": "boolean",
-        "comment": ""
+        "comment": "string"
     }
   }
   ```
