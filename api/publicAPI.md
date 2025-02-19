@@ -409,6 +409,78 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 404 : Base de connaissances non trouvée.
   - 500 : Erreur interne du serveur.
 
+
+#### Associer des fichiers à un dossier
+- **URL** : `POST /v1/folders/:id/files`
+- **Paramètres** :
+  - `id` : Identifiant unique du dossier (CUID).
+- **Body** :
+  ```json
+  {
+    "filesIds": ["string"]
+  }
+  ```
+- **Description** : Associe des fichiers spécifiés à un dossier.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": ["string"] // IDs des nouveaux fichiers ajoutés.
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé au dossier ou fichier.
+  - 409 : Fichiers déjà associés.
+  - 500 : Erreur interne.  
+
+
+#### Récupérer les fichiers sur une base de connaissances
+- **URL** : `GET /v1/folders/:id/files`
+- **Paramètres** :
+  - `id` : Identifiant unique du dossier.
+- **Description** : Récupérer les fichiers sur une base de connaissances.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+        "name": "string",
+        "size": "number",
+        "mimetype": "string",
+      }
+    ]
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
+#### Supprimer un fichier d'une base de connaissances
+- **URL** : `DELETE /v1/folders/:id/files/:fileId`
+- **Paramètres** :
+  - `id` : Identifiant unique du dossier.
+  - `fileId` : Identifiant unique du fichier.
+- **Description** : Supprime un fichier d'une base de connaissances.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "message": "string"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Fichier ou base de connaissances non trouvée.
+  - 500 : Erreur interne du serveur.
+
 ---
 
 ### **v1/conversations**
@@ -477,32 +549,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 400 : Aucun fichier téléchargé.
   - 500 : Erreurs internes (extraction de texte, génération des embeddings).
 
----
 
-### **v1/folders**
-#### Associer des fichiers à un dossier
-- **URL** : `POST /v1/folders/:id/files`
-- **Paramètres** :
-  - `id` : Identifiant unique du dossier (CUID).
-- **Body** :
-  ```json
-  {
-    "filesIds": ["string"]
-  }
-  ```
-- **Description** : Associe des fichiers spécifiés à un dossier.
-- **Réponse** :
-  ```json
-  {
-    "success": true,
-    "data": ["string"] // IDs des nouveaux fichiers ajoutés.
-  }
-  ```
-- **Erreurs possibles** :
-  - 400 : Requête invalide.
-  - 403 : Accès non autorisé au dossier ou fichier.
-  - 409 : Fichiers déjà associés.
-  - 500 : Erreur interne.
+#### Récupérer les fichiers sur une base de connaissances
 
 ---
 
