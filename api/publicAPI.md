@@ -26,7 +26,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "model": "string",
         "publicChat": "boolean",
         "createdAt": "timestamp",
-        "updatedAt": "timestamp"
+        "updatedAt": "timestamp",
+        "folderIds": ["string"]
       }
     ]
   }
@@ -53,7 +54,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "model": "string",
         "publicChat": "boolean",
         "createdAt": "timestamp",
-        "updatedAt": "timestamp"
+        "updatedAt": "timestamp",
+        "folderIds": ["string"]
       }
     
   }
@@ -110,7 +112,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "model": "string",
         "publicChat": "boolean",
         "createdAt": "timestamp",
-        "updatedAt": "timestamp"
+        "updatedAt": "timestamp",
+        "folderIds": ["string"]
       }
     
   }
@@ -166,7 +169,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "model": "string",
         "publicChat": "boolean",
         "createdAt": "timestamp",
-        "updatedAt": "timestamp"
+        "updatedAt": "timestamp",
+        "folderIds": ["string"]
       }
     
   }
