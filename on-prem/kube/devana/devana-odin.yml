@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devana-odin
+  namespace: devana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devana-odin
+  template:
+    metadata:
+      labels:
+        app: devana-odin
+    spec:
+      containers:
+        # -------------------------
+        # Gotenberg
+        # -------------------------
+        - name: gotenberg
+          resources:
+            requests:
+              cpu: "1"
+              memory: "256Mi"
+            limits:
+              cpu: "1.5"
+              memory: "384Mi"
+          image: gotenberg/gotenberg:8
+          ports:
+            - containerPort: 3000
+        # -------------------------
+        # Application principale
+        # -------------------------
+        - name: devana-odin
+          resources:
+            requests:
+              cpu: "3"
+              memory: "2.5Gi"
+            limits:
+              cpu: "4"
+              memory: "3Gi"
+          image: rg.fr-par.scw.cloud/scriptor/odin:latest
+          ports:
+            - containerPort: 3003
+          env:
+            # Services
+            ## Gotenberg
+            - name: GOTENBERG_URL
+              value: "http://localhost:3000"
+            ## PostgreSQL
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: DATABASE_URL_ODIN
+            ## S3
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_ENDPOINT
+            - name: S3_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_REGION
+            - name: S3_PUBLIC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_PUBLIC_URL
+            - name: "S3_BUCKET"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_BUCKET
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: AWS_S3_SECRET_ACCESS_KEY
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: AWS_S3_ACCESS_KEY_ID
+            ## Redis
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: REDIS_PASSWORD
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: devana-odin
+  namespace: devana
+spec:
+  selector:
+    app: devana-odin
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
