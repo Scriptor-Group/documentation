@@ -27,7 +27,10 @@ spec:
             - containerPort: 7700
           env:
             - name: MEILI_MASTER_KEY
-              value: "EXAMPLE_MASTER_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: MEILI_MASTER_KEY
           volumeMounts:
             - name: meilisearch-volume
               mountPath: /meili_data

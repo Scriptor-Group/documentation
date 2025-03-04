@@ -4,7 +4,7 @@ metadata:
   name: devana-odin
   namespace: devana
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: devana-odin
