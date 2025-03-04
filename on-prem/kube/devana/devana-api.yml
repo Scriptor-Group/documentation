@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devana-api
+  namespace: devana
 spec:
   strategy:
     type: RollingUpdate
@@ -20,11 +21,11 @@ spec:
         - name: devana-api
           resources:
             requests:
-              cpu: "0.1"
-              memory: "400Mi"
+              cpu: "1"
+              memory: "512Mi"
             limits:
-              cpu: "8"
-              memory: "2.5Gi"
+              cpu: "2"
+              memory: "1Gi"
           image: registry.devana.ai/devana/back:latest
           ports:
             - containerPort: 4666
@@ -250,6 +251,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: devana-api-service
+  namespace: devana
 spec:
   selector:
     app: devana-api
