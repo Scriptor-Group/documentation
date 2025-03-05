@@ -37,6 +37,11 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 5
           env:
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: JWT_SECRET_KEY
             - name: NEXTAUTH_URL
               valueFrom:
                 secretKeyRef:
@@ -47,21 +52,6 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: NEXTAUTH_SECRET
-            - name: ENABLE_OPENREPLAY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: ENABLE_OPENREPLAY
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: JWT_SECRET_KEY
-            - name: ADPUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: ADPUB_TOKEN
             - name: GITHUB_ID
               valueFrom:
                 secretKeyRef:

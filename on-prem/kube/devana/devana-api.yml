@@ -39,6 +39,14 @@ spec:
             timeoutSeconds: 3
             failureThreshold: 3
           env:
+            - name: CHECKPOINT_DISABLE # Disable prisma telemetry
+              value: "1"
+            # --- Application Configuration ---
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: JWT_SECRET_KEY
             - name: LICENCE
               valueFrom:
                 secretKeyRef:
@@ -49,31 +57,27 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: PORT
-            - name: EMBEDDING
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: EMBEDDING
             - name: APPLICATION_URL
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
                   key: APPLICATION_URL
+            - name: CLIENT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: CLIENT_URI
             - name: API_URI
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
                   key: API_URI
-            - name: PDF_TO_WORD_SERVER
+            # --- Services Configuration ---
+            - name: ODIN_API_URL
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: PDF_TO_WORD_SERVER
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: JWT_SECRET_KEY
+                  key: ODIN_API_URL
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -84,6 +88,11 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: CHROMA_HOST
+            - name: CHROMA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: CHROMA_API_KEY
             - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:
@@ -99,111 +108,67 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: REDIS_PASSWORD
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: OPENAI_API_KEY
-            - name: DEEPL_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DEEPL_KEY
-            - name: ANTHROPIC_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: ANTHROPIC_API_KEY
-            - name: MISTRAL_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MISTRAL_API_KEY
-            - name: GROQ_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GROQ_API_KEY
-            - name: GEMINI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GEMINI_API_KEY
-            - name: MAILJET_TEMPLATE_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MAILJET_TEMPLATE_ID
-            - name: MAILJET_APIKEY_PUBLIC
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MAILJET_APIKEY_PUBLIC
-            - name: MAILJET_APIKEY_PRIVATE
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MAILJET_APIKEY_PRIVATE
-            - name: AWS_BEDROCK_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: AWS_BEDROCK_ACCESS_KEY_ID
-            - name: AWS_BEDROCK_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: AWS_BEDROCK_SECRET_ACCESS_KEY
             - name: AWS_S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
                   key: AWS_S3_ACCESS_KEY_ID
-            - name: AWS_S3_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: AWS_S3_ENDPOINT
-            - name: AWS_S3_REGION
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: AWS_S3_REGION
             - name: AWS_S3_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
                   key: AWS_S3_SECRET_ACCESS_KEY
-            - name: SEARCH_API_KEY
+            - name: MEILI_HOST
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: SEARCH_API_KEY
-            - name: CRAWLBASE_TOKEN
+                  key: MEILI_HOST
+            - name: MEILI_MASTER_KEY
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: CRAWLBASE_TOKEN
-            - name: TOKEN_METRICS
+                  key: MEILI_MASTER_KEY
+            - name: IMAGE_TO_IMAGE_SERVER
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: TOKEN_METRICS
-            - name: GOOGLE_APPLICATION_CLIENT_EMAIL
+                  key: IMAGE_TO_IMAGE_SERVER
+            - name: TEXT_TO_IMAGE_SERVER
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: GOOGLE_APPLICATION_CLIENT_EMAIL
-            - name: GOOGLE_APPLICATION_PRIVATE_KEY
+                  key: TEXT_TO_IMAGE_SERVER
+            - name: DEVANA_EMBEDDINGS_HOST
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: GOOGLE_APPLICATION_PRIVATE_KEY
-            - name: CLIENT_URI
+                  key: DEVANA_EMBEDDINGS_HOST
+            - name: DEVANA_EMBEDDINGS_INDEX_HOST
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: CLIENT_URI
+                  key: DEVANA_EMBEDDINGS_INDEX_HOST
+            - name: DEVANA_EMBEDDINGS_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: DEVANA_EMBEDDINGS_APIKEY
+            - name: DEVANA_EMBEDDINGS_INDEX_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: DEVANA_EMBEDDINGS_INDEX_APIKEY
+            - name: EMBEDDING
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: EMBEDDING
+            # --- Connectors Configuration ---
+            - name: OAUTH_CALLBACK_URI
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: OAUTH_CALLBACK_URI
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -234,16 +199,30 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: MICROSOFT_CLIENT_SECRET
-            - name: OAUTH_CALLBACK_URI
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: OAUTH_CALLBACK_URI
             - name: MICROSOFT_TENANT_ID
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
                   key: MICROSOFT_TENANT_ID
+            - name: JIRA_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: JIRA_CLIENT_ID
+            - name: JIRA_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: JIRA_CLIENT_SECRET
+            # Temporary needed, but don't anything
+            - name: OPENAI_API_KEY
+              value: "TOREMOVE"
+            - name: GOOGLE_APPLICATION_CLIENT_EMAIL
+              value: "TOREMOVE"
+            - name: GOOGLE_APPLICATION_PRIVATE_KEY
+              value: "TOREMOVE"
+            - name: STRIPE_SECRET_KEY
+              value: "TOREMOVE"
       imagePullSecrets:
         - name: devana-registry
 ---

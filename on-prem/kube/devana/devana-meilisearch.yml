@@ -26,6 +26,8 @@ spec:
           ports:
             - containerPort: 7700
           env:
+            - name: MEILI_NO_ANALYTICS # Disable telemetry
+              value: "true"
             - name: MEILI_MASTER_KEY
               valueFrom:
                 secretKeyRef:
