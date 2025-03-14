@@ -53,6 +53,12 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: DATABASE_URL_ODIN
+            ## API Devana
+            - name: DEVANA_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: DEVANA_API_URL
             ## S3
             - name: S3_ENDPOINT
               valueFrom:
@@ -104,7 +110,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: devana-odin
+  name: devana-odin-service
   namespace: devana
 spec:
   selector:
