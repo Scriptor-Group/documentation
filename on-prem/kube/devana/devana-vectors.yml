@@ -28,6 +28,14 @@ spec:
           env:
           - name: IS_PERSISTENT
             value: "true"
+          - name: CHROMA_SERVER_AUTH_CREDENTIALS
+            value: "CHANGEME6"
+          - name: CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER
+            value: "chromadb.auth.token.TokenConfigServerAuthCredentialsProvider"
+          - name: CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER
+            value: "AUTHORIZATION"
+          - name: CHROMA_SERVER_AUTH_PROVIDER
+            value: 'chromadb.auth.token.TokenAuthServerProvider'
           volumeMounts:
           - name: vectors-volume
             mountPath: /chroma/.chroma/index
