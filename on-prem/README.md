@@ -16,105 +16,7 @@ Bienvenue dans la documentation expliquant le fonctionnement du on-premise de De
 
 Voici un diagramme expliquant l'architecture de l'infrastructure Devana pour le on-premise :
 
-```mermaid
-graph TD
-    %% Définition des sous-graphes External
-    subgraph External["Services Externes"]
-        subgraph Databases["Bases de données"]
-            PostgreSQL[PostgreSQL]
-            Redis[Redis]
-            S3Bucket["S3 Bucket"]
-        end
-        subgraph AI["Services IA"]
-            LLMServer["LLM Server"]
-            VisionServer["Vision Server"]
-            EmbeddingServer["Embedding Server"]
-        end
-    end
-
-    %% Définition du cluster Kubernetes/OpenShift
-    subgraph Kubernetes["Cluster Kubernetes/OpenShift"]
-
-        subgraph Core["Services Principaux"]
-            subgraph FrontendStack["Frontend"]
-                PodFrontend["Pod Frontend"]
-                SvcFrontend["Svc Frontend"]
-            end
-
-            subgraph APIStack["API"]
-                PodAPI["Pod API"]
-                SvcAPI["Svc API"]
-            end
-        end
-
-        subgraph Search["Services de Recherche"]
-            subgraph VectorDB["Base Vectorielle"]
-                PodVectorDB["Pod VectorDB"]
-                SvcVectorDB["Svc VectorDB"]
-            end
-
-            subgraph SearchEngine["Moteur de Recherche"]
-                PodMeiliSearch["Pod MeiliSearch"]
-                SvcMeiliSearch["Svc MeiliSearch"]
-            end
-        end
-
-        subgraph Parser["Service Parser"]
-            subgraph OdinPod["Odin - multi-container pod"]
-                PodOdin["Pod Odin"]
-                PodGotenberg["Pod Gotenberg"]
-                PodNats["Pod Nats"]
-            end
-            SvcParser["Svc Parser"]
-        end
-
-        Ingress[Ingress]
-        SSLTermination["SSL Termination"]
-    end
-
-    %% Définition des utilisateurs
-    subgraph Users["Utilisateurs"]
-        AppUsers[Users]
-        TeamsAgents["Teams Agents"]
-    end
-
-    %% Connexions Frontend
-    SvcFrontend --> PodFrontend
-
-    %% Connexions API
-    SvcAPI --> PodAPI
-
-    %% Connexions VectorDB
-    SvcVectorDB --> PodVectorDB
-
-    %% Connexions MeiliSearch
-    SvcMeiliSearch --> PodMeiliSearch
-
-    %% Connexions vers External Services depuis l'API
-    PodAPI -.-> Databases
-    PodAPI -.-> AI
-
-    %% Connexions inter-services
-    PodAPI --> SvcVectorDB
-    PodAPI --> SvcMeiliSearch
-    PodAPI --> SvcParser
-    PodFrontend --> SvcAPI
-
-    %% Connexions Ingress et utilisateurs
-    Ingress --> SvcAPI
-    Ingress --> SvcFrontend
-    SSLTermination --> Ingress
-    AppUsers --> SSLTermination
-    TeamsAgents --> SSLTermination
-
-    %% Connexions au sein du pod Odin
-    PodOdin --> PodGotenberg
-    PodOdin --> PodNats
-    PodOdin -.-> Databases
-    SvcParser --> PodOdin
-
-    direction TB
-```
+[![Schéma Network](./assets/on-prem-network2.svg)](https://excalidraw.com/#json=IWUTffmcXZpIfPwLVADe9,2kCA4Wk5fC73tNGCHc_Fzg)
 
 Le cluster Kubernetes est au cœur de l'infrastructure et gère les différents services de l'application Devana. Il communique avec la base de données PostgreSQL pour la persistance des données, avec le serveur de fichiers S3 pour le stockage des fichiers, et avec le serveur Redis pour la mise en cache et la gestion des sessions. Concernant Redis, vous pouvez également utiliser un cluster Redis si vous souhaitez l'heberger directement dans kubernetes.
 
@@ -196,10 +98,10 @@ Avant de procéder à l'installation de Devana, assurez-vous que votre infrastru
 
 Pour garantir des performances optimales de l'application Devana, il est important de dimensionner correctement les ressources allouées à chaque pod. Voici quelques recommandations pour les principaux composants :
 
-### Odin (Ex: Document parser)
+### Odin
 
-- CPU : **4 vCPU** (selon la quantité de documents à traiter)
-- RAM : **4 Go**
+- CPU : **5.5 vCPU**
+- RAM : **3.5 Go**
 - Disque : **20 Go**
 
 Odin est un multi-container pod, il est donc important de répartir les ressources ci-dessus aux différents container du pod.
@@ -210,15 +112,15 @@ Odin est un multi-container pod, il est donc important de répartir les ressourc
 
 ### API
 
-- CPU : **4 vCPU**
-- RAM : **4 Go**
+- CPU : **2 vCPU**
+- RAM : **1 Go**
 - Disque : **10 Go**
 
 > Nous recommandons d'utiliser un réplica set de minimum 2 pods pour garantir la haute disponibilité.
 
 ### Frontend
 
-- CPU : 1 vCPU
+- CPU : 0.8 vCPU
 - RAM : 1 Go
 - Disque : 5 Go
 
@@ -226,16 +128,16 @@ Odin est un multi-container pod, il est donc important de répartir les ressourc
 
 ### BDD Vectorielle
 
-- CPU : 4 vCPU (selon la taille de votre base de données)
-- RAM : 8 Go (selon la quantitée de données)
+- CPU : 3 vCPU (selon la taille de votre base de données)
+- RAM : 1 Go (selon la quantitée de données)
 - Disque : 100 Go (selon la taille de votre base de données)
 
 > Vous devez lancer un seul pod pour le service de la base de données vectorielle.
 
 ### Redis
 
-- CPU : 1 vCPU
-- RAM : 2 Go
+- CPU : 100m vCPU
+- RAM : 128 Mo
 - Disque : 10 Go
 
 > Vous devez lancer un seul pod pour le service de Redis.
