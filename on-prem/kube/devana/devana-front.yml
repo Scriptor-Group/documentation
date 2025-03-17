@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devana-front
+  namespace: devana
 spec:
   replicas: 2
   strategy:
@@ -20,12 +21,12 @@ spec:
       containers:
         - name: devana-front
           resources:
+            requests:
+              cpu: "0.4"
+              memory: "512Mi"
             limits:
               cpu: "0.8"
               memory: "1024Mi"
-            requests:
-              cpu: "0.02"
-              memory: "108Mi"
           image: registry.devana.ai/devana/front:latest
           ports:
             - containerPort: 3000
@@ -36,6 +37,11 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 5
           env:
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: JWT_SECRET_KEY
             - name: NEXTAUTH_URL
               valueFrom:
                 secretKeyRef:
@@ -46,21 +52,6 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: NEXTAUTH_SECRET
-            - name: ENABLE_OPENREPLAY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: ENABLE_OPENREPLAY
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: JWT_SECRET_KEY
-            - name: ADPUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: ADPUB_TOKEN
             - name: GITHUB_ID
               valueFrom:
                 secretKeyRef:
@@ -103,6 +94,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: devana-front-service
+  namespace: devana
 spec:
   selector:
     app: devana-front
