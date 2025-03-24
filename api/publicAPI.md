@@ -488,6 +488,34 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 ---
 
 ### **v1/conversations**
+
+#### Récupérer les conversations
+- **URL** : `GET /v1/conversations/`
+- **Query** :
+  - `agentId` : Identifiant unique de l'agent. (optionnel)
+  - `favorite` : true ou false. (optionnel)
+- **Description** : Retourne les conversations d'un utilisateur.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+        "message": "string",
+        "date": "timestamp",
+        "favorite": "boolean",
+      }
+    ]
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Conversation ou données non trouvées.
+  - 500 : Erreur interne du serveur.
+
+
 #### Récupérer les métriques d'une conversation
 - **URL** : `GET /v1/conversations/:id/metrics`
 - **Paramètres** :
@@ -528,6 +556,34 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 403 : Accès non autorisé.
   - 404 : Conversation ou données non trouvées.
   - 500 : Erreur interne du serveur.
+
+
+#### Mettre à jour une conversation
+- **URL** : `PUT /v1/conversations/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la conversation (CUID).
+- **Description** : Met à jour une conversation spécifique.
+- **Body** :
+  ```json
+  {
+    "favorite": "boolean"
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "message": "string"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Conversation non trouvée.
+  - 500 : Erreur interne du serveur.
+
 
 ---
 
