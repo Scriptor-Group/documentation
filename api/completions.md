@@ -1,6 +1,18 @@
-# Référence de l'API
+# Completion API
 
-Cette documentation détaille l'endpoint de completion compatible avec la structure API d'OpenAI.
+Cette documentation détaille l'endpoint de completion compatible avec la structure API `v1/completions` d'OpenAI, avec des fonctionnalités complémentaires comme :
+
+- Gestion complète des historiques de conversations
+- Support des fichiers en pièces jointes
+- Configuration avancée des agents et des modèles
+- Surveillance et analytique détaillée
+- RAG score pour évaluer la qualité des réponses
+- Gestion des tools calls avec contrôle d'exécution
+- Metadata pour monitoring et logging
+- Debugging en temps réel
+- Headers complémentaires pour l'authentification des tools calls
+- Prompt dédié et sécurisé pour l'utilisateur en cours
+- Mécanisme de retry avec backoff exponentiel
 
 ## Authentification
 
@@ -9,6 +21,11 @@ L'authentification est gérée via OAuth2. Incluez votre token d'authentificatio
 ```bash
 Authorization: Bearer VOTRE_TOKEN
 ```
+
+Le système :
+
+- Hydrate automatiquement l'utilisateur à partir du token
+- Vérifie les droits d'accès aux agents
 
 ## Effectuer des requêtes
 
@@ -20,23 +37,62 @@ POST /v1/chat/completions
 
 ### Corps de la Requête
 
-| Paramètre | Type | Obligatoire | Description |
-|-----------|------|-------------|-------------|
-| `model` | string | Oui | ID du modèle à utiliser. Peut être un ID d'agent personnalisé ou l'ID de configuration Devana AI par défaut. |
-| `messages` | array | Oui | Tableau des messages composant la conversation (maximum 4 messages). |
-| `temperature` | float | Non | Contrôle l'aléatoire dans les réponses. Valeurs entre 0 et 1. |
-| `max_tokens` | integer | Non | Nombre maximum de tokens à générer. |
-| `top_p` | float | Non | Contrôle la diversité via l'échantillonnage nucleus. |
-| `n` | integer | Non | Nombre de completions à générer. |
-| `stop` | string/array | Non | Séquences où l'API arrêtera la génération. |
-| `stream` | boolean | Non | Si vrai, les deltas de messages partiels seront envoyés. |
-| `conversation_id` | string | Non | ID de la conversation existante à continuer. |
-| `lang` | string | Non | Langue pour la réponse. Par défaut, locale de l'utilisateur ou 'fr'. |
-| `files` | array | Non | Tableau des IDs de fichiers à inclure dans le contexte. |
-| `clientModel` | string | Non | Modèle spécifique à utiliser avec la configuration Devana AI. |
-| `custom` | object | Non | Options de configuration personnalisées. |
+| Paramètre           | Type         | Obligatoire | Description                                                                                                  |
+| ------------------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------ |
+| `model`             | string       | Oui         | Un ID d'agent créé dans le système.                                                                          |
+| `messages`          | array        | Oui         | Tableau des messages composant la conversation (maximum 4 messages).                                         |
+| `temperature`       | float        | Non         | Contrôle l'aléatoire dans les réponses. Valeurs entre 0 et 1. Défaut: 0.8 ou valeur configurée pour l'agent. |
+| `max_tokens`        | integer      | Non         | Nombre maximum de tokens à générer.                                                                          |
+| `top_p`             | float        | Non         | Contrôle la diversité via l'échantillonnage nucleus.                                                         |
+| `n`                 | integer      | Non         | Nombre de completions à générer.                                                                             |
+| `stop`              | string/array | Non         | Séquences où l'API arrêtera la génération.                                                                   |
+| `stopSequences`     | array        | Non         | Séquences additionnelles où l'API arrêtera la génération.                                                    |
+| `frequency_penalty` | float        | Non         | Pénalité de fréquence pour réduire la répétition.                                                            |
+| `presence_penalty`  | float        | Non         | Pénalité de présence pour encourager la nouveauté.                                                           |
+| `stream`            | boolean      | Non         | Si vrai, les deltas de messages partiels seront envoyés.                                                     |
+| `conversation_id`   | string       | Non         | ID de la conversation existante à continuer.                                                                 |
+| `response_format`   | string       | Non         | Format de réponse souhaité (par exemple, { type: "text" \| "json_object"}). (compatible selon le LLM actif)  |
+| `lang`              | string       | Non         | Langue pour la réponse. Par défaut, locale de l'utilisateur ou 'fr'.                                         |
+| `files`             | array        | Non         | Tableau des IDs de fichiers à inclure dans le contexte.                                                      |
+| `clientModel`       | string       | Non         | Modèle spécifique à utiliser avec la configuration Devana AI. Défaut: valeur de DEFAULT_MODEL.               |
+| `custom`            | object       | Non         | Options de configuration personnalisées, comme `disableAutomaticIdentity`.                                   |
+| `metadata`          | object       | Non         | Métadonnées pour le monitoring et le logging.                                                                |
+| `headers`           | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
+| `identity`          | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
 
-#### Objet Message
+### Vérifications et limites
+
+Le système effectue automatiquement plusieurs vérifications :
+
+- Maximum 4 messages par requête
+- Température entre 0 et 1
+- Présence obligatoire d'au moins un message utilisateur
+- Vérification des limites d'utilisation par utilisateur
+- Validation des droits d'accès à l'agent
+
+### Tool Calls
+
+Les outils ajoutés via l'interface par l'utilisateur sont appelés automatiquement.
+
+#### Headers envoyés aux outils
+
+```typescript
+{
+  "x-user-id": string; // ID de l'utilisateur actuel Devana (si disponible)
+  "x-agent-id": string; // ID de l'agent actuel utilisé pour la réponse
+  // Autres headers personnalisés ajoutés lors de la requête
+}
+```
+
+#### Support de confirmation des tool calls
+
+Le système prend en charge la confirmation d'exécution d'outils via un format spécial :
+
+```
+[tool:confirm:{"messageId":"ID_MESSAGE","confirm":true|false}]
+```
+
+### Objet Message
 
 ```typescript
 {
@@ -69,15 +125,24 @@ curl -X POST https://api.example.com/v1/chat/completions \
 {
   id: string;                  // ID du message
   object: "chat.completion";   // Type d'objet
-  created: number;            // Timestamp
-  model: string;              // ID du modèle utilisé
-  conversation_id: string;    // ID de conversation
+  created: number;             // Timestamp
+  model: string;               // ID du modèle utilisé
+  conversation_id: string;     // ID de conversation
+  rag_score: number;           // Score de la réponse (qualité)
+  debug: {
+    tool_calls: any[];         // Outils appelés durant la génération
+    sources: any[];            // Sources utilisées pour la réponse
+    metadata: object;          // Métadonnées additionnelles
+  };
   choices: [{
     index: number;
     message: {
       role: "assistant";
       content: string;
       tool_calls: null;
+      score: {
+        value: number;         // Score de la réponse
+      };
     };
     finish_reason: string | null;
     logprobs: null;
@@ -101,6 +166,8 @@ Quand `stream: true`, l'API renvoie un flux d'événements server-sent. Chaque �
   created: number;
   model: string;
   conversation_id: string;
+  rag_score: number | null;    // Présent uniquement dans le dernier chunk
+  debug: object | null;        // Présent uniquement dans le dernier chunk
   choices: [{
     index: number;
     delta: {
@@ -109,7 +176,7 @@ Quand `stream: true`, l'API renvoie un flux d'événements server-sent. Chaque �
     finish_reason: null | "stop";
     logprobs: null;
   }];
-  usage: {
+  usage: {                     // Mis à jour dans chaque chunk
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
@@ -117,64 +184,82 @@ Quand `stream: true`, l'API renvoie un flux d'événements server-sent. Chaque �
 }
 ```
 
-Le flux se termine par un message `[DONE]`.
+Le flux se termine par un chunk avec `finish_reason: "stop"` suivi d'un message `[DONE]`.
 
 ## Gestion des Erreurs
 
 L'API utilise les codes de réponse HTTP conventionnels :
-- `400` - Mauvaise Requête (paramètres invalides)
-- `403` - Interdit (accès refusé ou limite atteinte)
-- `404` - Non Trouvé (modèle non trouvé)
+
+- `400` - Mauvaise Requête (paramètres invalides, messages manquants, etc.)
+- `403` - Interdit (accès refusé ou limite d'utilisation atteinte)
+- `404` - Non Trouvé (modèle ou conversation non trouvé)
 - `500` - Erreur Interne du Serveur
+
+Le système implémente une stratégie de retry avec backoff exponentiel pour les erreurs temporaires :
+
+- Maximum 3 tentatives par défaut
+- Délai initial de 500ms
+- Délai doublé à chaque nouvelle tentative
 
 ### Format de Réponse d'Erreur
 
 ```typescript
 {
-  error: string  // Message d'erreur
+  error: string; // Message d'erreur détaillé
 }
 ```
 
 ## Limitation de Débit
 
 L'API inclut une limitation de débit basée sur l'utilisateur :
+
 - Les métriques utilisateur sont vérifiées avant le traitement des requêtes
 - Quand les limites sont atteintes, retourne le code status 403
 
 ## Fonctionnalités Spéciales
 
 ### Contexte de Conversation
+
 - Supporte la continuation des conversations existantes via `conversation_id`
-- Maintient l'historique des conversations et les pièces jointes
-- Suit automatiquement l'utilisation des tokens et le statut de la conversation
+- Maintient l'historique complet des conversations et les pièces jointes
+- Suit automatiquement l'utilisation des tokens (prompt et réponse)
+- Calcule et stocke les tokens de contexte pour optimiser les coûts
 
 ### Support des Fichiers
+
 - Accepte les IDs de fichiers dans la requête
 - Maintient les associations de fichiers avec les messages de conversation
-- Supporte les pièces jointes au niveau conversation et message
+- Combine automatiquement les fichiers attachés à la conversation et à la requête actuelle
 
 ### Configuration Agent/Modèle
+
 - Supporte les agents AI personnalisés et la configuration Devana AI par défaut
 - Paramètres d'identité et de comportement configurables par agent
 - Connectivité web optionnelle pour des réponses améliorées
+- Gestion des versions du chat par agent
 
 ### Surveillance et Analytique
-- Suit les requêtes réseau
-- Enregistre le statut de vérification et le scoring
+
+- Suit les requêtes réseau détaillées
+- Enregistre le statut de vérification et le scoring précis
 - Supporte l'attribution des sources pour les réponses
 - Maintient des métriques détaillées d'utilisation des tokens
+- Fournit un système de debug en temps réel
 
 ### Particularités
-- Mode Chappie disponible pour certains agents
+
+- **Mode Chappie** disponible pour certains agents (vérification automatique)
 - Gestion automatique de la langue selon les préférences utilisateur
 - Support multi-modèles avec possibilité de spécifier le modèle client
 - Vérification automatique des droits d'accès aux agents
+- Gestion des statuts de conversation (PENDING, DONE, ERROR)
 
 # Exemples d'Utilisation
 
 ## Conversation Simple
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
@@ -192,6 +277,7 @@ curl -X POST https://api.example.com/v1/chat/completions \
 ```
 
 ### Réponse
+
 ```json
 {
   "id": "msg_123abc",
@@ -199,13 +285,22 @@ curl -X POST https://api.example.com/v1/chat/completions \
   "created": 1698152365,
   "model": "default-agent",
   "conversation_id": "conv_456def",
+  "rag_score": 0.95,
+  "debug": {
+    "tool_calls": null,
+    "sources": null,
+    "metadata": null
+  },
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
         "content": "La capitale de la France est Paris.",
-        "tool_calls": null
+        "tool_calls": null,
+        "score": {
+          "value": 0.95
+        }
       },
       "finish_reason": "stop",
       "logprobs": null
@@ -222,6 +317,7 @@ curl -X POST https://api.example.com/v1/chat/completions \
 ## Conversation avec Historique
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
@@ -241,6 +337,7 @@ curl -X POST https://api.example.com/v1/chat/completions \
 ## Utilisation du Streaming
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
@@ -258,14 +355,17 @@ curl -X POST https://api.example.com/v1/chat/completions \
 ```
 
 ### Réponse (flux d'événements)
+
 ```
-data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":"Il"},"finish_reason":null,"logprobs":null}]}
+data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":"Il"},"finish_reason":null,"logprobs":null}],"usage":{"prompt_tokens":5,"completion_tokens":1,"total_tokens":6}}
 
-data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":" était"},"finish_reason":null,"logprobs":null}]}
+data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":" était"},"finish_reason":null,"logprobs":null}],"usage":{"prompt_tokens":5,"completion_tokens":2,"total_tokens":7}}
 
-data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":" une"},"finish_reason":null,"logprobs":null}]}
+data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","choices":[{"index":0,"delta":{"content":" une"},"finish_reason":null,"logprobs":null}],"usage":{"prompt_tokens":5,"completion_tokens":3,"total_tokens":8}}
 
 ...
+
+data: {"id":"msg_789ghi","object":"chat.completion.chunk","created":1698152366,"model":"default-agent","conversation_id":"conv_456def","rag_score":0.87,"debug":{"tool_calls":[],"sources":null,"metadata":{}},"choices":[{"index":0,"delta":{"content":""},"finish_reason":"stop","logprobs":null}],"usage":{"prompt_tokens":5,"completion_tokens":150,"total_tokens":155}}
 
 data: [DONE]
 ```
@@ -273,6 +373,7 @@ data: [DONE]
 ## Conversation avec Fichiers
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
@@ -290,9 +391,10 @@ curl -X POST https://api.example.com/v1/chat/completions \
   }'
 ```
 
-## Utilisation d'un Agent Personnalisé avec Configuration Spécifique
+## Utilisation d'un Agent Personnalisé avec Debug et Identité
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
@@ -308,84 +410,81 @@ curl -X POST https://api.example.com/v1/chat/completions \
     "lang": "fr",
     "custom": {
       "disableAutomaticIdentity": true
+    },
+    "identity": {
+      "name": "Conseiller Juridique",
+      "expertise": "Droit Civil"
+    },
+    "metadata": {
+      "sessionContext": "consultation",
+      "clientSector": "Assurance"
     }
   }'
 ```
 
-## Conversation Multi-tours avec Température Basse
+## Confirmation d'Exécution d'Outil
 
 ### Requête
+
 ```bash
 curl -X POST https://api.example.com/v1/chat/completions \
   -H "Authorization: Bearer VOTRE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "default-agent",
-    "messages": [
-      {
-        "role": "system",
-        "content": "Tu es un assistant spécialisé en mathématiques"
-      },
-      {
-        "role": "user",
-        "content": "Quel est le théorème de Pythagore?"
-      },
-      {
-        "role": "assistant",
-        "content": "Le théorème de Pythagore établit que dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés."
-      },
-      {
-        "role": "user",
-        "content": "Peux-tu me donner un exemple concret?"
-      }
-    ],
-    "temperature": 0.2
-  }'
-```
-
-## Utilisation avec Modèle Client Spécifique
-
-### Requête
-```bash
-curl -X POST https://api.example.com/v1/chat/completions \
-  -H "Authorization: Bearer VOTRE_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "devana-ai",
-    "clientModel": "gpt-4",
+    "conversation_id": "conv_456def",
     "messages": [
       {
         "role": "user",
-        "content": "Analyse les tendances du marché de l'IA"
+        "content": "[tool:confirm:{\"messageId\":\"msg_123abc\",\"confirm\":true}]"
       }
-    ],
-    "max_tokens": 500
+    ]
   }'
 ```
 
-# Conseils d'Utilisation
+## Gestion d'Erreur et Retry
+
+### Exemple de Réponse d'Erreur
+
+```json
+{
+  "error": "Limit reached"
+}
+```
+
+# Conseils d'Utilisation Avancés
 
 1. **Gestion des Tokens**
-   - Surveillez l'utilisation des tokens dans les réponses
-   - Ajustez `max_tokens` selon vos besoins
-   - Utilisez le streaming pour les réponses longues
+
+   - Surveillez l'utilisation des tokens dans les réponses pour estimer les coûts
+   - Ajustez `max_tokens` selon vos besoins spécifiques
+   - Le système calcule automatiquement les tokens pour le prompt et la réponse
 
 2. **Optimisation des Réponses**
-   - Utilisez une température basse (0.1-0.3) pour des réponses factuelles
-   - Augmentez la température (0.7-0.9) pour des réponses plus créatives
-   - Ajustez `top_p` pour contrôler la diversité des réponses
 
-3. **Performance**
-   - Limitez le nombre de messages dans l'historique
-   - Utilisez le streaming pour une meilleure expérience utilisateur
-   - Gérez correctement les timeouts côté client
+   - Utilisez une température basse (0.1-0.3) pour des réponses factuelles précises
+   - Augmentez la température (0.7-0.9) pour des réponses plus créatives et variées
+   - Ajustez `frequency_penalty` et `presence_penalty` pour contrôler la répétition
 
-4. **Gestion des Erreurs**
-   - Implémentez une logique de retry avec backoff exponentiel
-   - Surveillez les codes d'erreur HTTP
-   - Vérifiez les limites d'utilisation
+3. **Performance et Stabilité**
 
-5. **Bonnes Pratiques**
-   - Stockez les `conversation_id` pour maintenir le contexte
-   - Utilisez des systèmes de cache appropriés
-   - Implementez une gestion robuste des événements en streaming
+   - Utilisez le streaming pour une meilleure expérience utilisateur sur les réponses longues
+   - Implémentez une logique de retry côté client (le serveur a déjà un backoff exponentiel)
+   - Pour les environnements critiques, surveillez activement les métriques d'utilisation
+
+4. **Gestion du Contexte**
+
+   - Stockez les `conversation_id` pour maintenir le contexte entre les sessions
+   - Limitez le nombre de messages dans vos requêtes (maximum 4)
+   - Utilisez les fichiers pour fournir plus de contexte sans augmenter le nombre de messages
+
+5. **Debugging**
+
+   - Activez les métadonnées pour obtenir des informations détaillées sur le traitement
+   - Utilisez le mode streaming pour voir la progression de la génération
+   - Exploitez les informations de debug pour améliorer vos prompts
+
+6. **Sécurité**
+   - Utilisez des headers personnalisés pour l'authentification des tools calls
+   - Gérez correctement les confirmations d'exécution pour les outils critiques
+   - Validez les entrées utilisateur avant de les envoyer à l'API
