@@ -52,6 +52,10 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `TOOLMODEL_MODEL` : Modèle LLM à utiliser pour l'appel des outils
 - `TOOLMODEL_API_KEY` : Clé d'API pour le LLM d'appel aux outils
 - `TOOLMODEL_BASE_URL` : URL de base pour le LLM qui s'occupe des appels d'outils
+- `DEVANA_EMBEDDINGS_INDEX_MODEL` : Modèle LLM à utiliser pour l'indexation des embeddings
+- `DEVANA_EMBEDDINGS_INDEX_APIKEY` : Clé d'API pour le LLM d'indexation des embeddings
+- `DEVANA_EMBEDDINGS_INDEX_HOST` : URL de base pour le LLM qui s'occupe de l'indexation des embeddings
+- `SCALEWAY_API_KEY` : Clé d'API Scaleway pour l'inférence LLM
 - ... (d'autres variables d'environnement peuvent être nécessaires en fonction de la configuration de votre application)
 
 ## Déploiement
