@@ -43,10 +43,12 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `OPENAI_API_KEY` : Clé d'API OpenAI (nécessaire pour utiliser les fonctionnalités d'IA)
 - `OPENAI_API_URL` : URL de l'API OpenAI (par défaut : `https://api.openai.com`)
 - `OPENAI_MODEL` : Modèle d'IA OpenAI à utiliser (par défaut : `gpt-3.5-turbo`)
+- `ENABLE_PROXY` : Activer ou désactiver l'utilisation d'un proxy pour les requêtes sortantes (par défaut : `false`)
 - `HTTP_PROXY`: Proxy HTTP à utiliser pour les requêtes sortantes
 - `HTTPS_PROXY`: Proxy HTTPS à utiliser pour les requêtes sortantes
 - `NO_PROXY`: Liste des adresses IP ou noms de domaine à exclure des proxies (séparés par des virgules)
 - `PROXY_FORCE_HTTP`: Forcer l'utilisation du proxy HTTP pour toutes les requêtes sortantes qui sont normalement en HTTPS (par défaut : `false`)
+- `MAX_TOKENS_TOOLS_CALLBACK` : Nombre maximum de tokens à retourner lors de l'appel aux outils ajoutés par l'utilisateur (par défaut : 20 000 tokens)
 - ... (d'autres variables d'environnement peuvent être nécessaires en fonction de la configuration de votre application)
 
 ## Déploiement
