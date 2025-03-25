@@ -49,6 +49,9 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `NO_PROXY`: Liste des adresses IP ou noms de domaine à exclure des proxies (séparés par des virgules)
 - `PROXY_FORCE_HTTP`: Forcer l'utilisation du proxy HTTP pour toutes les requêtes sortantes qui sont normalement en HTTPS (par défaut : `false`)
 - `MAX_TOKENS_TOOLS_CALLBACK` : Nombre maximum de tokens à retourner lors de l'appel aux outils ajoutés par l'utilisateur (par défaut : 20 000 tokens)
+- `TOOLMODEL_MODEL` : Modèle LLM à utiliser pour l'appel des outils
+- `TOOLMODEL_API_KEY` : Clé d'API pour le LLM d'appel aux outils
+- `TOOLMODEL_BASE_URL` : URL de base pour le LLM qui s'occupe des appels d'outils
 - ... (d'autres variables d'environnement peuvent être nécessaires en fonction de la configuration de votre application)
 
 ## Déploiement
