@@ -57,6 +57,10 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `DEVANA_EMBEDDINGS_INDEX_HOST` : URL de base pour le LLM qui s'occupe de l'indexation des embeddings
 - `SCALEWAY_API_KEY` : Clé d'API Scaleway pour l'inférence LLM
 - `ENCRYPTION_KEY` : [On-Prem] Permet le chiffrement des identifiants pour les configurations Sharepoint On-Premises
+  - Longueur de la clé :La longueur de la clé doit correspondre à une des tailles acceptées par l'AES (128, 192 ou 256 bits).
+    - AES-128: nécessite une clé de 128 bits (16 octets).
+    - AES-192: nécessite une clé de 192 bits (24 octets).
+    - AES-256: nécessite une clé de 256 bits (32 octets).
 - `SKIP_LIBRARY` : [On-Prem & Cloud] Tableau de bibliothèque Sharepoint à scopé pour les sites Sharepoint. `Exemple: ["Documents", "Site Pages", "Pages"]`
 - `GOOGLE_CLIENT_ID` : [Cloud]	L'identifiant client de votre application Google Drive	
 - `GOOGLE_CLIENT_SECRET` : [Cloud] Le secret client de votre application Google Drive
