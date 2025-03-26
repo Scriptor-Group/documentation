@@ -56,6 +56,17 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `DEVANA_EMBEDDINGS_INDEX_APIKEY` : Clé d'API pour le LLM d'indexation des embeddings
 - `DEVANA_EMBEDDINGS_INDEX_HOST` : URL de base pour le LLM qui s'occupe de l'indexation des embeddings
 - `SCALEWAY_API_KEY` : Clé d'API Scaleway pour l'inférence LLM
+- `ENCRYPTION_KEY` : [On-Prem] Permet le chiffrement des identifiants pour les configurations Sharepoint On-Premises
+- `SKIP_LIBRARY` : [On-Prem & Cloud] Tableau de bibliothèque Sharepoint à scopé pour les sites Sharepoint. `Exemple: ["Documents", "Site Pages", "Pages"]`
+- `GOOGLE_CLIENT_ID` : [Cloud]	L'identifiant client de votre application Google Drive	
+- `GOOGLE_CLIENT_SECRET` : [Cloud] Le secret client de votre application Google Drive
+- `DROPBOX_CLIENT_ID` : [Cloud]	L'identifiant client de votre application Dropbox	
+- `DROPBOX_CLIENT_SECRET` : [Cloud] Le secret client de votre application Dropbox	
+- `MICROSOFT_CLIENT_ID` : [Cloud] L'identifiant client de votre application Microsoft OneDrive	
+- `MICROSOFT_CLIENT_SECRET` : [Cloud] Le secret client de votre application Microsoft OneDrive	
+- `OAUTH_CALLBACK_URI` : [Cloud] L'URL de redirection pour gérer l'authentification	
+- `JIRA_CLIENT_ID` : [Cloud] L'identifiant client de votre application Jira	
+- `JIRA_CLIENT_SECRET` : [Cloud] Le secret client de votre application Jira
 - ... (d'autres variables d'environnement peuvent être nécessaires en fonction de la configuration de votre application)
 
 ## Déploiement
