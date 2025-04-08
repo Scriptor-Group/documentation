@@ -673,9 +673,16 @@ Toutes les réponses suivent un format uniforme :
 
 ### v1/jobs
 #### Récupérer les jobs en cours d'un utilisateur
-- **URL** : `GET /v1/jobs/:targetId?`
-- **Paramètres** :
-  - `targetId` : Identifiant unique du jobs (optionnel).
+- **URL** : `GET /v1/jobs`
+- **Query** :
+  - `limit` :  Le nombre de jobs maximum à retourner. (optionnel)
+  - `offset` : Le nombre de jobs à skip. (optionnel)
+  - `type` : Le type de jobs à retourner (PENDING, IN_PROGRESS, DONE, ERROR). (optionnel)
+  - `targetId` : La cible du job. (optionnel)
+
+> 🛑 **Note** : Le paramètre `targetId` était précédemment passé en `params`. **Il doit désormais être passé en query.**  
+> Les anciennes méthodes sont **dépréciées** et seront supprimées dans les futures versions de l'API Devana.  
+
 - **Description** : Retourne les jobs en cours d'un utilisateur.
 - **Réponse** :
   ```json
