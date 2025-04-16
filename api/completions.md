@@ -8,7 +8,7 @@ Cette documentation détaille l'endpoint de completion compatible avec la struct
 - Surveillance et analytique détaillée
 - RAG score pour évaluer la qualité des réponses
 - Gestion des tools calls avec contrôle d'exécution
-- Metadata pour monitoring et logging
+- Metadata pour les dashboards et logging via webhooks (Si configurés)
 - Debugging en temps réel
 - Headers complémentaires pour l'authentification des tools calls
 - Prompt dédié et sécurisé pour l'utilisateur en cours
@@ -56,7 +56,7 @@ POST /v1/chat/completions
 | `files`             | array        | Non         | Tableau des IDs de fichiers à inclure dans le contexte.                                                      |
 | `clientModel`       | string       | Non         | Modèle spécifique à utiliser avec la configuration Devana AI. Défaut: valeur de DEFAULT_MODEL.               |
 | `custom`            | object       | Non         | Options de configuration personnalisées, comme `disableAutomaticIdentity`.                                   |
-| `metadata`          | object       | Non         | Métadonnées pour le monitoring et le logging.                                                                |
+| `metadata`          | object       | Non         | Metadata pour les dashboards et logging via webhooks (Si configurés).                                        |
 | `headers`           | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
 | `identity`          | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
 
