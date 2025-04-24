@@ -72,7 +72,7 @@ Le service API de Devana peut être configuré via les variables d'environnement
 - `JIRA_CLIENT_ID` : [Cloud] L'identifiant client de votre application Jira	
 - `JIRA_CLIENT_SECRET` : [Cloud] Le secret client de votre application Jira
 - ... (d'autres variables d'environnement peuvent être nécessaires en fonction de la configuration de votre application)
-- `ALLOW_PROVIDER_MULTIACCOUNT_ACCESS` : [On-Prem] Permet de gérer les accès multi-compte pour les fournisseurs de stockage cloud. (par défaut : `false`)
+- `ALLOW_PROVIDER_MULTIACCOUNT_ACCESS` : [On-Prem] Permet de gérer les accès multi-compte pour les fournisseurs de stockage cloud.
 
 ## Déploiement
 
