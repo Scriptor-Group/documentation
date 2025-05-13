@@ -92,5 +92,5 @@ S3_BUCKET=odin
 
 ### ⚠️ Remarques générales
 
-- Ne définissez qu'un seul provider à la fois (S3 ou Azure).
+- Ne définissez qu'un seul provider à la fois (S3 ou Azure) pour l'ensemble des services.
 - Pour chaque service, l'application détecte automatiquement quel provider utiliser selon les variables présentes.
