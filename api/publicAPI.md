@@ -591,7 +591,7 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 #### Télécharger un fichier
 - **URL** : `POST /v1/files`
 - **Description** : Télécharge un fichier pour le traitement.
-- **Body** : `multipart/form-data` avec un champ `file`.
+- **Body** : `multipart/form-data` avec un champ `file` et un champ `folderId`(optionnel).
 - **Réponse** :
   ```json
   {
