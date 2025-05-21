@@ -16,66 +16,111 @@ Bienvenue dans la documentation expliquant le fonctionnement du on-premise de De
 
 Voici un diagramme expliquant l'architecture de l'infrastructure Devana pour le on-premise :
 
-[![Schéma Network](./assets/on-prem-network2.svg)](https://excalidraw.com/#json=IWUTffmcXZpIfPwLVADe9,2kCA4Wk5fC73tNGCHc_Fzg)
+```mermaid
+graph TD
+    %% Définition des sous-graphes External
+    subgraph External["Services Externes"]
+        subgraph Databases["Bases de données"]
+            PostgreSQL[PostgreSQL]
+            Redis[Redis]
+            S3Bucket["S3 Bucket"]
+        end
+        subgraph AI["Services IA"]
+            LLMServer["LLM Server"]
+            VisionServer["Vision Server"]
+            EmbeddingServer["Embedding Server"]
+        end
+    end
+
+    %% Définition du cluster Kubernetes/OpenShift
+    subgraph Kubernetes["Cluster Kubernetes/OpenShift"]
+
+        subgraph Core["Services Principaux"]
+            subgraph FrontendStack["Frontend"]
+                PodFrontend["Pod Frontend"]
+                SvcFrontend["Svc Frontend"]
+            end
+
+            subgraph APIStack["API"]
+                PodAPI["Pod API"]
+                SvcAPI["Svc API"]
+            end
+        end
+
+        subgraph Search["Services de Recherche"]
+            subgraph VectorDB["Base Vectorielle"]
+                PodVectorDB["Pod VectorDB"]
+                SvcVectorDB["Svc VectorDB"]
+            end
+
+            subgraph SearchEngine["Moteur de Recherche"]
+                PodMeiliSearch["Pod MeiliSearch"]
+                SvcMeiliSearch["Svc MeiliSearch"]
+            end
+        end
+
+        subgraph Parser["Service Parser"]
+            subgraph OdinPod["Odin - multi-container pod"]
+                PodOdin["Pod Odin"]
+                PodGotenberg["Pod Gotenberg"]
+                PodNats["Pod Nats"]
+            end
+            SvcParser["Svc Parser"]
+        end
+
+        Ingress[Ingress]
+        SSLTermination["SSL Termination"]
+    end
+
+    %% Définition des utilisateurs
+    subgraph Users["Utilisateurs"]
+        AppUsers[Users]
+        TeamsAgents["Teams Agents"]
+    end
+
+    %% Connexions Frontend
+    SvcFrontend --> PodFrontend
+
+    %% Connexions API
+    SvcAPI --> PodAPI
+
+    %% Connexions VectorDB
+    SvcVectorDB --> PodVectorDB
+
+    %% Connexions MeiliSearch
+    SvcMeiliSearch --> PodMeiliSearch
+
+    %% Connexions vers External Services depuis l'API
+    PodAPI -.-> Databases
+    PodAPI -.-> AI
+
+    %% Connexions inter-services
+    PodAPI --> SvcVectorDB
+    PodAPI --> SvcMeiliSearch
+    PodAPI --> SvcParser
+    PodFrontend --> SvcAPI
+
+    %% Connexions Ingress et utilisateurs
+    Ingress --> SvcAPI
+    Ingress --> SvcFrontend
+    SSLTermination --> Ingress
+    AppUsers --> SSLTermination
+    TeamsAgents --> SSLTermination
+
+    %% Connexions au sein du pod Odin
+    PodOdin --> PodGotenberg
+    PodOdin --> PodNats
+    PodOdin -.-> Databases
+    SvcParser --> PodOdin
+
+    direction TB
+```
 
 Le cluster Kubernetes est au cœur de l'infrastructure et gère les différents services de l'application Devana. Il communique avec la base de données PostgreSQL pour la persistance des données, avec le serveur de fichiers S3 pour le stockage des fichiers, et avec le serveur Redis pour la mise en cache et la gestion des sessions. Concernant Redis, vous pouvez également utiliser un cluster Redis si vous souhaitez l'heberger directement dans kubernetes.
 
 ## Réseau
 
-```mermaid
-flowchart LR
-    
-    %% Utilisateurs
-    Users((Utilisateurs)):::user
-    
-    %% Conteneur Front
-    subgraph Front["Frontend"]
-        direction TB
-        Client["Client NextJS"]
-        Serveur["Serveur NextJS"]
-    end
-    
-    %% Conteneur API
-    subgraph Api["Backend"]
-        direction TB
-        GraphQL["API GraphQL"]
-        WS["WebSocket Server"]
-    end
-    
-    %% Nginx reverse proxy
-    subgraph Nginx["NGINX Reverse Proxy"]
-        direction TB
-        RouterNginx["Router & SSL Termination"]
-    end
-    
-    %% Ports et protocoles
-    Port1[HTTP:3000]:::port
-    Port2[HTTP]:::port
-    Port3[HTTP:4666]:::port
-    Port4[HTTP:5001]:::port
-    Port5[HTTPS]:::port
-    Port6[HTTPS/graphql]:::port
-    Port7[HTTPS/ws]:::port
-    
-    %% Variables d'environnement
-    EnvNext["NEXTAUTH_URL"]:::envBuildtime
-    EnvNginx["NGINX_HOST"]:::envRuntime
-    EnvFront["FRONT"]:::envRuntime
-    EnvGraphQL["BACK_GRAPHQL"]:::envRuntime
-    EnvWS["BACK_WS"]:::envRuntime
-    
-    %% Connexions
-    Client --> EnvNext --> Port1 --> RouterNginx
-    Serveur --> EnvNginx --> Port2 --> RouterNginx
-    RouterNginx --> Port3 --> GraphQL
-    RouterNginx --> Port4 --> WS
-    
-    Users --> Port5 & Port6 & Port7 --> RouterNginx
-    
-    RouterNginx -.- EnvFront --> Front
-    RouterNginx -.- EnvGraphQL --> GraphQL
-    RouterNginx -.- EnvWS --> WS
-```
+[![Schéma Network](./assets/on-prem-network2.svg)](https://excalidraw.com/#json=IWUTffmcXZpIfPwLVADe9,2kCA4Wk5fC73tNGCHc_Fzg)
 
 Ce schéma réseau présente un cas particulier de mise en place de Devana. Il n'est pas valable pour chaque cas.
 
