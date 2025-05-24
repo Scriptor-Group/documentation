@@ -568,6 +568,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 - **Query** :
   - `limit` : Le nombre de messages maximum à retourner. (optionnel)
   - `offset` : Le nombre de messages à skip. (optionnel)
+  - `fiability` : Filtrer par fiabilité. Les valeurs possibles sont : `GOOD`, `BAD`. (optionnel)
+  - `flagged` : Filtrer par messages flaggés ou non. Les valeurs possibles sont : `true`, `false`. (optionnel)
   - `metadata`: Permet le filtrage par metadata. (optionnel) [Voir la documentation détaillée](./others/metadata.md)
 - **Description** : Retourne les messages d'une conversation spécifique.
 - **Réponse** :
@@ -585,7 +587,10 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "sources": "string",
         "tokens": "number",
         "contextTokens": "number",
-        "metadata": "object"
+        "metadata": "object",
+        "flagModeration": "boolean",
+        "fiability": "string",
+        "iaId": "string",
       }
     ]
   }
