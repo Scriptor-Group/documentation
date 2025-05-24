@@ -489,6 +489,36 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 
 ### **v1/conversations**
 
+#### Récupérer les conversations
+- **URL** : `GET /v1/conversations`
+- **Description** : Retourne les conversations associées à un agent spécifique.
+- **Query** :
+  - `limit` : Le nombre de conversations maximum à retourner. (optionnel)
+  - `offset` : Le nombre de conversations à skip. (optionnel)
+  - `agentId` : L'identifiant unique de l'agent. (optionnel)
+  - `favorite` : Si la conversation est favorite. (optionnel)
+  - `metadata`: Permet le filtrage par metadata. (optionnel) [Voir la documentation détaillée](./others/metadata.md)
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+        "date": "timestamp",
+        "message": "string",
+        "favorite": "boolean",
+        "agentId": "string",
+      }
+    ]
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Conversation non trouvée.
+  - 500 : Erreur interne du serveur.
+
 #### Récupérer les métriques d'une conversation
 - **URL** : `GET /v1/conversations/:id/metrics`
 - **Paramètres** :
@@ -535,6 +565,12 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
 - **URL** : `GET /v1/conversations/:id/messages`
 - **Paramètres** :
   - `id` : Identifiant unique de la conversation (CUID).
+- **Query** :
+  - `limit` : Le nombre de messages maximum à retourner. (optionnel)
+  - `offset` : Le nombre de messages à skip. (optionnel)
+  - `fiability` : Filtrer par fiabilité. Les valeurs possibles sont : `GOOD`, `BAD`. (optionnel)
+  - `flagged` : Filtrer par messages flaggés ou non. Les valeurs possibles sont : `true`, `false`. (optionnel)
+  - `metadata`: Permet le filtrage par metadata. (optionnel) [Voir la documentation détaillée](./others/metadata.md)
 - **Description** : Retourne les messages d'une conversation spécifique.
 - **Réponse** :
   ```json
@@ -550,7 +586,11 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "score": "number",
         "sources": "string",
         "tokens": "number",
-        "contextTokens": "number"
+        "contextTokens": "number",
+        "metadata": "object",
+        "flagModeration": "boolean",
+        "fiability": "string",
+        "iaId": "string",
       }
     ]
   }
@@ -560,6 +600,53 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 403 : Accès non autorisé.
   - 404 : Conversation non trouvée.
   - 500 : Erreur interne du serveur.
+
+#### Mise à jour d'une conversation
+- **URL** : `PUT /v1/conversations/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la conversation (CUID).
+- **Description** : Mise à jour d'une conversation.
+- **Body** :
+  ```json
+  {
+    "favorite": "boolean"
+  }
+  ```
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "message": "string"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Conversation non trouvée.
+  - 500 : Erreur interne du serveur.
+
+#### Supprimer une conversation
+- **URL** : `DELETE /v1/conversations/:id`
+- **Paramètres** :
+  - `id` : Identifiant unique de la conversation (CUID).
+- **Description** : Supprime une conversation.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": {
+      "message": "string"
+    }
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 403 : Accès non autorisé.
+  - 404 : Conversation non trouvée.
+  - 500 : Erreur interne du serveur.
+
 
 ---
 
