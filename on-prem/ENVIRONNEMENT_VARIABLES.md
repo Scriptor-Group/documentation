@@ -219,8 +219,8 @@ Configuration des connexions aux services et bases de données fondamentaux dont
 
 ### Base de Données (PostgreSQL)
 
-| Variable | Description | Exemple de format |
-| :--- | :--- | :--- |
+| Variable | Description |
+| :--- | :--- |
 | `DATABASE_URL` | Chaîne de connexion complète pour la base de données PostgreSQL, incluant l'utilisateur, le mot de passe, l'hôte, le port, le nom de la base et le schéma. | `postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA` |
 
 ### Redis
@@ -228,7 +228,7 @@ Configuration des connexions aux services et bases de données fondamentaux dont
 Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâches en arrière-plan.
 
 | Variable | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `REDIS_HOST` | Hôte du serveur Redis. |
 | `REDIS_PORT` | Port d'écoute du serveur Redis. |
 | `REDIS_PASSWORD`| (Optionnel) Mot de passe pour la connexion à Redis. |
@@ -240,7 +240,7 @@ Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâch
 Configuration pour le stockage d'objets (documents, images, etc.). Le système est compatible avec AWS S3 ou des solutions auto-hébergées comme Minio.
 
 | Variable | Description | 
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `S3_BUCKET` | Nom du bucket où les fichiers seront stockés. |
 | `S3_ACCESS_KEY` | Clé d'accès (Access Key ID) pour le service S3. |
 | `S3_SECRET_KEY` | Clé secrète (Secret Access Key) pour le service S3. |
@@ -255,7 +255,7 @@ Configuration pour le stockage d'objets (documents, images, etc.). Le système e
 Configuration des points d'accès (URL) pour les services internes ou externes dont l'application dépend.
 
 | Variable | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `DEVANA_API_URL`| URL interne de l'API principale, utilisée pour la communication entre services. |
 | `GOTENBERG_URL`| URL de l'instance Gotenberg, utilisée pour la conversion de documents (ex: génération de PDF). |
 
@@ -266,7 +266,7 @@ Configuration des points d'accès (URL) pour les services internes ou externes d
 Configuration de la connexion au modèle de langage (Large Language Model) utilisé pour la vision et la génération de texte.
 
 | Variable | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `LLM_API_URL` | URL du point d'accès (endpoint) de l'API du LLM (ex: Ollama, TGI, OpenAI compatible). |
 | `LLM_API_KEY` |
 | `LLM_MODEL` |
@@ -290,7 +290,7 @@ Ce document détaille les variables d'environnement requises pour le fonctionnem
 Ces variables sont cruciales pour la sécurité de l'application, notamment pour la gestion des sessions utilisateur et la validation des jetons d'authentification. Elles doivent être gardées secrètes.
 
 | Variable | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `JWT_SECRET_KEY` | Clé secrète utilisée pour signer et vérifier les JSON Web Tokens (JWT). Elle garantit que les jetons n'ont pas été altérés. |
 | `NEXTAUTH_SECRET` | Clé secrète requise par **NextAuth.js** pour chiffrer les cookies de session et les jetons JWT. **Cette variable est critique pour la sécurité de l'authentification.** |
 
@@ -301,5 +301,5 @@ Ces variables sont cruciales pour la sécurité de l'application, notamment pour
 Cette variable définit le point d'accès au serveur back-end, permettant au front-end de communiquer avec lui pour récupérer ou envoyer des données.
 
 | Variable | Description |
-| :--- | :--- | :--- |
+| :--- | :--- |
 | `API_URL` | URL complète du serveur API back-end. Cette URL est principalement utilisée par le serveur Next.js (pour le rendu côté serveur - SSR) afin de communiquer avec l'API. |
