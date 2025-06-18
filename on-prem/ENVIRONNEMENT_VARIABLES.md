@@ -210,3 +210,96 @@ Paramètres de bas niveau pour ajuster le comportement du RAG (Retrieval-Augment
 | `RAG_MAX_PAGES` | Nombre maximum de pages de documents à récupérer. | `10` |
 | `RAG_SAFETY_MARGIN`| Marge de sécurité (ex: 0.85 pour 85%) pour le calcul du contexte. | `0.85` |
 | `RAG_XML_OVERHEAD`| Estimation du surcoût en tokens lié au formatage XML. | `500` |
+
+# Odin
+
+## 1. Services de Base
+
+Configuration des connexions aux services et bases de données fondamentaux dont l'application dépend.
+
+### Base de Données (PostgreSQL)
+
+| Variable | Description | Exemple de format |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Chaîne de connexion complète pour la base de données PostgreSQL, incluant l'utilisateur, le mot de passe, l'hôte, le port, le nom de la base et le schéma. | `postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA` |
+
+### Redis
+
+Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâches en arrière-plan.
+
+| Variable | Description |
+| :--- | :--- | :--- |
+| `REDIS_HOST` | Hôte du serveur Redis. |
+| `REDIS_PORT` | Port d'écoute du serveur Redis. |
+| `REDIS_PASSWORD`| (Optionnel) Mot de passe pour la connexion à Redis. |
+
+---
+
+## 2. Stockage Fichiers (Compatible S3)
+
+Configuration pour le stockage d'objets (documents, images, etc.). Le système est compatible avec AWS S3 ou des solutions auto-hébergées comme Minio.
+
+| Variable | Description | 
+| :--- | :--- | :--- |
+| `S3_BUCKET` | Nom du bucket où les fichiers seront stockés. |
+| `S3_ACCESS_KEY` | Clé d'accès (Access Key ID) pour le service S3. |
+| `S3_SECRET_KEY` | Clé secrète (Secret Access Key) pour le service S3. |
+| `S3_ENDPOINT` | URL complète du service S3. |
+| `S3_REGION`| Région du bucket (ex: `eu-west-3`). |
+| `S3_PUBLIC_URL`| (Optionnel) URL publique de base pour accéder directement aux fichiers stockés, si différente de l'endpoint. |
+
+---
+
+## 3. Services Applicatifs
+
+Configuration des points d'accès (URL) pour les services internes ou externes dont l'application dépend.
+
+| Variable | Description |
+| :--- | :--- | :--- |
+| `DEVANA_API_URL`| URL interne de l'API principale, utilisée pour la communication entre services. |
+| `GOTENBERG_URL`| URL de l'instance Gotenberg, utilisée pour la conversion de documents (ex: génération de PDF). |
+
+---
+
+## 4. Modèle d'IA (LLM)
+
+Configuration de la connexion au modèle de langage (Large Language Model) utilisé pour la vision et la génération de texte.
+
+| Variable | Description |
+| :--- | :--- | :--- |
+| `LLM_API_URL` | URL du point d'accès (endpoint) de l'API du LLM (ex: Ollama, TGI, OpenAI compatible). |
+| `LLM_API_KEY` |
+| `LLM_MODEL` |
+
+---
+
+## 5. Sécurité & Réseau
+
+Paramètres de configuration liés à la sécurité du réseau et aux certificats.
+
+| Variable | Description | Exemple |
+| :--- | :--- | :--- |
+| `NODE_EXTRA_CA_CERTS` | (Optionnel) Chemin d'accès à un fichier de certificats d'autorité (CA) supplémentaires. Utile pour les environnements d'entreprise utilisant des certificats TLS/SSL auto-signés. | `/certs/ca.crt` |
+
+# Front-End
+
+Ce document détaille les variables d'environnement requises pour le fonctionnement de l'application front-end (Next.js).
+
+## 1. Sécurité et Authentification
+
+Ces variables sont cruciales pour la sécurité de l'application, notamment pour la gestion des sessions utilisateur et la validation des jetons d'authentification. Elles doivent être gardées secrètes.
+
+| Variable | Description |
+| :--- | :--- | :--- |
+| `JWT_SECRET_KEY` | Clé secrète utilisée pour signer et vérifier les JSON Web Tokens (JWT). Elle garantit que les jetons n'ont pas été altérés. |
+| `NEXTAUTH_SECRET` | Clé secrète requise par **NextAuth.js** pour chiffrer les cookies de session et les jetons JWT. **Cette variable est critique pour la sécurité de l'authentification.** |
+
+---
+
+## 2. Configuration de l'API
+
+Cette variable définit le point d'accès au serveur back-end, permettant au front-end de communiquer avec lui pour récupérer ou envoyer des données.
+
+| Variable | Description |
+| :--- | :--- | :--- |
+| `API_URL` | URL complète du serveur API back-end. Cette URL est principalement utilisée par le serveur Next.js (pour le rendu côté serveur - SSR) afin de communiquer avec l'API. |
