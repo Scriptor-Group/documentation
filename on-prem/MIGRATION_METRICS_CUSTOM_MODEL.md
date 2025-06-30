@@ -15,6 +15,6 @@ curl -X GET API_URL/migration/metrics/custom-model \
   -H "Authorization: Bearer <API_KEY>"
   -H "Content-Type: application/json"
 ```  
-A noté que seul un super admin ou un admin d'une marque blanche peut lancer cette requête.
+À noter que seul un super admin ou un admin d'une marque blanche peut lancer cette requête.
 
 Après l'exécution de la requête, vous pourrez voir les nouvelles métriques dans le tableau de bord de Devana.
