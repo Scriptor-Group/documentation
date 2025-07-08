@@ -27,7 +27,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "publicChat": "boolean",
         "createdAt": "timestamp",
         "updatedAt": "timestamp",
-        "folderIds": ["string"]
+        "folderIds": ["string"],
+        "maxFiles": "number"
       }
     ]
   }
@@ -55,7 +56,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "publicChat": "boolean",
         "createdAt": "timestamp",
         "updatedAt": "timestamp",
-        "folderIds": ["string"]
+        "folderIds": ["string"],
+        "maxFiles": "number"
       }
     
   }
@@ -95,7 +97,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
     "maxTokensMonth": "number" | null,
     "maxContextTokens": "number" | null,
     "alertTokensMonth": "number" | null,
-    "overrideUrl": "string" | null
+    "overrideUrl": "string" | null,
+    "maxFiles": "number" | null
   }
   ```
 - **Réponse** :
@@ -113,7 +116,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "publicChat": "boolean",
         "createdAt": "timestamp",
         "updatedAt": "timestamp",
-        "folderIds": ["string"]
+        "folderIds": ["string"],
+        "maxFiles": "number"
       }
     
   }
@@ -152,7 +156,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
     "maxTokensMonth": "number" | null,
     "maxContextTokens": "number" | null,
     "alertTokensMonth": "number" | null,
-    "overrideUrl": "string" | null
+    "overrideUrl": "string" | null,
+    "maxFiles": "number" | null
   }
   ```
 - **Réponse** :
@@ -170,7 +175,8 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
         "publicChat": "boolean",
         "createdAt": "timestamp",
         "updatedAt": "timestamp",
-        "folderIds": ["string"]
+        "folderIds": ["string"],
+        "maxFiles": "number"
       }
     
   }
