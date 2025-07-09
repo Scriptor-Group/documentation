@@ -36,6 +36,8 @@ spec:
             value: "AUTHORIZATION"
           - name: CHROMA_SERVER_AUTH_PROVIDER
             value: 'chromadb.auth.token.TokenAuthServerProvider'
+          - name: ANONYMIZED_TELEMETRY
+            value: "False"
           volumeMounts:
           - name: vectors-volume
             mountPath: /chroma/.chroma/index
