@@ -21,11 +21,11 @@ spec:
         - name: devana-api
           resources:
             requests:
-              cpu: "1"
-              memory: "512Mi"
+              cpu: "3"
+              memory: "4Gi"
             limits:
-              cpu: "2"
-              memory: "1Gi"
+              cpu: "3"
+              memory: "4Gi"
           image: registry.devana.ai/devana/back:latest
           ports:
             - containerPort: 4666

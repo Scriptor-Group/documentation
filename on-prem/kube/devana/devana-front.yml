@@ -22,11 +22,11 @@ spec:
         - name: devana-front
           resources:
             requests:
-              cpu: "0.4"
-              memory: "512Mi"
+              cpu: "1"
+              memory: "1Gi"
             limits:
-              cpu: "0.8"
-              memory: "1024Mi"
+              cpu: "1"
+              memory: "1Gi"
           image: registry.devana.ai/devana/front:latest
           ports:
             - containerPort: 3000

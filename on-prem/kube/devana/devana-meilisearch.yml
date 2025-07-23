@@ -17,11 +17,11 @@ spec:
         - name: devana-meilisearch
           resources:
             requests:
-              cpu: "200m"
-              memory: "256Mi"
+              cpu: "2"
+              memory: "3Gi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "2"
+              memory: "3Gi"
           image: getmeili/meilisearch:v1.9
           ports:
             - containerPort: 7700
