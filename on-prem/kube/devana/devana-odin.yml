@@ -106,7 +106,12 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: REDIS_PASSWORD
---- 
+            - name: LLM_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: VISION_JSON
+---
 apiVersion: v1
 kind: Service
 metadata:

@@ -52,16 +52,6 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: LICENCE
-            - name: PORT
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: PORT
-            - name: APPLICATION_URL
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: APPLICATION_URL
             - name: CLIENT_URI
               valueFrom:
                 secretKeyRef:
@@ -108,6 +98,26 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: REDIS_PASSWORD
+            - name: AWS_S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_ENDPOINT
+            - name: AWS_S3_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_REGION
+            - name: S3_PUBLIC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_PUBLIC_URL
+            - name: CLOUD_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret-devana
+                  key: S3_BUCKET
             - name: AWS_S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -128,101 +138,11 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: MEILI_MASTER_KEY
-            - name: IMAGE_TO_IMAGE_SERVER
+            - name: EMBEDDING_JSON
               valueFrom:
                 secretKeyRef:
                   name: secret-devana
-                  key: IMAGE_TO_IMAGE_SERVER
-            - name: TEXT_TO_IMAGE_SERVER
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: TEXT_TO_IMAGE_SERVER
-            - name: DEVANA_EMBEDDINGS_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DEVANA_EMBEDDINGS_HOST
-            - name: DEVANA_EMBEDDINGS_INDEX_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DEVANA_EMBEDDINGS_INDEX_HOST
-            - name: DEVANA_EMBEDDINGS_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DEVANA_EMBEDDINGS_APIKEY
-            - name: DEVANA_EMBEDDINGS_INDEX_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DEVANA_EMBEDDINGS_INDEX_APIKEY
-            - name: EMBEDDING
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: EMBEDDING
-            # --- Connectors Configuration ---
-            - name: OAUTH_CALLBACK_URI
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: OAUTH_CALLBACK_URI
-            - name: GOOGLE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GOOGLE_CLIENT_ID
-            - name: GOOGLE_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GOOGLE_CLIENT_SECRET
-            - name: DROPBOX_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DROPBOX_CLIENT_ID
-            - name: DROPBOX_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: DROPBOX_CLIENT_SECRET
-            - name: MICROSOFT_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MICROSOFT_CLIENT_ID
-            - name: MICROSOFT_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MICROSOFT_CLIENT_SECRET
-            - name: MICROSOFT_TENANT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: MICROSOFT_TENANT_ID
-            - name: JIRA_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: JIRA_CLIENT_ID
-            - name: JIRA_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: JIRA_CLIENT_SECRET
-            # Temporary needed, but don't anything
-            - name: OPENAI_API_KEY
-              value: "TOREMOVE"
-            - name: GOOGLE_APPLICATION_CLIENT_EMAIL
-              value: "TOREMOVE"
-            - name: GOOGLE_APPLICATION_PRIVATE_KEY
-              value: "TOREMOVE"
-            - name: STRIPE_SECRET_KEY
-              value: "TOREMOVE"
+                  key: EMBEDDING_JSON
       imagePullSecrets:
         - name: devana-registry
 ---

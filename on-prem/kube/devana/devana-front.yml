@@ -52,41 +52,6 @@ spec:
                 secretKeyRef:
                   name: secret-devana
                   key: NEXTAUTH_SECRET
-            - name: GITHUB_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GITHUB_ID
-            - name: GITHUB_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GITHUB_SECRET
-            - name: GOOGLE_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GOOGLE_ID
-            - name: GOOGLE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GOOGLE_SECRET
-            - name: GOOGLE_TRANSLATE_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: GOOGLE_TRANSLATE_API_KEY
-            - name: FACEBOOK_ID
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: FACEBOOK_ID
-            - name: FACEBOOK_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret-devana
-                  key: FACEBOOK_SECRET
       imagePullSecrets:
         - name: devana-registry
 ---
