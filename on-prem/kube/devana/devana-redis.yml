@@ -17,11 +17,11 @@ spec:
         - name: redis
           resources:
             requests:
-              cpu: "50m"
-              memory: "64Mi"
+              cpu: "1"
+              memory: "2Gi"
             limits:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu: "1"
+              memory: "2Gi"
           image: redis
           ports:
             - containerPort: 6379

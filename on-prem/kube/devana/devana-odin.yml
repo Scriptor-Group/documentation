@@ -4,7 +4,7 @@ metadata:
   name: devana-odin
   namespace: devana
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: devana-odin
@@ -20,11 +20,11 @@ spec:
         - name: gotenberg
           resources:
             requests:
-              cpu: "1"
-              memory: "256Mi"
+              cpu: "2"
+              memory: "3Gi"
             limits:
-              cpu: "1.5"
-              memory: "384Mi"
+              cpu: "2"
+              memory: "3Gi"
           image: gotenberg/gotenberg:8
           ports:
             - containerPort: 3000
@@ -35,10 +35,10 @@ spec:
           resources:
             requests:
               cpu: "3"
-              memory: "2.5Gi"
+              memory: "6Gi"
             limits:
-              cpu: "4"
-              memory: "3Gi"
+              cpu: "3"
+              memory: "6Gi"
           image: rg.fr-par.scw.cloud/scriptor/odin:latest
           ports:
             - containerPort: 3003
