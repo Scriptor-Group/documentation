@@ -145,8 +145,8 @@ Pour garantir des performances optimales de l'application Devana, il est importa
 
 ### Odin
 
-- CPU : **5.5 vCPU**
-- RAM : **3.5 Go**
+- CPU : **5 vCPU**
+- RAM : **5 Go**
 - Disque : **20 Go**
 
 Odin est un multi-container pod, il est donc important de répartir les ressources ci-dessus aux différents container du pod.
@@ -154,6 +154,13 @@ Odin est un multi-container pod, il est donc important de répartir les ressourc
 > Nous recommandons d'utiliser un réplica set de minimum 4 pods pour garantir la haute disponibilité du service en cas de dépôt de plusieurs documents en simultanés.
 >
 > Lors d'un premier run, nous vous recommandons de lancer un ensemble de X pods afin d'absorber les premiers documents de l'entreprise. Vous pouvez par la suite réduire le nombre de prods à 4 pods minimum. 
+
+### Gotenberg
+
+- CPU : **2 vCPU**
+- RAM : **2 Go**
+- Disque : **10 Go**
+
 
 ### API
 
@@ -165,7 +172,7 @@ Odin est un multi-container pod, il est donc important de répartir les ressourc
 
 ### Frontend
 
-- CPU : 0.8 vCPU
+- CPU : 1 vCPU
 - RAM : 1 Go
 - Disque : 5 Go
 
