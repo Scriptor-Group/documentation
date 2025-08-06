@@ -1,85 +1,138 @@
-# Azure AD SSO Configuration
+# Configuration SSO Azure AD
 
-Configure Microsoft Azure Active Directory (Entra ID) authentication for your Devana.ai whitemark instance. This provider supports both cloud-based Azure AD and on-premises Active Directory Federation Services (ADFS).
+Ce guide décrit comment configurer l'authentification Single Sign-On (SSO) avec Azure Active Directory pour votre application. Cette configuration supporte à la fois Azure AD cloud et les déploiements Active Directory Federation Services (ADFS) on-premises.
 
-## Required Environment Variables
+> **⚠️ Important** : Les callbacks Azure AD sont gérés par l'API serveur, pas par le frontend. Utilisez l'URL de votre API dans la configuration.
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `AZURE_AD_CLIENT_ID` | Application (client) ID from Azure AD | Yes | `12345678-1234-1234-1234-123456789012` |
-| `AZURE_AD_CLIENT_SECRET` | Client secret from Azure AD | Yes | `your-client-secret` |
-| `AZURE_AD_REDIRECT_URL` | Redirect URI for authentication | Yes | `https://your-domain.com/auth/azuread/callback` |
-| `AZURE_AD_TENANT_ID` | Azure AD tenant ID (cloud only) | Cloud: Yes | `87654321-4321-4321-4321-210987654321` |
-| `AZURE_AD_ON_PREM_URL` | ADFS metadata URL (on-prem only) | On-prem: Yes | `https://adfs.yourcompany.com/.well-known/openid-configuration` |
-| `AZURE_AD_SCOPES` | Comma-separated list of scopes | No | `profile,offline_access,email,User.Read` |
+## Prérequis
 
-## Setup Instructions
+- Accès administrateur à Azure AD
+- Permissions pour créer des App Registrations
+- Accès aux variables d'environnement de votre application
 
-### Option A: Cloud Azure AD Setup
+## Variables d'environnement requises
 
-1. **Register Application in Azure Portal:**
-   - Go to [Azure Portal](https://portal.azure.com)
-   - Navigate to "Azure Active Directory" � "App registrations"
-   - Click "New registration"
-   - Configure:
-     - **Name**: `Devana.ai SSO`
-     - **Supported account types**: Accounts in this organizational directory only
-     - **Redirect URI**: Web - `https://your-domain.com/auth/azuread/callback`
+| Variable                 | Description                                   | Requis       | Exemple                                                         |
+| ------------------------ | --------------------------------------------- | ------------ | --------------------------------------------------------------- |
+| `AZURE_AD_CLIENT_ID`     | ID de l'application (client) depuis Azure AD  | Oui          | `12345678-1234-1234-1234-123456789012`                          |
+| `AZURE_AD_CLIENT_SECRET` | Secret client depuis Azure AD                 | Oui          | `your-client-secret`                                            |
+| `AZURE_AD_REDIRECT_URL`  | URI de redirection pour l'authentification    | Oui          | `https://votre-api.com/auth/azuread/callback`                   |
+| `AZURE_AD_TENANT_ID`     | ID du tenant Azure AD (cloud uniquement)      | Cloud: Oui   | `87654321-4321-4321-4321-210987654321`                          |
+| `AZURE_AD_ON_PREM_URL`   | URL des métadonnées ADFS (on-prem uniquement) | On-prem: Oui | `https://adfs.yourcompany.com/.well-known/openid-configuration` |
+| `AZURE_AD_SCOPES`        | Liste des scopes séparés par virgules         | Non          | `profile,offline_access,email,User.Read,GroupMember.Read.All`   |
+| `AZURE_AD_ROLES`         | Groupes à synchroniser comme équipes          | Non          | `Administrators,Users,Managers`                                 |
 
-2. **Configure Application:**
-   - Note the **Application (client) ID** (`AZURE_AD_CLIENT_ID`)
-   - Note the **Directory (tenant) ID** (`AZURE_AD_TENANT_ID`)
-   - Go to "Certificates & secrets" � "Client secrets"
-   - Create a new client secret (`AZURE_AD_CLIENT_SECRET`)
+## 1. Création de l'App Registration Azure AD
 
-3. **API Permissions (Optional for roles):**
-   - Go to "API permissions"
-   - Add permissions:
-     - **Microsoft Graph**: `User.Read` (for basic profile)
-     - **Microsoft Graph**: `Directory.Read.All` (for roles/groups)
-   - Grant admin consent for the organization
+### Étape 1 : Créer l'application
 
-### Option B: On-Premises ADFS Setup
+1. Connectez-vous au [portail Azure](https://portal.azure.com)
+2. Accédez à **Azure Active Directory** > **App registrations**
+3. Cliquez sur **New registration**
+4. Configurez :
+   - **Name** : Nom de votre application (ex: "DevanaAI SSO")
+   - **Supported account types** : "Accounts in this organizational directory only"
+   - **Redirect URI** : Type "Web" + `https://votre-api.com/auth/azuread/callback` (URL de l'API serveur)
 
-1. **Configure ADFS Application:**
-   - Open ADFS Management Console
-   - Navigate to "Application Groups"
-   - Create new application group for web application and web API
-   - Configure redirect URI: `https://your-domain.com/auth/azuread/callback`
+### Étape 2 : Configuration des URI de redirection
 
-2. **Get Metadata URL:**
-   - The metadata URL follows the pattern:
-   - `https://your-adfs-server/.well-known/openid-configuration`
+1. Dans votre App Registration > **Authentication**
+2. Ajoutez les URI de redirection :
+   - Production : `https://votre-api.com/auth/azuread/callback` (API serveur)
+3. Cochez **ID tokens** et **Access tokens** dans la section "Implicit grant and hybrid flows"
 
-### 3. Environment Configuration
+### Étape 3 : Générer un secret client
 
-**For Cloud Azure AD:**
-```env
-# Azure AD Cloud Configuration
-AZURE_AD_CLIENT_ID=12345678-1234-1234-1234-123456789012
-AZURE_AD_CLIENT_SECRET=your-client-secret
-AZURE_AD_REDIRECT_URL=https://your-domain.com/auth/azuread/callback
-AZURE_AD_TENANT_ID=87654321-4321-4321-4321-210987654321
+1. Accédez à **Certificates & secrets**
+2. Cliquez sur **New client secret**
+3. Configurez :
+   - **Description** : "DevanaAI Client Secret"
+   - **Expires** : 24 months (recommandé)
+4. **⚠️ Copiez immédiatement la valeur du secret** (elle ne sera plus accessible)
 
-# Optional: Custom scopes (defaults to profile,offline_access,email)
-AZURE_AD_SCOPES=profile,offline_access,email,User.Read,Directory.Read.All
+## 2. Configuration des permissions API
+
+### Permissions Microsoft Graph requises :
+
+1. Dans **API permissions** > **Add a permission** > **Microsoft Graph**
+2. Sélectionnez **Delegated permissions** et ajoutez :
+
+#### Permissions obligatoires :
+
+- `User.Read` - Lire le profil utilisateur de base
+- `GroupMember.Read.All` - Lire les appartenances aux groupes de l'utilisateur
+
+#### Permissions optionnelles :
+
+- `Group.Read.All` - Alternative à GroupMember.Read.All (plus de permissions)
+- `Directory.Read.All` - Lire les rôles directory (si nécessaire)
+
+3. Cliquez sur **Grant admin consent** pour approuver les permissions
+
+## 3. Configuration des claims de tokens
+
+### Ajouter les groupes aux tokens :
+
+1. Accédez à **Token configuration**
+2. Cliquez sur **Add optional claim**
+3. Sélectionnez **ID** tokens
+4. Cochez **groups**
+5. Cliquez sur **Add**
+
+### Configuration avancée des groupes :
+
+- **Groups assigned to the application** : Recommandé pour limiter les groupes inclus
+- **All groups** : Inclut tous les groupes (peut créer des tokens volumineux)
+- **Security groups** : Seulement les groupes de sécurité
+
+## 4. Configuration on-premises ADFS (Alternative)
+
+### Configuration de l'application ADFS :
+
+1. Ouvrir la Console de gestion ADFS
+2. Naviguer vers "Application Groups"
+3. Créer un nouveau groupe d'applications pour l'application web et l'API web
+4. Configurer l'URI de redirection : `https://votre-api.com/auth/azuread/callback`
+
+### Obtenir l'URL des métadonnées :
+
+L'URL des métadonnées suit le pattern :
+`https://votre-serveur-adfs/.well-known/openid-configuration`
+
+## 5. Configuration des variables d'environnement
+
+### Pour Azure AD Cloud :
+
+```bash
+# Configuration Azure AD obligatoire
+AZURE_AD_CLIENT_ID=votre-client-id
+AZURE_AD_CLIENT_SECRET=votre-client-secret
+AZURE_AD_TENANT_ID=votre-tenant-id
+AZURE_AD_REDIRECT_URL=https://votre-api.com/auth/azuread/callback
+
+# Scopes requis pour le bon fonctionnement
+AZURE_AD_SCOPES=profile,offline_access,email,User.Read,GroupMember.Read.All
+
+# Rôles/Groupes à synchroniser comme équipes (optionnel)
+AZURE_AD_ROLES=Administrators,Users,Managers
 ```
 
-**For On-Premises ADFS:**
-```env
-# Azure AD On-Premises Configuration
+### Pour Azure AD On-Premise :
+
+```bash
+# Configuration Azure AD On-Premises
 AZURE_AD_CLIENT_ID=your-adfs-client-id
 AZURE_AD_CLIENT_SECRET=your-adfs-client-secret
-AZURE_AD_REDIRECT_URL=https://your-domain.com/auth/azuread/callback
+AZURE_AD_REDIRECT_URL=https://votre-api.com/auth/azuread/callback
 AZURE_AD_ON_PREM_URL=https://adfs.yourcompany.com/.well-known/openid-configuration
 
-# Optional: Custom scopes
+# Scopes optionnels
 AZURE_AD_SCOPES=profile,offline_access,email
 ```
 
-### 4. Whitemark Configuration
+## 6. Configuration Whitemark
 
-Configure your whitemark to include Azure AD as an allowed provider:
+Configurez votre whitemark pour inclure Azure AD comme fournisseur autorisé :
 
 ```json
 {
@@ -88,119 +141,212 @@ Configure your whitemark to include Azure AD as an allowed provider:
 }
 ```
 
-## Authentication Flow
+## 7. Flux d'authentification
 
-1. User clicks "Sign in with Microsoft" button
-2. User is redirected to Azure AD/ADFS authorization endpoint
-3. User authenticates with their Microsoft credentials
-4. Azure AD redirects back to your callback URL with authorization code
-5. Application exchanges code for access token and ID token
-6. Application optionally fetches user roles from Microsoft Graph API
-7. User is created/updated in Devana.ai and logged in
+1. L'utilisateur clique sur le bouton "Se connecter avec Microsoft"
+2. L'utilisateur est redirigé vers le point de terminaison d'autorisation Azure AD/ADFS
+3. L'utilisateur s'authentifie avec ses identifiants Microsoft
+4. Azure AD redirige vers votre URL de callback avec le code d'autorisation
+5. L'application échange le code contre un token d'accès et un token ID
+6. L'application récupère optionnellement les rôles utilisateur depuis l'API Microsoft Graph
+7. L'utilisateur est créé/mis à jour dans l'application et connecté
 
-## User Data Mapping
+## 8. Mappage des données utilisateur
 
-Azure AD provides comprehensive user information:
+Azure AD fournit des informations utilisateur complètes :
 
-| Azure AD Field | Devana.ai Field | Notes |
-|----------------|-----------------|-------|
-| `email` | `email` | Primary identifier |
-| `given_name` | `firstName` | First name |
-| `family_name` | `lastName` | Last name |
-| `name` | `displayName` | Full name |
-| `oid` | `providerId` | Unique user identifier |
+| Champ Azure AD | Champ Application | Notes                          |
+| -------------- | ----------------- | ------------------------------ |
+| `email`        | `email`           | Identifiant principal          |
+| `given_name`   | `firstName`       | Prénom                         |
+| `family_name`  | `lastName`        | Nom de famille                 |
+| `name`         | `displayName`     | Nom complet                    |
+| `oid`          | `providerId`      | Identifiant unique utilisateur |
 
-## Role/Group Integration
+## 9. Gestion des équipes (Teams)
 
-When configured with appropriate scopes (`User.Read` + `Directory.Read.All`), the system can fetch user roles:
+### Synchronisation automatique :
 
-### Cloud Azure AD Roles
-- Fetches directory roles from Microsoft Graph API
-- Requires `Directory.Read.All` or `Directory.AccessAsUser.All` permissions
-- Roles are logged but not currently used for authorization
+- Les groupes Azure AD deviennent automatiquement des équipes dans l'application
+- Utilisez `AZURE_AD_ROLES` pour filtrer les groupes à synchroniser
+- Format : noms de groupes séparés par des virgules
 
-### Configuration for Role Retrieval
-```env
-AZURE_AD_SCOPES=profile,offline_access,email,User.Read,Directory.Read.All
+### Exemple de configuration :
+
+```bash
+# Synchronise seulement ces 3 groupes comme équipes
+AZURE_AD_ROLES=DevTeam,QATeam,AdminTeam
 ```
 
-## Security Features
+### Configuration pour récupération des rôles :
 
-- **CSRF Protection**: State parameter validation prevents cross-site request forgery
-- **Session Management**: Secure session handling with automatic cleanup
-- **Domain Validation**: Authentication tied to specific whitemark domains
-- **Token Validation**: Full OIDC token validation in production environments
-- **HTTPS Enforcement**: Production environments require HTTPS for redirect URLs
+Lorsque configuré avec les scopes appropriés (`User.Read` + `GroupMember.Read.All`), le système peut récupérer les rôles utilisateur :
 
-## Advanced Configuration
+#### Rôles Azure AD Cloud
 
-### Custom Scopes
+- Récupère les rôles de directory depuis l'API Microsoft Graph
+- Nécessite les permissions `Directory.Read.All` ou `Directory.AccessAsUser.All`
+- Les rôles sont loggés mais pas actuellement utilisés pour l'autorisation
 
-Default scopes: `profile`, `offline_access`, `email`
+## 10. Fonctionnalités de sécurité
 
-Common additional scopes:
-- `User.Read`: Basic profile information
-- `Directory.Read.All`: Read directory data including roles
-- `Directory.AccessAsUser.All`: Access directory as signed-in user
+- **Protection CSRF** : Validation du paramètre state pour prévenir les attaques cross-site
+- **Gestion de session** : Gestion sécurisée des sessions avec nettoyage automatique
+- **Validation de domaine** : Authentification liée aux domaines whitemark spécifiques
+- **Validation de token** : Validation complète des tokens OIDC en environnements de production
+- **Application HTTPS** : Les environnements de production nécessitent HTTPS pour les URLs de redirection
 
-### Environment-Specific Settings
+## 11. Configuration avancée
 
-The provider automatically adjusts behavior based on `NODE_ENV`:
+### Scopes personnalisés
 
-**Development:**
+Scopes par défaut : `profile`, `offline_access`, `email`
+
+Scopes additionnels courants :
+
+- `User.Read` : Informations de profil de base
+- `Directory.Read.All` : Lire les données de directory incluant les rôles
+- `Directory.AccessAsUser.All` : Accéder au directory en tant qu'utilisateur connecté
+- `GroupMember.Read.All` : Lire les appartenances aux groupes
+
+### Paramètres spécifiques à l'environnement
+
+Le fournisseur ajuste automatiquement le comportement basé sur `NODE_ENV` :
+
+**Développement :**
+
 - `allowHttpForRedirectUrl: true`
 - `validateIssuer: false`
 
-**Production:**
+**Production :**
+
 - `allowHttpForRedirectUrl: false`
 - `validateIssuer: true`
 
-## Troubleshooting
+## 12. Test de la configuration
 
-### Common Issues
+### Vérifications à effectuer :
+
+1. **Test d'authentification** :
+
+   - L'utilisateur peut se connecter via Azure AD
+   - Le profil utilisateur est correctement récupéré
+
+2. **Test des groupes** :
+
+   - Les groupes Azure AD apparaissent dans les logs
+   - L'utilisateur est assigné aux bonnes équipes
+   - Les permissions d'accès aux ressources partagées fonctionnent
+
+3. **Test des tokens** :
+   - Les tokens contiennent les claims attendus
+   - Les scopes sont correctement accordés
+
+### Commandes de diagnostic :
+
+```bash
+# Vérifier les logs d'authentification
+grep "Azure AD" logs/application.log
+
+# Vérifier les groupes récupérés
+grep "userRoles" logs/application.log
+```
+
+## 13. Dépannage courant
+
+### Problèmes fréquents
 
 **AADSTS50011: Redirect URI mismatch**
-- Ensure `AZURE_AD_REDIRECT_URL` exactly matches the registered redirect URI
-- URLs are case-sensitive and must include protocol (https://)
+
+- S'assurer que `AZURE_AD_REDIRECT_URL` correspond exactement à l'URI de redirection enregistrée
+- Les URLs sont sensibles à la casse et doivent inclure le protocole (https://)
 
 **AADSTS70001: Application not found**
-- Verify `AZURE_AD_CLIENT_ID` is correct
-- Ensure the application is properly registered in the correct tenant
+
+- Vérifier que `AZURE_AD_CLIENT_ID` est correct
+- S'assurer que l'application est correctement enregistrée dans le bon tenant
 
 **AADSTS7000215: Invalid client secret**
-- Check that `AZURE_AD_CLIENT_SECRET` is correct and not expired
-- Client secrets have expiration dates in Azure AD
+
+- Vérifier que `AZURE_AD_CLIENT_SECRET` est correct et non expiré
+- Les secrets clients ont des dates d'expiration dans Azure AD
 
 **Invalid issuer**
-- For cloud: Verify `AZURE_AD_TENANT_ID` is correct
-- For on-prem: Verify `AZURE_AD_ON_PREM_URL` points to correct ADFS server
 
-**Failed to fetch user roles**
-- Ensure required permissions are granted and admin consent provided
-- Check that `User.Read` and `Directory.Read.All` scopes are included
-- Verify the access token has sufficient permissions
+- Pour le cloud : Vérifier que `AZURE_AD_TENANT_ID` est correct
+- Pour on-prem : Vérifier que `AZURE_AD_ON_PREM_URL` pointe vers le bon serveur ADFS
 
-### Testing
+**"No groups in token"**
 
-1. Enable Azure AD SSO in your whitemark configuration
-2. Navigate to your login page  
-3. Click "Sign in with Microsoft"
-4. Complete authentication with an Azure AD account
-5. Verify user is created and logged in successfully
-6. Check logs for role information if configured
+- Vérifiez que `GroupMember.Read.All` est accordé
+- Confirmez que les groupes sont ajoutés dans Token configuration
+- L'utilisateur doit appartenir à au moins un groupe
 
-### Debug Information
+**"Invalid redirect URI"**
 
-The system logs detailed information including:
-- Retrieved user roles (when configured)
-- Authentication errors with specific error codes
-- Token validation results
+- Vérifiez que l'URI de redirection correspond exactement
+- Incluez le protocole (https://)
+- Pas de slash final dans l'URI
 
-## Best Practices
+**"Insufficient privileges"**
 
-- Use HTTPS for all redirect URIs in production
-- Regularly rotate client secrets before expiration
-- Monitor authentication logs for failed attempts
-- Use least-privilege principle for API permissions
-- Keep ADFS servers updated with latest security patches
-- Consider using certificate-based authentication for higher security
+- Un administrateur doit accorder le consentement admin
+- Vérifiez que les permissions API sont correctement configurées
+
+**"Groups not syncing as teams"**
+
+- Vérifiez `AZURE_AD_ROLES` contient les noms exacts des groupes
+- Les noms de groupes sont sensibles à la casse
+- Consultez les logs pour voir les groupes récupérés
+- Utilisez `displayName` du groupe Azure AD (pas l'ID)
+
+**"Failed to fetch user roles"**
+
+- S'assurer que les permissions requises sont accordées et le consentement admin fourni
+- Vérifier que les scopes `User.Read` et `Directory.Read.All` sont inclus
+- Vérifier que le token d'accès a des permissions suffisantes
+
+### Test
+
+1. Activer Azure AD SSO dans votre configuration whitemark
+2. Naviguer vers votre page de connexion
+3. Cliquer sur "Se connecter avec Microsoft"
+4. Compléter l'authentification avec un compte Azure AD
+5. Vérifier que l'utilisateur est créé et connecté avec succès
+6. Vérifier les logs pour les informations de rôles si configuré
+
+### Informations de débogage
+
+Le système log des informations détaillées incluant :
+
+- Rôles utilisateur récupérés (quand configuré)
+- Erreurs d'authentification avec codes d'erreur spécifiques
+- Résultats de validation de tokens
+
+## 14. Sécurité et bonnes pratiques
+
+### Recommandations :
+
+- ✅ Utilisez HTTPS pour toutes les URIs de redirection en production
+- ✅ Renouvelez les secrets clients régulièrement avant expiration
+- ✅ Surveillez les logs d'authentification pour les tentatives échouées
+- ✅ Utilisez le principe du moindre privilège pour les permissions API
+- ✅ Maintenez les serveurs ADFS à jour avec les derniers correctifs de sécurité
+- ✅ Considérez l'utilisation de l'authentification basée sur certificats pour une sécurité accrue
+- ✅ Utilisez des groupes spécifiques plutôt que "All groups"
+- ✅ Testez sur un environnement de développement d'abord
+
+### À éviter :
+
+- ❌ Ne commitez jamais les secrets dans le code
+- ❌ N'utilisez pas Directory.Read.All sans justification
+- ❌ N'accordez pas plus de permissions que nécessaire
+
+## Support
+
+En cas de problème persistant, fournissez les informations suivantes :
+
+- Version de l'application
+- Configuration des variables d'environnement (sans les secrets)
+- Messages d'erreur complets
+- Logs d'authentification pertinents
