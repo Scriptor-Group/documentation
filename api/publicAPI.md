@@ -256,6 +256,49 @@ Toutes les routes nécessitent une clé API (`Authorization` header sous la form
   - 404 : Agent non trouvé.
   - 500 : Erreur interne du serveur.
 
+### Récupérer les tools actifs sur un agent
+- **URL** : `GET /v1/agents/:id/tools`
+- **Paramètres** :
+  - `id` : Identifiant unique de l'agent.
+- **Réponse** :
+  ```json
+  {
+    "success": true,
+    "data": [
+      {
+        "id": "string",
+            "name": "string",
+            "description": "string",
+            "url": "string",
+            "method": "string",
+            "advanced": "boolean",
+            "authorization": "string",
+            "authorizationKeyParams": "string",
+            "authorizationType": "string",
+            "execConfirmation": "boolean",
+            "isPublic": "boolean",
+            "schema": {
+              "arguments":[
+                {
+                  "name": "string",
+                  "type": "string",
+                  "nullable": "boolean",
+                  "description": "string"
+                }
+              ]
+            },
+            "createdAt": "string",
+            "updatedAt": "string",
+      }
+    ]
+  }
+  ```
+- **Erreurs possibles** :
+  - 400 : Requête invalide.
+  - 401 : Authentification manquante.
+  - 403 : Accès non autorisé.
+  - 500 : Erreur interne du serveur.
+
 ---
 
 ### **v1/folders**
