@@ -59,6 +59,7 @@ POST /v1/chat/completions
 | `metadata`          | object       | Non         | Metadata pour les dashboards et logging via webhooks (Si configurés).                                        |
 | `headers`           | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
 | `identity`          | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
+| `asyncRagScore`    | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                           |
 
 ### Vérifications et limites
 
@@ -253,6 +254,10 @@ L'API inclut une limitation de débit basée sur l'utilisateur :
 - Support multi-modèles avec possibilité de spécifier le modèle client
 - Vérification automatique des droits d'accès aux agents
 - Gestion des statuts de conversation (PENDING, DONE, ERROR)
+
+
+### Paramètres asyncScoreRag
+- Si `true`, la réponse est renvoyée immédiatement sans attendre le calcul du score RAG,le score RAG sera calculé en arrière-plan. Les réponses n'incluront plus les sources la réponses sera à chaque fois un tableau vide (`[]`).
 
 # Exemples d'Utilisation
 
