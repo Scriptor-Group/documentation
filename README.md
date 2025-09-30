@@ -1,57 +1,119 @@
 ![Devana](https://app.devana.ai/static/logo-small.png)
 
-# Documentation
+# Documentation Devana.ai
 
-Welcome to the official documentation for Devana.ai - Your Enterprise AI Copilot Platform. This repository contains comprehensive documentation for all Devana.ai services and features.
+Bienvenue dans la documentation officielle de Devana.ai - Votre plateforme d'IA d'entreprise.
 
-## 🌟 Overview
+## 🌟 Présentation
 
-Devana.ai is an advanced AI platform that enables organizations to:
-- Deploy custom AI assistants
-- Integrate AI capabilities into existing applications
-	- Control and monitor AI usage in enterprise environments
-- Ensure data privacy and security compliance
+Devana.ai est une plateforme d'IA avancée qui permet aux organisations de :
 
-## 📚 Documentation Sections
+- Déployer des assistants IA personnalisés
+- Intégrer l'IA dans vos applications existantes
+- Contrôler et monitorer l'usage de l'IA en environnement d'entreprise
+- Garantir la confidentialité des données et la conformité
+- Traiter et analyser des documents avec Odin, notre moteur de traitement de documents
+- Suivre les usages et performances via des métriques détaillées
 
-### API Documentation
-- [Public API Reference](./api/publicAPI.md) - Main API endpoints documentation
-- [Agent API Reference](./api/publicAgentAPI.md) - Specific endpoints for AI agents
-- [Completions API](./api/completions.md) - Text generation and completion endpoints
-- [OAuth Integration](./api/oauth.md) - Authentication and authorization
+## 📚 Sections de documentation
 
-### Integration Options
-- [IFrame Integration](./api/iframe.md) - Embed Devana.ai in your web applications
-- [IFrame Integration Examples](./api/iframeIntegration.md) - Sample code and use cases
-- [Available Tools](./api/tools.md) - List of built-in tools and capabilities
+### 📡 [API](./api/README.md)
 
-### On-Premises Deployment
-- [Deployment Guide](./on-prem/README.md) - Getting started with on-prem installation
-- [Adding Custom Models](./on-prem/ADD_MODEL.md) - Integrate your own AI models
-- [Monitoring & License](./on-prem/MONITORING_LICENCE.md) - Usage tracking and licensing
-- [Health Monitoring](./on-prem/HEALTH_SERVICES.md) - Service health and maintenance
-- [Troubleshooting](./on-prem/BUG_REPORT.md) - Common issues and solutions
+Documentation complète de l'API REST pour intégrer Devana.ai dans vos applications.
 
-### Technical Reference
-- [Supported Formats](./Supported%20formats.md) - File types and data formats
-- [Changelog](./Changelog/) - Version history and updates
+- **Authentification** : OAuth 2.0
+- **Endpoints** : Agents, Conversations, Completions
+- **Intégration** : IFrame, Tools, Webhooks
 
-## 🚀 Getting Started
+### 🚀 [Déploiement](./deployment/README.md)
 
-1. **Cloud Solution**: 
-   - Visit [devana.ai](https://www.devana.ai) to create an account
-   - Follow the [API Documentation](./api/publicAPI.md) to integrate
+Guide complet pour déployer Devana.ai en on-premise ou cloud privé.
 
-2. **On-Premises**: 
-   - Follow our [Deployment Guide](./on-prem/README.md)
-   - Configure your environment using the provided documentation
+- **[Requirements](./deployment/requirements.md)** ⭐ : Dimensionnement matériel, LLM/Embeddings, réseau, sécurité
+- **Configuration** : Variables d'environnement, modèles personnalisés
+- **Infrastructure** : Kubernetes, Azure, Base de données PostgreSQL
+- **Authentification** : SSO (Azure AD, Google, LDAP, OIDC...)
+- **Monitoring** : Health checks, licences
+
+### 📋 [Changelogs](./changelogs/)
+
+Historique des versions et fonctionnalités.
+
+- [Devana.ai](./changelogs/devana/README.md) - Plateforme principale
+- [Odin](./changelogs/odin/README.md) - Service de traitement de documents
+
+### 📖 [Documentation générale](./docs/)
+
+- [Formats supportés](./docs/supported-formats.md) - Types de fichiers et formats de données
+
+## 🚀 Démarrage rapide
+
+### Solution Cloud
+
+1. Créez un compte sur [devana.ai](https://www.devana.ai)
+2. Obtenez votre clé API
+3. Suivez la [documentation API](./api/README.md) pour intégrer
+
+### Solution On-Premise
+
+1. Consultez le [guide de déploiement](./deployment/README.md)
+2. Configurez votre environnement
+3. Déployez avec Kubernetes
+
+## 💡 Exemples d'utilisation
+
+### Appel API simple
+
+```bash
+curl -X POST https://api.devana.ai/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agentId": "your-agent-id",
+    "messages": [{"role": "user", "content": "Bonjour!"}]
+  }'
+```
+
+### Intégration IFrame
+
+```html
+<iframe
+  src="https://app.devana.ai/embed/your-agent-id"
+  width="100%"
+  height="600px"
+  frameborder="0"
+></iframe>
+```
+
+## 🏗️ Architecture
+
+```
+Devana.ai Platform
+├── Front-end (Next.js)
+├── API Server (Node.js + GraphQL)
+├── Odin (Document Processing)
+└── Database (PostgreSQL + Vector DB)
+```
+
+## 🔗 Liens utiles
+
+- 🌐 [Site web](https://www.devana.ai)
+- 📱 [Application](https://app.devana.ai)
+- 🐙 [GitHub - Devana](https://github.com/Scriptor-Group/devana.ai)
+- 🐙 [GitHub - Odin](https://github.com/Scriptor-Group/odin)
 
 ## 💬 Support
 
-For technical support:
-- Review the documentation in this repository
-- Submit issues through the appropriate channels
-- Contact our support team for enterprise-specific questions
+Pour le support technique :
+
+- Consultez la documentation dans ce repository
+- Contactez support-it@devana.ai pour les questions spécifiques
+
+## 📄 Licence
+
+© 2025 Scriptor Group - Tous droits réservés
 
 ---
-For the latest updates and features, visit [devana.ai](https://www.devana.ai)
+
+**Dernière mise à jour** : Septembre 2025
+**Version** : v0.6.0053
