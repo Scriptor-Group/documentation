@@ -6,6 +6,27 @@
 
 ---
 
+## 📑 Table des matières
+
+1. [Vue d'ensemble](#-vue-densemble)
+2. [Architecture de la plateforme](#-architecture-de-la-plateforme)
+3. [Requirements Matériels](#-requirements-matériels)
+   - [Configuration minimale](#configuration-minimale-environnement-de-test--50-utilisateurs)
+   - [Configuration production](#configuration-recommandée-production--100-500-utilisateurs)
+   - [Configuration entreprise](#configuration-entreprise-1000-10-000-utilisateurs)
+4. [Requirements LLM & Embeddings](#-requirements-llm--embeddings)
+   - [Scénario 1 : Cloud Providers](#scénario-1--cloud-providers-openai-azure-openai-anthropic)
+   - [Scénario 2 : Auto-hébergé](#scénario-2--llm-auto-hébergés-recommandé-pour-entreprises)
+   - [Scénario 3 : Hybride](#scénario-3--hybride-recommandé-pour-flexibilité)
+5. [Requirements Réseau](#-requirements-réseau)
+6. [Requirements Stockage](#-requirements-stockage)
+7. [Requirements Sécurité](#-requirements-sécurité)
+8. [Requirements Kubernetes](#-requirements-kubernetes)
+9. [Monitoring & Observabilité](#-monitoring--observabilité)
+10. [Ressources complémentaires](#-ressources-complémentaires)
+
+---
+
 ## 📋 Vue d'ensemble
 
 Ce document spécifie les exigences techniques pour le déploiement de la plateforme Devana.ai en environnement d'entreprise. Il est conçu pour les organisations à grande échelle nécessitant haute disponibilité, sécurité renforcée et conformité réglementaire.

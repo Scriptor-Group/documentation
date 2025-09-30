@@ -1,22 +1,46 @@
-# Completion API
+# Chat Completions API - Devana.ai
 
-Cette documentation détaille l'endpoint de completion compatible avec la structure API `v1/completions` d'OpenAI, avec des fonctionnalités complémentaires comme :
+Documentation de l'endpoint `/v1/chat/completions` pour générer des réponses avec vos agents IA.
 
-- Gestion complète des historiques de conversations
-- Support des fichiers en pièces jointes
-- Configuration avancée des agents et des modèles
-- Surveillance et analytique détaillée
-- RAG score pour évaluer la qualité des réponses
-- Gestion des tools calls avec contrôle d'exécution
-- Metadata pour les dashboards et logging via webhooks (Si configurés)
-- Debugging en temps réel
-- Headers complémentaires pour l'authentification des tools calls
-- Prompt dédié et sécurisé pour l'utilisateur en cours
-- Mécanisme de retry avec backoff exponentiel
+**Endpoint :** `POST https://api.devana.ai/v1/chat/completions`
+**Compatible :** OpenAI Chat Completions API + extensions Devana.ai
+
+---
+
+## 📑 Table des matières
+
+1. [Vue d'ensemble](#vue-densemble)
+2. [Authentification](#authentification)
+3. [Paramètres de la requête](#paramètres-de-la-requête)
+4. [Exemples d'utilisation](#exemples-dutilisation)
+5. [Streaming](#streaming)
+6. [RAG & Sources](#rag--sources)
+7. [Tools Calls](#tools-calls)
+8. [Gestion des erreurs](#gestion-des-erreurs)
+9. [Paramètres avancés](#paramètres-avancés)
+
+---
+
+## Vue d'ensemble
+
+L'endpoint `/v1/chat/completions` est compatible avec l'API OpenAI tout en offrant des fonctionnalités avancées :
+
+**Fonctionnalités principales :**
+- ✅ Gestion des historiques de conversations
+- ✅ Support des fichiers en pièces jointes
+- ✅ RAG (Retrieval Augmented Generation) automatique
+- ✅ Tools calls avec validation et contrôle
+- ✅ Streaming de réponses (Server-Sent Events)
+- ✅ Configuration avancée par agent
+- ✅ Metadata et webhooks pour analytics
+- ✅ Mode debug pour développement
+- ✅ Retry automatique avec backoff exponentiel
+
+---
 
 ## Authentification
 
-L'authentification est gérée via OAuth2. Incluez votre token d'authentification dans les headers de la requête :
+Incluez votre clé API dans le header `Authorization` :
 
 ```bash
 Authorization: Bearer VOTRE_TOKEN
