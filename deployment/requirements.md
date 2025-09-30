@@ -398,8 +398,8 @@ Odin -> Embeddings:8000 (ALLOW)
 
 ### Version
 
-- **Minimum** : Kubernetes 1.28+
-- **Recommandé** : Kubernetes 1.30+ ou OpenShift 4.16+
+- **Minimum** : Kubernetes 1.31+
+- **Recommandé** : Kubernetes 1.32+ ou OpenShift 4.19+
 - **Distributions supportées** :
   - Vanilla Kubernetes
   - Red Hat OpenShift
@@ -407,7 +407,7 @@ Odin -> Embeddings:8000 (ALLOW)
   - VMware Tanzu
   - Amazon EKS / Azure AKS / Google GKE (cloud privé)
 
-### Addons requis
+### Addons conseillés
 
 | Addon | Usage | Recommandation |
 |-------|-------|----------------|
