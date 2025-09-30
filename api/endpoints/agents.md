@@ -1,12 +1,54 @@
-# Documentation API Publique
+# API Agents - Devana.ai
 
-Bienvenue dans la documentation de l'API publique. Cette API permet aux clients d’interagir avec les services, de gérer leurs données, et d’effectuer diverses opérations. 
+Documentation des endpoints pour la gestion des agents IA.
+
+**Base URL :** `https://api.devana.ai`
+
+---
+
+## 📑 Table des matières
+
+1. [Authentification](#authentification)
+2. [Endpoints disponibles](#endpoints-disponibles)
+3. [Récupérer la liste des agents](#récupérer-la-liste-des-agents)
+4. [Récupérer un agent](#récupérer-un-agent)
+5. [Créer un agent](#créer-un-agent)
+6. [Mettre à jour un agent](#mettre-à-jour-un-agent)
+7. [Supprimer un agent](#supprimer-un-agent)
+8. [Récupérer les conversations](#récupérer-les-conversations-dun-agent)
+9. [Ajouter des fichiers](#ajouter-des-fichiers-à-un-agent)
+10. [Récupérer les tools](#récupérer-les-tools-actifs-sur-un-agent)
+
+---
 
 ## Authentification
 
-Toutes les routes nécessitent une clé API (`Authorization` header sous la forme `Bearer <API_KEY>`). Une clé valide est essentielle pour accéder aux fonctionnalités de l’API.
+Toutes les requêtes nécessitent une clé API dans le header `Authorization`.
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+Plus d'informations : [OAuth 2.0](../authentication/oauth.md)
 
 ---
+
+## Endpoints disponibles
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/v1/agents` | Liste tous les agents |
+| `GET` | `/v1/agents/:id` | Récupère un agent spécifique |
+| `POST` | `/v1/agents` | Crée un nouvel agent |
+| `PUT` | `/v1/agents/:id` | Met à jour un agent |
+| `DELETE` | `/v1/agents/:id` | Supprime un agent |
+| `GET` | `/v1/agents/:id/conversations` | Liste les conversations d'un agent |
+| `POST` | `/v1/agents/:id/files` | Ajoute des fichiers à un agent |
+| `GET` | `/v1/agents/:id/tools` | Liste les tools actifs |
+
+---
+
+## Endpoints
 
 ### **v1/agents**
 #### Récupérer la liste des agents
