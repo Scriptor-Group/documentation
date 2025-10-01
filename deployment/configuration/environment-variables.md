@@ -296,6 +296,17 @@ Paramètres de configuration liés à la sécurité du réseau et aux certificat
 
 ---
 
+## 6. Connecteurs Devana
+
+Configuration pour les connecteurs de sources de données externes (ex: SharePoint, Jira).
+
+| Variable      | Description                                                                           |
+| :------------ | :------------------------------------------------------------------------------------ |
+| `ENCRYPTION_KEY` | Clé utilisée pour chiffrer les données sensibles lors de leur transmission ou stockage. |
+
+---
+
+
 ## Frontend
 
 Ce document détaille les variables d'environnement requises pour le fonctionnement de l'application front-end (Next.js).
