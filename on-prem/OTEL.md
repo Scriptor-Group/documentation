@@ -9,6 +9,8 @@ OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://otel-collector:4318/v1/logs
 OTEL_RESOURCE_ATTRIBUTES=service.name=devana-api,service.version=0.0.0,deployment.environment=development
 ```
 
+Sachant que toutes les variables d'environnement général à OpenTelemtry sont pris en compte par défaut. Comme par exemple : `OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE` ou `OTEL_EXPORTER_OTLP_HEADERS`
+
 Pour les logs nous utilisons `pino-opentelemetry-transport`.
 Pour les traces et metrics :
 
@@ -27,3 +29,4 @@ const sdk = new NodeSDK({
 
 sdk.start();
 ```
+
