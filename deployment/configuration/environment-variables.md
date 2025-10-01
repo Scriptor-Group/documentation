@@ -298,7 +298,7 @@ Paramètres de configuration liés à la sécurité du réseau et aux certificat
 
 ## 6. Connecteurs Devana
 
-Configuration pour les connecteurs de sources de données externes (ex: SharePoint, Jira).
+Configuration pour les connecteurs de sources de données externes (ex: SharePoint, Jira). Cette variable est optionnelle si non utilisation du connecteur SharePoint.
 
 | Variable      | Description                                                                           |
 | :------------ | :------------------------------------------------------------------------------------ |
