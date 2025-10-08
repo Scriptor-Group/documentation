@@ -248,7 +248,18 @@ Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâch
 
 ---
 
-## 2. Stockage Fichiers (Compatible S3)
+### 2. BullMQ (Gestion des Files d'Attente)
+
+Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâches en arrière-plan.
+
+| Variable         | Description                                         |
+| :--------------- | :-------------------------------------------------- |
+| `CONCURRENCY_QUEUE`     | Nombre maximum de tâches simultanées dans la file d'attente. |
+| `QUEUE_NAME`     | Nom de la file d'attente.                     |
+
+---
+
+## 3. Stockage Fichiers (Compatible S3)
 
 Configuration pour le stockage d'objets (documents, images, etc.). Le système est compatible avec AWS S3 ou des solutions auto-hébergées comme Minio.
 
@@ -263,7 +274,7 @@ Configuration pour le stockage d'objets (documents, images, etc.). Le système e
 
 ---
 
-## 3. Services Applicatifs
+## 4. Services Applicatifs
 
 Configuration des points d'accès (URL) pour les services internes ou externes dont l'application dépend.
 
@@ -274,7 +285,7 @@ Configuration des points d'accès (URL) pour les services internes ou externes d
 
 ---
 
-## 4. Modèle d'IA (LLM)
+## 5. Modèle d'IA (LLM)
 
 Configuration de la connexion au modèle de langage (Large Language Model) utilisé pour la vision et la génération de texte.
 
@@ -286,7 +297,7 @@ Configuration de la connexion au modèle de langage (Large Language Model) utili
 
 ---
 
-## 5. Sécurité & Réseau
+## 6. Sécurité & Réseau
 
 Paramètres de configuration liés à la sécurité du réseau et aux certificats.
 
