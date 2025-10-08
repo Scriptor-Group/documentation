@@ -1,0 +1,314 @@
+---
+# Service Account pour l'opérateur
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-operator
+  namespace: postgres-operator
+
+---
+# Role pour gérer les ressources dans le namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-operator
+  namespace: postgres-operator
+rules:
+# Gestion des custom resources PostgreSQL
+- apiGroups:
+  - acid.zalan.do
+  resources:
+  - postgresqls
+  - postgresqls/status
+  - operatorconfigurations
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des pods PostgreSQL
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des services
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des endpoints (pour Patroni)
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des secrets (credentials utilisateurs)
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des configmaps
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des PVCs (volumes persistants)
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Lecture des PVs (pour info)
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - watch
+
+# Gestion des StatefulSets
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Lecture des events
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des ServiceAccounts pour les pods PostgreSQL
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+
+# Gestion des PodDisruptionBudgets
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Gestion des cronjobs (pour les backups logiques)
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Lecture des nodes (pour affinity/anti-affinity)
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+
+# Gestion des RoleBindings dans le namespace
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+
+---
+# RoleBinding pour lier le ServiceAccount au Role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: postgres-operator
+  namespace: postgres-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: postgres-operator
+subjects:
+- kind: ServiceAccount
+  name: postgres-operator
+  namespace: postgres-operator
+
+---
+# Role additionnel pour les pods PostgreSQL
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-pod
+  namespace: postgres-operator
+rules:
+# Les pods PostgreSQL ont besoin d'accéder aux endpoints pour Patroni
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Accès aux configmaps pour la configuration
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+
+# Accès aux pods (pour la découverte de cluster)
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+# Accès aux services
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
+---
+# RoleBinding pour les pods PostgreSQL
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: postgres-pod
+  namespace: postgres-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: postgres-pod
+subjects:
+- kind: ServiceAccount
+  name: postgres-pod
+  namespace: postgres-operator
+
+---
+# ServiceAccount pour les pods PostgreSQL
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-pod
+  namespace: postgres-operator
