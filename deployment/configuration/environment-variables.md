@@ -286,7 +286,13 @@ Configuration de la connexion au modèle de langage (Large Language Model) utili
 
 ---
 
-## 5. Sécurité & Réseau
+## Sharepoint
+Paramètres spécifiques pour l'intégration avec SharePoint en tant que fournisseur de données.
+| Variable                   | Description                                         |
+| :------------------------- | :-------------------------------------------------- |
+| `ASPX_ENABLE_ALT_FIRST`     | Active l'option de récupération textuel de l'image au lieu de son contenu binaire. Par défaut, le contenu binaire est récupéré. |
+
+## 6. Sécurité & Réseau
 
 Paramètres de configuration liés à la sécurité du réseau et aux certificats.
 
