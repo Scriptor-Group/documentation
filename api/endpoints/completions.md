@@ -83,7 +83,8 @@ POST /v1/chat/completions
 | `metadata`          | object       | Non         | Metadata pour les dashboards et logging via webhooks (Si configurés).                                        |
 | `headers`           | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
 | `identity`          | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
-| `asyncRagScore`    | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                           |
+| `asyncRagScore`     | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                             |
+| `attachementsFastMode`        | boolean      | Non         | Si vrai, nous ignorons la vision sur les attachements                                              |
 
 ### Vérifications et limites
 
