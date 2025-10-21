@@ -19,7 +19,7 @@ Documentation complète pour le déploiement de Devana.ai en environnement on-pr
 
 ### ⚙️ Configuration
 - [Variables d'environnement](./configuration/environment-variables.md) - Configuration complète de tous les services
-- [Ajout de modèles personnalisés](./configuration/add-custom-model.md) - LLM & Embeddings auto-hébergés
+- [Fournisseurs LLM](./configuration/llm-providers.md) - Configuration des providers LLM & Embeddings (cloud et auto-hébergés)
 - [Template de documentation agent](./configuration/agent-template.md) - Création d'agents personnalisés
 
 ### 🏗️ Infrastructure
@@ -58,8 +58,8 @@ Pour effectuer l'installation de Devana, vous devez suivre les étapes décrites
 Pour déployer la base de données PostgreSQL de Devana, vous pouvez suivre les instructions présentes dans le document suivant :
 - [Déploiement de la base de données](./infrastructure/database/db/postgresql.md).
 
-# Ajout d'un model
+# Configuration des fournisseurs LLM
 
-Pour ajouter un modèle personnalisé à Devana, vous pouvez l'ajouter via l'interface d'administration de Devana ou en utilisant l'accès base de données, vous pouvez suivre les instructions présentes dans le document suivant :
-- [Ajout d'un modèle personnalisé](./configuration/add-custom-model.md).
+Pour configurer les fournisseurs LLM (cloud ou auto-hébergés) et les modèles personnalisés dans Devana, consultez la documentation suivante :
+- [Fournisseurs LLM](./configuration/llm-providers.md).
 

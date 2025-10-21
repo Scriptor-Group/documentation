@@ -521,7 +521,7 @@ provisioner: ru.yandex.s3.csi
 
 - [Guide de déploiement Kubernetes](./infrastructure/kubernetes/kube/README.md)
 - [Configuration des variables d'environnement](./configuration/environment-variables.md)
-- [Ajout de modèles personnalisés](./configuration/add-custom-model.md)
+- [Fournisseurs LLM](./configuration/llm-providers.md)
 - [Configuration SSO](./authentication/README.md)
 - [Monitoring et health checks](./monitoring/health-checks.md)
 

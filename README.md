@@ -30,7 +30,7 @@ Documentation complète de l'API REST pour intégrer Devana.ai dans vos applicat
 Guide complet pour déployer Devana.ai en on-premise ou cloud privé.
 
 - **[Requirements](./deployment/requirements.md)** ⭐ : Dimensionnement matériel, LLM/Embeddings, réseau, sécurité
-- **Configuration** : Variables d'environnement, modèles personnalisés
+- **Configuration** : Variables d'environnement, [fournisseurs LLM](./deployment/configuration/llm-providers.md)
 - **Infrastructure** : Kubernetes, Azure, Base de données PostgreSQL
 - **Authentification** : SSO (Azure AD, Google, LDAP, OIDC...)
 - **Monitoring** : Health checks, licences
