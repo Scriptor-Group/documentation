@@ -21,6 +21,7 @@ Ce guide décrit comment configurer l'authentification Single Sign-On (SSO) avec
 | `AZURE_AD_ON_PREM_URL`   | URL des métadonnées ADFS (on-prem uniquement) | On-prem: Oui | `https://adfs.yourcompany.com/.well-known/openid-configuration` |
 | `AZURE_AD_SCOPES`        | Liste des scopes séparés par virgules         | Non          | `profile,offline_access,email,User.Read,GroupMember.Read.All`   |
 | `AZURE_AD_ROLES`         | Groupes à synchroniser comme équipes          | Non          | `Administrators,Users,Managers`                                 |
+| `AZURE_AD_LOG_LEVEL`     | Niveau de log (error, warn, info, debug)      | Non          | `info`                                                          |
 
 ## 1. Création de l'App Registration Azure AD
 
@@ -59,15 +60,15 @@ Ce guide décrit comment configurer l'authentification Single Sign-On (SSO) avec
 
 #### Permissions obligatoires :
 
-- `User.Read` - Lire le profil utilisateur de base
-- `GroupMember.Read.All` - Lire les appartenances aux groupes de l'utilisateur
+- `User.Read` - Lire le profil utilisateur de base ainsi que ses groupes
 
 #### Permissions optionnelles :
 
+- `GroupMember.Read.All` - Lire les groupes que les utilisateurs peuvent voir
 - `Group.Read.All` - Alternative à GroupMember.Read.All (plus de permissions)
 - `Directory.Read.All` - Lire les rôles directory (si nécessaire)
 
-3. Cliquez sur **Grant admin consent** pour approuver les permissions
+1. Cliquez sur **Grant admin consent** pour approuver les permissions
 
 ## 3. Configuration des claims de tokens
 

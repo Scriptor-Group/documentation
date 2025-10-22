@@ -113,6 +113,27 @@ Traditional authentication only:
 - No SSO provider buttons shown
 - Users must register with email/password
 
+### 5. Example of PostgreSQL Update
+To update a whitemark to enable Google and GitHub SSO with both SSO and credentials authentication:
+
+```sql
+UPDATE "devana"."WhiteMark" 
+SET 
+    "registrationType" = '{"CREDENTIALS", "SSO"}'::array<"RegistrationType">, 
+    "allowedProviders" = '{"GOOGLE", "GITHUB"}'::array<"AuthProviders">
+WHERE "id" = 'your-white-mark-id';
+```
+
+To update a whitemark to enable SSO on registration only with Azure AD:
+
+```sql
+UPDATE "devana"."WhiteMark" 
+SET 
+    "allowedRegistration" = '{"SSO"}'::array<"RegistrationType">
+WHERE "id" = 'your-white-mark-id';
+```
+  
+
 ## Configuration Methods
 
 ### GraphQL Mutations
