@@ -20,7 +20,7 @@ Configure Google OAuth 2.0 authentication for your Devana.ai whitemark instance.
    - Enable the Google+ API (or newer People API)
 
 2. **Configure OAuth Consent Screen:**
-   - Navigate to "APIs & Services" ’ "OAuth consent screen"
+   - Navigate to "APIs & Services" -> "OAuth consent screen"
    - Choose "External" for public applications or "Internal" for G Suite organizations
    - Fill in required information:
      - **App name**: `Devana.ai`
@@ -30,8 +30,8 @@ Configure Google OAuth 2.0 authentication for your Devana.ai whitemark instance.
    - Add test users if in testing mode
 
 3. **Create OAuth 2.0 Credentials:**
-   - Go to "APIs & Services" ’ "Credentials"
-   - Click "Create Credentials" ’ "OAuth client ID"
+   - Go to "APIs & Services" -> "Credentials"
+   - Click "Create Credentials" -> "OAuth client ID"
    - Select "Web application" as application type
    - Configure:
      - **Name**: `Devana.ai SSO`
@@ -124,7 +124,7 @@ Google Workspace admins can control third-party app access:
 
 1. **Allow/Block Apps:**
    - Go to Google Admin Console
-   - Navigate to "Security" ’ "API controls"
+   - Navigate to "Security" -> "API controls"
    - Manage third-party app access
 
 2. **App Verification:**
@@ -228,4 +228,4 @@ Google APIs have usage limits:
 - **Requests per 100 seconds per user**: 100 requests
 - **Requests per 100 seconds**: 10,000 requests
 
-Monitor usage in Google Cloud Console under "APIs & Services" ’ "Quotas".
+Monitor usage in Google Cloud Console under "APIs & Services" -> "Quotas".

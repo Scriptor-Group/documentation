@@ -18,10 +18,10 @@ Configure Authentik authentication for your Devana.ai whitemark instance. Authen
 
 1. **Access Authentik Admin Interface:**
    - Log in to your Authentik instance as an administrator
-   - Navigate to "Applications" ’ "Applications"
+   - Navigate to "Applications" -> "Applications"
 
 2. **Create OAuth2/OpenID Provider:**
-   - Go to "Applications" ’ "Providers"
+   - Go to "Applications" -> "Providers"
    - Click "Create" and select "OAuth2/OpenID Provider"
    - Configure the following settings:
      - **Name**: `Devana.ai SSO`
@@ -32,7 +32,7 @@ Configure Authentik authentication for your Devana.ai whitemark instance. Authen
      - **Scopes**: Include `openid`, `profile`, `email`, `offline_access`
 
 3. **Create Application:**
-   - Go to "Applications" ’ "Applications"
+   - Go to "Applications" -> "Applications"
    - Click "Create" and configure:
      - **Name**: `Devana.ai`
      - **Slug**: `devana-ai`

@@ -16,7 +16,7 @@ Configure GitHub OAuth authentication for your Devana.ai whitemark instance.
 
 1. **Create OAuth App:**
    - Go to [GitHub Developer Settings](https://github.com/settings/developers)
-   - Click "OAuth Apps" ’ "New OAuth App"
+   - Click "OAuth Apps" -> "New OAuth App"
    - Fill in the application details:
      - **Application name**: `Devana.ai SSO`
      - **Homepage URL**: `https://your-domain.com`
