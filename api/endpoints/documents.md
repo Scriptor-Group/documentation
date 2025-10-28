@@ -1,4 +1,4 @@
-# Documents API - Devana.ai
+# Documents API
 
 Documentation complète de l'API de gestion et d'extraction de documents dans Devana.ai.
 
@@ -27,6 +27,7 @@ Documentation complète de l'API de gestion et d'extraction de documents dans De
 ## Vue d'ensemble
 
 L'API Documents permet de gérer le cycle de vie complet des documents :
+
 - Upload de documents avec extraction automatique du contenu
 - Récupération du contenu extrait et structuré
 - Suivi du statut d'extraction en temps réel
@@ -56,9 +57,9 @@ Récupère le payload complet d'un document incluant le texte extrait, la struct
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du document |
+| Paramètre | Type          | Requis | Description                    |
+| --------- | ------------- | ------ | ------------------------------ |
+| `id`      | String (CUID) | Oui    | Identifiant unique du document |
 
 #### Requête
 
@@ -132,9 +133,9 @@ Récupère uniquement le statut d'extraction d'un document sans le contenu compl
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du document |
+| Paramètre | Type          | Requis | Description                    |
+| --------- | ------------- | ------ | ------------------------------ |
+| `id`      | String (CUID) | Oui    | Identifiant unique du document |
 
 #### Requête
 
@@ -153,6 +154,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 **Statuts possibles :**
+
 - `PENDING` : En attente de traitement
 - `IN_PROGRESS` : Extraction en cours
 - `DONE` : Extraction terminée avec succès
@@ -201,17 +203,17 @@ Upload un document et lance automatiquement l'extraction du contenu. Retourne im
 
 #### Headers
 
-| Header | Type | Requis | Description |
-|---------|------|--------|-------------|
-| `Authorization` | String | Oui | Token Bearer avec API Key |
-| `Content-Type` | String | Oui | `multipart/form-data` |
+| Header          | Type   | Requis | Description               |
+| --------------- | ------ | ------ | ------------------------- |
+| `Authorization` | String | Oui    | Token Bearer avec API Key |
+| `Content-Type`  | String | Oui    | `multipart/form-data`     |
 
 #### Body Parameters (multipart/form-data)
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `file` | File | Oui | Le fichier à uploader |
-| `folderId` | String (CUID) | Oui | ID du dossier de destination |
+| Paramètre  | Type          | Requis | Description                  |
+| ---------- | ------------- | ------ | ---------------------------- |
+| `file`     | File          | Oui    | Le fichier à uploader        |
+| `folderId` | String (CUID) | Oui    | ID du dossier de destination |
 
 #### Requête
 
@@ -353,24 +355,26 @@ interface TextPayload {
 
 ## Statuts d'extraction
 
-| Statut | Description | Actions recommandées |
-|--------|-------------|---------------------|
-| `PENDING` | Document en file d'attente | Attendre et vérifier régulièrement |
-| `IN_PROGRESS` | Extraction en cours | Continuer le polling |
-| `DONE` | Extraction réussie | Récupérer le payload complet |
-| `ERROR` | Échec de l'extraction | Vérifier les logs, réessayer si nécessaire |
+| Statut        | Description                | Actions recommandées                       |
+| ------------- | -------------------------- | ------------------------------------------ |
+| `PENDING`     | Document en file d'attente | Attendre et vérifier régulièrement         |
+| `IN_PROGRESS` | Extraction en cours        | Continuer le polling                       |
+| `DONE`        | Extraction réussie         | Récupérer le payload complet               |
+| `ERROR`       | Échec de l'extraction      | Vérifier les logs, réessayer si nécessaire |
 
 ---
 
 ## Types de fichiers supportés
 
 ### Documents avec extraction Odin
+
 - **PDF** : Extraction complète avec structure, images, tableaux
 - **DOCX/DOC** : Documents Word avec formatage préservé
 - **PPTX/PPT** : Présentations PowerPoint
 - **Images** : PNG, JPG, JPEG (avec OCR si nécessaire)
 
 ### Documents avec extraction simple
+
 - **Texte** : TXT, MD, CSV
 - **Code** : JS, PY, JSON, XML, HTML
 - **Tableurs** : XLSX, XLS (extraction basique)
@@ -381,14 +385,14 @@ Pour la liste complète, consultez [Formats supportés](../../docs/supported-for
 
 ## Gestion des erreurs
 
-| Code | Message | Description | Solution |
-|------|---------|-------------|----------|
-| `400` | Bad Request | Paramètres invalides | Vérifier le format des paramètres |
-| `400` | No file uploaded | Aucun fichier fourni | Inclure un fichier dans la requête |
-| `401` | Unauthorized | Permissions insuffisantes | Vérifier les droits sur le dossier |
-| `404` | File/Folder not found | Ressource introuvable | Vérifier l'ID fourni |
-| `408` | Request Timeout | Extraction trop longue | Réessayer ou utiliser l'API Jobs |
-| `500` | Internal Server Error | Erreur serveur | Contacter le support |
+| Code  | Message               | Description               | Solution                           |
+| ----- | --------------------- | ------------------------- | ---------------------------------- |
+| `400` | Bad Request           | Paramètres invalides      | Vérifier le format des paramètres  |
+| `400` | No file uploaded      | Aucun fichier fourni      | Inclure un fichier dans la requête |
+| `401` | Unauthorized          | Permissions insuffisantes | Vérifier les droits sur le dossier |
+| `404` | File/Folder not found | Ressource introuvable     | Vérifier l'ID fourni               |
+| `408` | Request Timeout       | Extraction trop longue    | Réessayer ou utiliser l'API Jobs   |
+| `500` | Internal Server Error | Erreur serveur            | Contacter le support               |
 
 ### Gestion des erreurs d'extraction
 
@@ -414,24 +418,24 @@ En cas d'erreur lors de l'extraction :
 ```javascript
 async function uploadDocumentWithRetry(file, folderId, maxRetries = 3) {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('folderId', folderId);
+  formData.append("file", file);
+  formData.append("folderId", folderId);
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch('https://api.devana.ai/v1/documents', {
-        method: 'POST',
+      const response = await fetch("https://api.devana.ai/v1/documents", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${API_KEY}`
+          Authorization: `Bearer ${API_KEY}`,
         },
-        body: formData
+        body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
 
         // Si le document est en cours de traitement
-        if (data.data.status === 'IN_PROGRESS') {
+        if (data.data.status === "IN_PROGRESS") {
           return await waitForExtraction(data.data.documentId);
         }
 
@@ -440,7 +444,7 @@ async function uploadDocumentWithRetry(file, folderId, maxRetries = 3) {
 
       if (response.status === 408 && attempt < maxRetries) {
         console.log(`Timeout, retry ${attempt}/${maxRetries}`);
-        await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+        await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
         continue;
       }
 
@@ -453,19 +457,19 @@ async function uploadDocumentWithRetry(file, folderId, maxRetries = 3) {
 }
 
 async function waitForExtraction(documentId) {
-  let status = 'PENDING';
+  let status = "PENDING";
   let attempts = 0;
   const maxAttempts = 60; // 2 minutes maximum
 
-  while (status !== 'DONE' && status !== 'ERROR' && attempts < maxAttempts) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  while (status !== "DONE" && status !== "ERROR" && attempts < maxAttempts) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const response = await fetch(
       `https://api.devana.ai/v1/documents/${documentId}/status`,
       {
         headers: {
-          'Authorization': `Bearer ${API_KEY}`
-        }
+          Authorization: `Bearer ${API_KEY}`,
+        },
       }
     );
 
@@ -476,14 +480,14 @@ async function waitForExtraction(documentId) {
     console.log(`Status: ${status} (attempt ${attempts}/${maxAttempts})`);
   }
 
-  if (status === 'DONE') {
+  if (status === "DONE") {
     // Récupérer le payload complet
     const response = await fetch(
       `https://api.devana.ai/v1/documents/${documentId}`,
       {
         headers: {
-          'Authorization': `Bearer ${API_KEY}`
-        }
+          Authorization: `Bearer ${API_KEY}`,
+        },
       }
     );
 
@@ -664,16 +668,19 @@ curl -X GET "https://api.devana.ai/v1/jobs?targetId=cm4doc123abc&type=EXTRACTION
 ## Bonnes pratiques
 
 1. **Gestion des timeouts**
+
    - Implémenter un système de retry pour les uploads
    - Utiliser le polling pour les documents complexes
    - Définir un timeout maximum (ex: 5 minutes)
 
 2. **Optimisation des performances**
+
    - Grouper les uploads en batch quand possible
    - Utiliser l'API Jobs pour le suivi asynchrone
    - Mettre en cache les payloads extraits
 
 3. **Gestion des erreurs**
+
    - Toujours vérifier le statut d'extraction
    - Logger les erreurs pour le debugging
    - Prévoir un fallback pour les échecs d'extraction
@@ -688,6 +695,7 @@ curl -X GET "https://api.devana.ai/v1/jobs?targetId=cm4doc123abc&type=EXTRACTION
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API Documents :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Contactez le support technique : support@devana.ai
 - Reportez les bugs sur notre [GitHub](https://github.com/devana-ai/api-issues)

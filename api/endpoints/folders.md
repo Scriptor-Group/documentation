@@ -1,4 +1,4 @@
-# Folders API - Devana.ai
+# Folders API
 
 Documentation complète de l'API de gestion des dossiers (bases de connaissances) dans Devana.ai.
 
@@ -34,6 +34,7 @@ Documentation complète de l'API de gestion des dossiers (bases de connaissances
 L'API Folders permet de gérer les dossiers (bases de connaissances) qui contiennent les documents utilisés par les agents IA. Chaque dossier peut contenir plusieurs fichiers et être partagé entre utilisateurs.
 
 **Fonctionnalités principales :**
+
 - Création et gestion de dossiers de documents
 - Association de fichiers aux dossiers
 - Partage de dossiers entre utilisateurs
@@ -116,9 +117,9 @@ Récupère les détails complets d'un dossier spécifique.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du dossier |
+| Paramètre | Type          | Requis | Description                   |
+| --------- | ------------- | ------ | ----------------------------- |
+| `id`      | String (CUID) | Oui    | Identifiant unique du dossier |
 
 #### Requête
 
@@ -159,11 +160,11 @@ Crée un nouveau dossier pour organiser des documents.
 
 #### Body Parameters
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `name` | String | Oui | Nom du dossier |
-| `description` | String | Non | Description du dossier |
-| `chunkSize` | Number | Non | Taille des chunks pour l'indexation (par défaut: 500) |
+| Paramètre     | Type   | Requis | Description                                           |
+| ------------- | ------ | ------ | ----------------------------------------------------- |
+| `name`        | String | Oui    | Nom du dossier                                        |
+| `description` | String | Non    | Description du dossier                                |
+| `chunkSize`   | Number | Non    | Taille des chunks pour l'indexation (par défaut: 500) |
 
 #### Requête
 
@@ -219,17 +220,17 @@ Met à jour les propriétés d'un dossier existant.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du dossier |
+| Paramètre | Type          | Requis | Description                   |
+| --------- | ------------- | ------ | ----------------------------- |
+| `id`      | String (CUID) | Oui    | Identifiant unique du dossier |
 
 #### Body Parameters
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `name` | String | Non | Nouveau nom du dossier |
-| `description` | String | Non | Nouvelle description |
-| `chunkSize` | Number | Non | Nouvelle taille de chunks (ré-indexe tous les fichiers) |
+| Paramètre     | Type   | Requis | Description                                             |
+| ------------- | ------ | ------ | ------------------------------------------------------- |
+| `name`        | String | Non    | Nouveau nom du dossier                                  |
+| `description` | String | Non    | Nouvelle description                                    |
+| `chunkSize`   | Number | Non    | Nouvelle taille de chunks (ré-indexe tous les fichiers) |
 
 #### Requête
 
@@ -286,9 +287,9 @@ Supprime définitivement un dossier et tous ses fichiers associés.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du dossier |
+| Paramètre | Type          | Requis | Description                   |
+| --------- | ------------- | ------ | ----------------------------- |
+| `id`      | String (CUID) | Oui    | Identifiant unique du dossier |
 
 #### Requête
 
@@ -309,6 +310,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 **⚠️ Attention :**
+
 - Les dossiers de base (`isBase: true`) ne peuvent pas être supprimés
 - La suppression est définitive et entraîne :
   - Suppression de tous les fichiers du dossier
@@ -331,15 +333,15 @@ Associe des fichiers existants à un dossier.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | Identifiant unique du dossier |
+| Paramètre | Type          | Requis | Description                   |
+| --------- | ------------- | ------ | ----------------------------- |
+| `id`      | String (CUID) | Oui    | Identifiant unique du dossier |
 
 #### Body Parameters
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `filesIds` | Array[String] | Oui | Liste des IDs de fichiers à associer |
+| Paramètre  | Type          | Requis | Description                          |
+| ---------- | ------------- | ------ | ------------------------------------ |
+| `filesIds` | Array[String] | Oui    | Liste des IDs de fichiers à associer |
 
 #### Requête
 
@@ -351,11 +353,7 @@ Content-Type: application/json
 
 ```json
 {
-  "filesIds": [
-    "cm4file1abc123xyz",
-    "cm4file2def456uvw",
-    "cm4file3ghi789rst"
-  ]
+  "filesIds": ["cm4file1abc123xyz", "cm4file2def456uvw", "cm4file3ghi789rst"]
 }
 ```
 
@@ -364,15 +362,12 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "data": [
-    "cm4file1abc123xyz",
-    "cm4file2def456uvw",
-    "cm4file3ghi789rst"
-  ]
+  "data": ["cm4file1abc123xyz", "cm4file2def456uvw", "cm4file3ghi789rst"]
 }
 ```
 
 **Notes :**
+
 - Les fichiers doivent appartenir à l'utilisateur
 - Les fichiers déjà associés au dossier sont ignorés
 - Déclenche la synchronisation avec la base vectorielle
@@ -396,9 +391,9 @@ Récupère la liste de tous les fichiers associés à un dossier.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String | Oui | Identifiant unique du dossier |
+| Paramètre | Type   | Requis | Description                   |
+| --------- | ------ | ------ | ----------------------------- |
+| `id`      | String | Oui    | Identifiant unique du dossier |
 
 #### Requête
 
@@ -450,10 +445,10 @@ Supprime définitivement un fichier spécifique d'un dossier.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String | Oui | Identifiant unique du dossier |
-| `fileId` | String | Oui | Identifiant unique du fichier |
+| Paramètre | Type   | Requis | Description                   |
+| --------- | ------ | ------ | ----------------------------- |
+| `id`      | String | Oui    | Identifiant unique du dossier |
+| `fileId`  | String | Oui    | Identifiant unique du fichier |
 
 #### Requête
 
@@ -474,6 +469,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 **⚠️ Attention :** La suppression est définitive et entraîne :
+
 - Suppression du fichier du stockage cloud
 - Suppression des embeddings vectoriels
 - Suppression des métadonnées
@@ -490,11 +486,13 @@ curl -X DELETE https://api.devana.ai/v1/folders/cm4abc123def456ghi789/files/cm4f
 ## Types de dossiers
 
 ### Dossiers standards
+
 - Créés par les utilisateurs
 - Peuvent être modifiés et supprimés
 - Peuvent être partagés avec d'autres utilisateurs
 
 ### Dossiers de base (`isBase: true`)
+
 - Dossiers système créés automatiquement
 - Ne peuvent pas être supprimés
 - Associés automatiquement aux agents
@@ -507,16 +505,19 @@ curl -X DELETE https://api.devana.ai/v1/folders/cm4abc123def456ghi789/files/cm4f
 L'API vérifie automatiquement les permissions selon le contexte :
 
 ### Permissions de lecture
+
 - Propriétaire du dossier : accès complet
 - Utilisateurs avec partage : accès en lecture seule
 - Vérifiées via `guardAuthorizedFolderRights`
 
 ### Permissions d'écriture
+
 - Propriétaire du dossier : toutes les opérations
 - Utilisateurs avec droits d'écriture explicites
 - Vérifiées via `guardAuthorizedFolderRightsWrite`
 
 ### Hiérarchie des permissions
+
 1. Vérification de la propriété
 2. Vérification des partages
 3. Vérification des droits sur les agents associés (pour les dossiers de base)
@@ -526,18 +527,23 @@ L'API vérifie automatiquement les permissions selon le contexte :
 ## Gestion des chunks
 
 ### Qu'est-ce qu'un chunk ?
+
 Un chunk est un segment de texte utilisé pour l'indexation vectorielle. La taille du chunk affecte :
+
 - La précision de la recherche
 - La pertinence des résultats
 - Les performances du système
 
 ### Tailles recommandées
+
 - **300-500 tokens** : Documents techniques, FAQ
 - **500-800 tokens** : Documentation générale
 - **800-1200 tokens** : Textes narratifs longs
 
 ### Modification du chunkSize
+
 Lorsque vous modifiez le `chunkSize` d'un dossier :
+
 1. Tous les documents existants sont supprimés de l'index
 2. Les fichiers sont ré-indexés avec la nouvelle taille
 3. Le processus est asynchrone et peut prendre du temps
@@ -546,14 +552,14 @@ Lorsque vous modifiez le `chunkSize` d'un dossier :
 
 ## Codes d'erreur
 
-| Code | Message | Description |
-|------|---------|-------------|
-| `400` | Bad Request | Paramètres invalides ou manquants |
-| `401` | Unauthorized | Clé API manquante ou invalide |
-| `403` | Forbidden | Permissions insuffisantes |
-| `404` | Not Found | Dossier ou fichier introuvable |
-| `409` | Conflict | Fichiers déjà associés au dossier |
-| `500` | Internal Server Error | Erreur serveur inattendue |
+| Code  | Message               | Description                       |
+| ----- | --------------------- | --------------------------------- |
+| `400` | Bad Request           | Paramètres invalides ou manquants |
+| `401` | Unauthorized          | Clé API manquante ou invalide     |
+| `403` | Forbidden             | Permissions insuffisantes         |
+| `404` | Not Found             | Dossier ou fichier introuvable    |
+| `409` | Conflict              | Fichiers déjà associés au dossier |
+| `500` | Internal Server Error | Erreur serveur inattendue         |
 
 ---
 
@@ -648,14 +654,14 @@ Les dossiers peuvent être associés aux agents IA pour leur fournir une base de
 // Exemple d'association via l'API Agents
 const associateFolderToAgent = async (agentId, folderId) => {
   const response = await fetch(`https://api.devana.ai/v1/agents/${agentId}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Authorization': `Bearer ${API_KEY}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${API_KEY}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      folderIds: [folderId]  // Ajouter le dossier à l'agent
-    })
+      folderIds: [folderId], // Ajouter le dossier à l'agent
+    }),
   });
 
   return response.json();
@@ -667,16 +673,19 @@ const associateFolderToAgent = async (agentId, folderId) => {
 ## Bonnes pratiques
 
 1. **Organisation des dossiers**
+
    - Créez des dossiers thématiques séparés
    - Utilisez des descriptions claires
    - Évitez les dossiers trop volumineux (> 1000 fichiers)
 
 2. **Optimisation des chunks**
+
    - Testez différentes tailles pour votre cas d'usage
    - Plus petit = plus précis mais plus de tokens
    - Plus grand = moins de tokens mais moins précis
 
 3. **Gestion des permissions**
+
    - Utilisez les partages pour la collaboration
    - Vérifiez les permissions avant les opérations sensibles
    - Documentez les accès partagés
@@ -691,6 +700,7 @@ const associateFolderToAgent = async (agentId, folderId) => {
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API Folders :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Contactez le support technique : support@devana.ai
 - Reportez les bugs sur notre [GitHub](https://github.com/devana-ai/api-issues)

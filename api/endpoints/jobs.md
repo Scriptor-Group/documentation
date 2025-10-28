@@ -1,4 +1,4 @@
-# Jobs API - Devana.ai
+# Jobs API
 
 Documentation de l'API de gestion des tâches asynchrones (Jobs) dans Devana.ai.
 
@@ -26,6 +26,7 @@ Documentation de l'API de gestion des tâches asynchrones (Jobs) dans Devana.ai.
 ## Vue d'ensemble
 
 L'API Jobs permet de suivre l'état des tâches asynchrones dans Devana.ai. Ces tâches incluent :
+
 - Extraction de contenu de documents
 - Génération d'embeddings
 - Synchronisation de dossiers
@@ -33,6 +34,7 @@ L'API Jobs permet de suivre l'état des tâches asynchrones dans Devana.ai. Ces 
 - Traitement batch de fichiers
 
 **Caractéristiques principales :**
+
 - Suivi en temps réel des tâches
 - Filtrage par type et statut
 - Historique limité aux dernières 24 heures
@@ -58,12 +60,12 @@ Récupère la liste des tâches asynchrones de l'utilisateur avec possibilité d
 
 #### Query Parameters
 
-| Paramètre | Type | Requis | Description | Valeur par défaut |
-|-----------|------|--------|-------------|-------------------|
-| `targetId` | String | Non | ID de la ressource cible (document, dossier, etc.) | - |
-| `type` | String (Enum) | Non | Filtrer par statut : `PENDING`, `IN_PROGRESS`, `DONE`, `ERROR` | - |
-| `limit` | Number | Non | Nombre maximum de résultats | 25 |
-| `offset` | Number | Non | Décalage pour la pagination | 0 |
+| Paramètre  | Type          | Requis | Description                                                    | Valeur par défaut |
+| ---------- | ------------- | ------ | -------------------------------------------------------------- | ----------------- |
+| `targetId` | String        | Non    | ID de la ressource cible (document, dossier, etc.)             | -                 |
+| `type`     | String (Enum) | Non    | Filtrer par statut : `PENDING`, `IN_PROGRESS`, `DONE`, `ERROR` | -                 |
+| `limit`    | Number        | Non    | Nombre maximum de résultats                                    | 25                |
+| `offset`   | Number        | Non    | Décalage pour la pagination                                    | 0                 |
 
 #### Requête
 
@@ -118,24 +120,28 @@ Authorization: Bearer YOUR_API_KEY
 #### Exemples avec curl
 
 **Récupérer toutes les tâches récentes :**
+
 ```bash
 curl -X GET https://api.devana.ai/v1/jobs \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 **Filtrer par document spécifique :**
+
 ```bash
 curl -X GET "https://api.devana.ai/v1/jobs?targetId=cm4doc123abc456" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 **Récupérer les tâches en erreur :**
+
 ```bash
 curl -X GET "https://api.devana.ai/v1/jobs?type=ERROR" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 **Pagination des résultats :**
+
 ```bash
 curl -X GET "https://api.devana.ai/v1/jobs?limit=50&offset=50" \
   -H "Authorization: Bearer YOUR_API_KEY"
@@ -147,26 +153,26 @@ curl -X GET "https://api.devana.ai/v1/jobs?limit=50&offset=50" \
 
 Les différents types de tâches trackées par le système :
 
-| Type | Description | Durée typique |
-|------|-------------|---------------|
-| `EXTRACTION` | Extraction de contenu de documents (PDF, DOCX, etc.) | 5s - 5min |
-| `EMBEDDING` | Génération de vecteurs pour la recherche sémantique | 10s - 10min |
-| `SYNC` | Synchronisation de dossiers externes (SharePoint, etc.) | 1min - 30min |
-| `IMPORT` | Import batch de fichiers | 30s - 15min |
-| `TRANSCRIPTION` | Transcription audio (STT) | 10s - 5min |
-| `GENERATION` | Génération de contenu ou résumés | 5s - 2min |
+| Type            | Description                                             | Durée typique |
+| --------------- | ------------------------------------------------------- | ------------- |
+| `EXTRACTION`    | Extraction de contenu de documents (PDF, DOCX, etc.)    | 5s - 5min     |
+| `EMBEDDING`     | Génération de vecteurs pour la recherche sémantique     | 10s - 10min   |
+| `SYNC`          | Synchronisation de dossiers externes (SharePoint, etc.) | 1min - 30min  |
+| `IMPORT`        | Import batch de fichiers                                | 30s - 15min   |
+| `TRANSCRIPTION` | Transcription audio (STT)                               | 10s - 5min    |
+| `GENERATION`    | Génération de contenu ou résumés                        | 5s - 2min     |
 
 ---
 
 ## Statuts des jobs
 
-| Statut | Description | Action recommandée |
-|--------|-------------|-------------------|
-| `PENDING` | Tâche en attente dans la queue | Attendre, vérifier régulièrement |
-| `IN_PROGRESS` | Tâche en cours d'exécution | Continuer le polling |
-| `DONE` | Tâche terminée avec succès | Récupérer les résultats |
-| `ERROR` | Échec de la tâche | Vérifier les logs, réessayer |
-| `KILLED` | Tâche annulée (non retourné par l'API) | - |
+| Statut        | Description                            | Action recommandée               |
+| ------------- | -------------------------------------- | -------------------------------- |
+| `PENDING`     | Tâche en attente dans la queue         | Attendre, vérifier régulièrement |
+| `IN_PROGRESS` | Tâche en cours d'exécution             | Continuer le polling             |
+| `DONE`        | Tâche terminée avec succès             | Récupérer les résultats          |
+| `ERROR`       | Échec de la tâche                      | Vérifier les logs, réessayer     |
+| `KILLED`      | Tâche annulée (non retourné par l'API) | -                                |
 
 **Note :** Les jobs avec statut `KILLED` sont automatiquement filtrés et ne sont jamais retournés.
 
@@ -175,10 +181,12 @@ Les différents types de tâches trackées par le système :
 ## Filtrage et pagination
 
 ### Filtrage par date
+
 - Seuls les jobs des dernières **24 heures** sont retournés
 - Pour un historique plus ancien, utilisez l'interface web
 
 ### Limitations
+
 - Maximum 100 résultats par requête
 - Offset maximum : 1000
 - Les jobs sont triés par date de création (plus récent en premier)
@@ -192,8 +200,8 @@ async function getFolderJobs(folderId) {
     `https://api.devana.ai/v1/jobs?targetId=${folderId}`,
     {
       headers: {
-        'Authorization': `Bearer ${API_KEY}`
-      }
+        Authorization: `Bearer ${API_KEY}`,
+      },
     }
   );
 
@@ -205,17 +213,17 @@ async function getFolderJobs(folderId) {
 async function getFilteredJobs(filters) {
   const params = new URLSearchParams();
 
-  if (filters.targetId) params.append('targetId', filters.targetId);
-  if (filters.type) params.append('type', filters.type);
-  if (filters.limit) params.append('limit', filters.limit);
-  if (filters.offset) params.append('offset', filters.offset);
+  if (filters.targetId) params.append("targetId", filters.targetId);
+  if (filters.type) params.append("type", filters.type);
+  if (filters.limit) params.append("limit", filters.limit);
+  if (filters.offset) params.append("offset", filters.offset);
 
   const response = await fetch(
     `https://api.devana.ai/v1/jobs?${params.toString()}`,
     {
       headers: {
-        'Authorization': `Bearer ${API_KEY}`
-      }
+        Authorization: `Bearer ${API_KEY}`,
+      },
     }
   );
 
@@ -231,26 +239,28 @@ async function getFilteredJobs(filters) {
 
 ```typescript
 interface Job {
-  id: string;           // Identifiant unique du job
-  userId: string;       // ID de l'utilisateur propriétaire
-  targetId: string;     // ID de la ressource cible
-  type: JobType;        // Type de tâche
-  status: JobStatus;    // Statut actuel
-  progress?: number;    // Progression (0-100)
-  metadata?: {          // Métadonnées spécifiques au type
+  id: string; // Identifiant unique du job
+  userId: string; // ID de l'utilisateur propriétaire
+  targetId: string; // ID de la ressource cible
+  type: JobType; // Type de tâche
+  status: JobStatus; // Statut actuel
+  progress?: number; // Progression (0-100)
+  metadata?: {
+    // Métadonnées spécifiques au type
     [key: string]: any;
   };
-  error?: string;       // Message d'erreur si échec
-  startedAt?: Date;     // Début de l'exécution
-  completedAt?: Date;   // Fin de l'exécution
-  createdAt: Date;      // Création du job
-  updatedAt: Date;      // Dernière mise à jour
+  error?: string; // Message d'erreur si échec
+  startedAt?: Date; // Début de l'exécution
+  completedAt?: Date; // Fin de l'exécution
+  createdAt: Date; // Création du job
+  updatedAt: Date; // Dernière mise à jour
 }
 ```
 
 ### Métadonnées par type
 
 **EXTRACTION:**
+
 ```json
 {
   "fileName": "document.pdf",
@@ -262,6 +272,7 @@ interface Job {
 ```
 
 **EMBEDDING:**
+
 ```json
 {
   "folderName": "Knowledge Base",
@@ -453,10 +464,10 @@ class JobDashboard {
   }
 
   async fetchJobs() {
-    const response = await fetch('https://api.devana.ai/v1/jobs?limit=50', {
+    const response = await fetch("https://api.devana.ai/v1/jobs?limit=50", {
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`
-      }
+        Authorization: `Bearer ${this.apiKey}`,
+      },
     });
 
     const data = await response.json();
@@ -467,7 +478,7 @@ class JobDashboard {
     const jobs = await this.fetchJobs();
 
     // Mettre à jour le cache local
-    jobs.forEach(job => {
+    jobs.forEach((job) => {
       const existing = this.jobs.get(job.id);
 
       if (!existing || existing.status !== job.status) {
@@ -483,11 +494,13 @@ class JobDashboard {
   onJobUpdate(newJob, oldJob) {
     // Notification de changement de statut
     if (oldJob && oldJob.status !== newJob.status) {
-      console.log(`Job ${newJob.id} changed from ${oldJob.status} to ${newJob.status}`);
+      console.log(
+        `Job ${newJob.id} changed from ${oldJob.status} to ${newJob.status}`
+      );
 
-      if (newJob.status === 'ERROR') {
+      if (newJob.status === "ERROR") {
         this.notifyError(newJob);
-      } else if (newJob.status === 'DONE') {
+      } else if (newJob.status === "DONE") {
         this.notifyComplete(newJob);
       }
     }
@@ -497,18 +510,18 @@ class JobDashboard {
     const stats = this.getStatistics();
 
     console.clear();
-    console.log('=== JOB DASHBOARD ===');
+    console.log("=== JOB DASHBOARD ===");
     console.log(`Total: ${stats.total}`);
     console.log(`Pending: ${stats.pending}`);
     console.log(`In Progress: ${stats.inProgress}`);
     console.log(`Completed: ${stats.completed}`);
     console.log(`Errors: ${stats.errors}`);
-    console.log('\n=== ACTIVE JOBS ===');
+    console.log("\n=== ACTIVE JOBS ===");
 
     // Afficher les jobs actifs
     Array.from(this.jobs.values())
-      .filter(job => job.status === 'IN_PROGRESS')
-      .forEach(job => {
+      .filter((job) => job.status === "IN_PROGRESS")
+      .forEach((job) => {
         console.log(`${job.id}: ${job.type} - ${job.progress || 0}%`);
       });
   }
@@ -518,10 +531,10 @@ class JobDashboard {
 
     return {
       total: jobs.length,
-      pending: jobs.filter(j => j.status === 'PENDING').length,
-      inProgress: jobs.filter(j => j.status === 'IN_PROGRESS').length,
-      completed: jobs.filter(j => j.status === 'DONE').length,
-      errors: jobs.filter(j => j.status === 'ERROR').length
+      pending: jobs.filter((j) => j.status === "PENDING").length,
+      inProgress: jobs.filter((j) => j.status === "IN_PROGRESS").length,
+      completed: jobs.filter((j) => j.status === "DONE").length,
+      errors: jobs.filter((j) => j.status === "ERROR").length,
     };
   }
 
@@ -550,7 +563,7 @@ class JobDashboard {
 }
 
 // Lancer le dashboard
-const dashboard = new JobDashboard('YOUR_API_KEY');
+const dashboard = new JobDashboard("YOUR_API_KEY");
 dashboard.start();
 ```
 
@@ -619,23 +632,23 @@ Pour recevoir des notifications en temps réel sur les changements de statut des
 
 ```javascript
 // Exemple de webhook handler
-app.post('/webhook/job-status', (req, res) => {
+app.post("/webhook/job-status", (req, res) => {
   const { jobId, status, targetId, type, metadata } = req.body;
 
   console.log(`Job ${jobId} updated: ${status}`);
 
-  switch(status) {
-    case 'DONE':
+  switch (status) {
+    case "DONE":
       // Traiter la fin du job
       handleJobComplete(targetId, type, metadata);
       break;
-    case 'ERROR':
+    case "ERROR":
       // Gérer l'erreur
       handleJobError(jobId, metadata.error);
       break;
   }
 
-  res.status(200).send('OK');
+  res.status(200).send("OK");
 });
 ```
 
@@ -644,10 +657,12 @@ app.post('/webhook/job-status', (req, res) => {
 ## Limitations et considérations
 
 1. **Rétention des données**
+
    - Les jobs sont conservés seulement 24 heures
    - Pour un historique long terme, stockez les résultats localement
 
 2. **Rate limiting**
+
    - Maximum 100 requêtes par minute
    - Utilisez le polling intelligent avec backoff exponentiel
 
@@ -660,6 +675,7 @@ app.post('/webhook/job-status', (req, res) => {
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API Jobs :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Contactez le support technique : support@devana.ai
 - Reportez les bugs sur notre [GitHub](https://github.com/devana-ai/api-issues)

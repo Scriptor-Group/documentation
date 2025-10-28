@@ -1,4 +1,4 @@
-# Chat Completions API - Devana.ai
+# Chat Completions API
 
 Documentation de l'endpoint `/v1/chat/completions` pour générer des réponses avec vos agents IA.
 
@@ -26,6 +26,7 @@ Documentation de l'endpoint `/v1/chat/completions` pour générer des réponses 
 L'endpoint `/v1/chat/completions` est compatible avec l'API OpenAI tout en offrant des fonctionnalités avancées :
 
 **Fonctionnalités principales :**
+
 - ✅ Gestion des historiques de conversations
 - ✅ Support des fichiers en pièces jointes
 - ✅ RAG (Retrieval Augmented Generation) automatique
@@ -61,30 +62,30 @@ POST /v1/chat/completions
 
 ### Corps de la Requête
 
-| Paramètre           | Type         | Obligatoire | Description                                                                                                  |
-| ------------------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------ |
-| `model`             | string       | Oui         | Un ID d'agent créé dans le système.                                                                          |
-| `messages`          | array        | Oui         | Tableau des messages composant la conversation (maximum 4 messages).                                         |
-| `temperature`       | float        | Non         | Contrôle l'aléatoire dans les réponses. Valeurs entre 0 et 1. Défaut: 0.8 ou valeur configurée pour l'agent. |
-| `max_tokens`        | integer      | Non         | Nombre maximum de tokens à générer.                                                                          |
-| `top_p`             | float        | Non         | Contrôle la diversité via l'échantillonnage nucleus.                                                         |
-| `n`                 | integer      | Non         | Nombre de completions à générer.                                                                             |
-| `stop`              | string/array | Non         | Séquences où l'API arrêtera la génération.                                                                   |
-| `stopSequences`     | array        | Non         | Séquences additionnelles où l'API arrêtera la génération.                                                    |
-| `frequency_penalty` | float        | Non         | Pénalité de fréquence pour réduire la répétition.                                                            |
-| `presence_penalty`  | float        | Non         | Pénalité de présence pour encourager la nouveauté.                                                           |
-| `stream`            | boolean      | Non         | Si vrai, les deltas de messages partiels seront envoyés.                                                     |
-| `conversation_id`   | string       | Non         | ID de la conversation existante à continuer.                                                                 |
-| `response_format`   | string       | Non         | Format de réponse souhaité (par exemple, { type: "text" \| "json_object"}). (compatible selon le LLM actif)  |
-| `lang`              | string       | Non         | Langue pour la réponse. Par défaut, locale de l'utilisateur ou 'fr'.                                         |
-| `files`             | array        | Non         | Tableau des IDs de fichiers à inclure dans le contexte.                                                      |
-| `clientModel`       | string       | Non         | Modèle spécifique à utiliser avec la configuration Devana AI. Défaut: valeur de DEFAULT_MODEL.               |
-| `custom`            | object       | Non         | Options de configuration personnalisées, comme `disableAutomaticIdentity`.                                   |
-| `metadata`          | object       | Non         | Metadata pour les dashboards et logging via webhooks (Si configurés).                                        |
-| `headers`           | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
-| `identity`          | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
-| `asyncRagScore`     | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                             |
-| `attachementsFastMode`        | boolean      | Non         | Si vrai, nous ignorons la vision sur les attachements                                              |
+| Paramètre              | Type         | Obligatoire | Description                                                                                                  |
+| ---------------------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------ |
+| `model`                | string       | Oui         | Un ID d'agent créé dans le système.                                                                          |
+| `messages`             | array        | Oui         | Tableau des messages composant la conversation (maximum 4 messages).                                         |
+| `temperature`          | float        | Non         | Contrôle l'aléatoire dans les réponses. Valeurs entre 0 et 1. Défaut: 0.8 ou valeur configurée pour l'agent. |
+| `max_tokens`           | integer      | Non         | Nombre maximum de tokens à générer.                                                                          |
+| `top_p`                | float        | Non         | Contrôle la diversité via l'échantillonnage nucleus.                                                         |
+| `n`                    | integer      | Non         | Nombre de completions à générer.                                                                             |
+| `stop`                 | string/array | Non         | Séquences où l'API arrêtera la génération.                                                                   |
+| `stopSequences`        | array        | Non         | Séquences additionnelles où l'API arrêtera la génération.                                                    |
+| `frequency_penalty`    | float        | Non         | Pénalité de fréquence pour réduire la répétition.                                                            |
+| `presence_penalty`     | float        | Non         | Pénalité de présence pour encourager la nouveauté.                                                           |
+| `stream`               | boolean      | Non         | Si vrai, les deltas de messages partiels seront envoyés.                                                     |
+| `conversation_id`      | string       | Non         | ID de la conversation existante à continuer.                                                                 |
+| `response_format`      | string       | Non         | Format de réponse souhaité (par exemple, { type: "text" \| "json_object"}). (compatible selon le LLM actif)  |
+| `lang`                 | string       | Non         | Langue pour la réponse. Par défaut, locale de l'utilisateur ou 'fr'.                                         |
+| `files`                | array        | Non         | Tableau des IDs de fichiers à inclure dans le contexte.                                                      |
+| `clientModel`          | string       | Non         | Modèle spécifique à utiliser avec la configuration Devana AI. Défaut: valeur de DEFAULT_MODEL.               |
+| `custom`               | object       | Non         | Options de configuration personnalisées, comme `disableAutomaticIdentity`.                                   |
+| `metadata`             | object       | Non         | Metadata pour les dashboards et logging via webhooks (Si configurés).                                        |
+| `headers`              | object       | Non         | Headers complémentaires pour l'authentification des tools calls.                                             |
+| `identity`             | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
+| `asyncRagScore`        | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                             |
+| `attachementsFastMode` | boolean      | Non         | Si vrai, nous ignorons la vision sur les attachements                                                        |
 
 ### Vérifications et limites
 
@@ -280,8 +281,8 @@ L'API inclut une limitation de débit basée sur l'utilisateur :
 - Vérification automatique des droits d'accès aux agents
 - Gestion des statuts de conversation (PENDING, DONE, ERROR)
 
-
 ### Paramètre asyncRagScore
+
 - Si `true`, la réponse est renvoyée immédiatement sans attendre le calcul du score RAG. Le score RAG sera calculé en arrière-plan. Les réponses n'incluront plus les sources, qui seront systématiquement un tableau vide (`[]`).
 
 # Exemples d'Utilisation

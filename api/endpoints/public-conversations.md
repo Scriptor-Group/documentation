@@ -1,4 +1,4 @@
-# Public Conversations API - Devana.ai
+# Public Conversations API
 
 Documentation de l'API pour les conversations publiques et les agents embedables dans Devana.ai.
 
@@ -27,11 +27,13 @@ Documentation de l'API pour les conversations publiques et les agents embedables
 ## Vue d'ensemble
 
 L'API Public Conversations permet d'intégrer des agents Devana.ai dans des applications tierces via :
+
 - **Widgets embedables** : Chat widgets pour sites web
 - **Applications mobiles** : SDK pour iOS/Android
 - **Intégrations custom** : Via API REST avec tokens sécurisés
 
 **Caractéristiques principales :**
+
 - Conversations sans authentification utilisateur
 - Streaming en temps réel (Server-Sent Events)
 - Système de tokens sécurisés avec limite de tentatives
@@ -69,9 +71,9 @@ Récupère les messages d'une conversation privée (nécessite OAuth).
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String | Oui | Format: `{conversationId}:{messageId}` (messageId optionnel) |
+| Paramètre | Type   | Requis | Description                                                  |
+| --------- | ------ | ------ | ------------------------------------------------------------ |
+| `id`      | String | Oui    | Format: `{conversationId}:{messageId}` (messageId optionnel) |
 
 #### Headers
 
@@ -136,9 +138,9 @@ Récupère les messages d'une conversation publique via token de sécurité.
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `token` | String | Oui | Token de sécurité généré |
+| Paramètre | Type   | Requis | Description              |
+| --------- | ------ | ------ | ------------------------ |
+| `token`   | String | Oui    | Token de sécurité généré |
 
 #### Requête
 
@@ -170,10 +172,10 @@ GET /v1/chat/conversation/public/messages/sec_token_abc123xyz789
 
 #### Erreurs spécifiques
 
-| Code | Message | Description |
-|------|---------|-------------|
-| `403` | Access denied | Token invalide ou trop de tentatives suspectes (>5) |
-| `404` | Conversation not found | La conversation n'existe pas |
+| Code  | Message                | Description                                         |
+| ----- | ---------------------- | --------------------------------------------------- |
+| `403` | Access denied          | Token invalide ou trop de tentatives suspectes (>5) |
+| `404` | Conversation not found | La conversation n'existe pas                        |
 
 ---
 
@@ -209,12 +211,12 @@ X-Security-Token: sec_token_abc123xyz789
 
 #### Paramètres du body
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `messages` | Array | Oui | Historique des messages de la conversation |
-| `stream` | Boolean | Oui | Doit être `true` (streaming uniquement) |
-| `custom` | Object | Non | Paramètres personnalisés (temperature, max_tokens, etc.) |
-| `lang` | String | Non | Langue de la réponse (fr, en, es, etc.) |
+| Paramètre  | Type    | Requis | Description                                              |
+| ---------- | ------- | ------ | -------------------------------------------------------- |
+| `messages` | Array   | Oui    | Historique des messages de la conversation               |
+| `stream`   | Boolean | Oui    | Doit être `true` (streaming uniquement)                  |
+| `custom`   | Object  | Non    | Paramètres personnalisés (temperature, max_tokens, etc.) |
+| `lang`     | String  | Non    | Langue de la réponse (fr, en, es, etc.)                  |
 
 #### Réponse (200 OK) - Server-Sent Events
 
@@ -231,6 +233,7 @@ et je vous répondrai en temps réel.
 #### Format du streaming
 
 Le streaming utilise le format Server-Sent Events (SSE) :
+
 - Chaque fragment de texte est envoyé au fur et à mesure
 - Le signal `[DONE]` indique la fin de la réponse
 - La connexion reste ouverte pendant toute la durée du streaming
@@ -249,10 +252,10 @@ Authorization: Bearer YOUR_API_KEY
 
 #### Query Parameters
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `agentId` | String | Oui | ID de l'agent public |
-| `conversationId` | String | Non | ID de conversation existante (pour reprendre) |
+| Paramètre        | Type   | Requis | Description                                   |
+| ---------------- | ------ | ------ | --------------------------------------------- |
+| `agentId`        | String | Oui    | ID de l'agent public                          |
+| `conversationId` | String | Non    | ID de conversation existante (pour reprendre) |
 
 #### Requête - Nouvelle conversation
 
@@ -305,11 +308,11 @@ X-Security-Token: sec_token_abc123xyz789
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `messageId` | String | Oui | ID du message à évaluer |
-| `fiability` | String | Oui | `GOOD` (like) ou `BAD` (dislike) |
-| `comment` | String | Non | Commentaire optionnel |
+| Paramètre   | Type   | Requis | Description                      |
+| ----------- | ------ | ------ | -------------------------------- |
+| `messageId` | String | Oui    | ID du message à évaluer          |
+| `fiability` | String | Oui    | `GOOD` (like) ou `BAD` (dislike) |
+| `comment`   | String | Non    | Commentaire optionnel            |
 
 #### Réponse (200 OK)
 
@@ -329,22 +332,22 @@ X-Security-Token: sec_token_abc123xyz789
 ```javascript
 // Exemple JavaScript pour consommer le stream
 async function sendMessageWithStreaming(token, message) {
-  const response = await fetch('/v1/chat/conversation/public/message', {
-    method: 'POST',
+  const response = await fetch("/v1/chat/conversation/public/message", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'X-Security-Token': token
+      "Content-Type": "application/json",
+      "X-Security-Token": token,
     },
     body: JSON.stringify({
-      messages: [{ role: 'user', content: message }],
+      messages: [{ role: "user", content: message }],
       stream: true,
-      lang: 'fr'
-    })
+      lang: "fr",
+    }),
   });
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
-  let fullResponse = '';
+  let fullResponse = "";
 
   while (true) {
     const { done, value } = await reader.read();
@@ -354,8 +357,8 @@ async function sendMessageWithStreaming(token, message) {
     const chunk = decoder.decode(value);
 
     // Vérifier si c'est la fin du stream
-    if (chunk.includes('[DONE]')) {
-      console.log('Stream terminé');
+    if (chunk.includes("[DONE]")) {
+      console.log("Stream terminé");
       break;
     }
 
@@ -363,7 +366,7 @@ async function sendMessageWithStreaming(token, message) {
     fullResponse += chunk;
 
     // Afficher le chunk en temps réel
-    console.log('Chunk reçu:', chunk);
+    console.log("Chunk reçu:", chunk);
     updateUI(chunk); // Mettre à jour l'interface
   }
 
@@ -404,7 +407,7 @@ class StreamHandler {
   async processStream(response) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    let result = '';
+    let result = "";
 
     try {
       while (true) {
@@ -413,7 +416,7 @@ class StreamHandler {
 
         const chunk = decoder.decode(value, { stream: true });
 
-        if (chunk.includes('[DONE]')) {
+        if (chunk.includes("[DONE]")) {
           break;
         }
 
@@ -427,7 +430,7 @@ class StreamHandler {
   }
 
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 ```
@@ -438,13 +441,13 @@ class StreamHandler {
 
 ### Codes d'erreur communs
 
-| Code | Message | Description | Solution |
-|------|---------|-------------|----------|
-| `401` | Unauthorized | Token ou API key manquant/invalide | Vérifier les credentials |
-| `403` | Access denied | Trop de tentatives ou accès refusé | Générer un nouveau token |
-| `404` | Not found | Conversation/message introuvable | Vérifier l'ID |
-| `429` | Too Many Requests | Rate limit dépassé | Implémenter un backoff |
-| `500` | Internal Server Error | Erreur serveur | Réessayer plus tard |
+| Code  | Message               | Description                        | Solution                 |
+| ----- | --------------------- | ---------------------------------- | ------------------------ |
+| `401` | Unauthorized          | Token ou API key manquant/invalide | Vérifier les credentials |
+| `403` | Access denied         | Trop de tentatives ou accès refusé | Générer un nouveau token |
+| `404` | Not found             | Conversation/message introuvable   | Vérifier l'ID            |
+| `429` | Too Many Requests     | Rate limit dépassé                 | Implémenter un backoff   |
+| `500` | Internal Server Error | Erreur serveur                     | Réessayer plus tard      |
 
 ### Gestion des tentatives suspectes
 
@@ -458,7 +461,7 @@ class TokenManager {
   }
 
   async getToken(agentId, conversationId = null) {
-    const key = `${agentId}-${conversationId || 'new'}`;
+    const key = `${agentId}-${conversationId || "new"}`;
 
     // Vérifier si on a déjà un token valide
     if (this.tokens.has(key)) {
@@ -469,15 +472,15 @@ class TokenManager {
     }
 
     // Générer un nouveau token
-    const response = await fetch('/v1/chat/conversation/public/message/token', {
-      method: 'GET',
+    const response = await fetch("/v1/chat/conversation/public/message/token", {
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`,
       },
       params: {
         agentId,
-        conversationId
-      }
+        conversationId,
+      },
     });
 
     const data = await response.json();
@@ -507,225 +510,238 @@ class TokenManager {
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Chat Widget Devana.ai</title>
-  <style>
-    #chat-widget {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 350px;
-      height: 500px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      background: white;
-      display: flex;
-      flex-direction: column;
-    }
+  <head>
+    <title>Chat Widget Devana.ai</title>
+    <style>
+      #chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+      }
 
-    #chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
+      #chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
 
-    .message {
-      margin: 10px 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
+      .message {
+        margin: 10px 0;
+        padding: 8px 12px;
+        border-radius: 8px;
+      }
 
-    .user-message {
-      background: #007bff;
-      color: white;
-      align-self: flex-end;
-      margin-left: auto;
-    }
+      .user-message {
+        background: #007bff;
+        color: white;
+        align-self: flex-end;
+        margin-left: auto;
+      }
 
-    .assistant-message {
-      background: #f1f1f1;
-      color: black;
-    }
+      .assistant-message {
+        background: #f1f1f1;
+        color: black;
+      }
 
-    #chat-input {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #ddd;
-    }
+      #chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+      }
 
-    #message-input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
+      #message-input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
 
-    #send-button {
-      margin-left: 10px;
-      padding: 8px 16px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div id="chat-widget">
-    <div id="chat-messages"></div>
-    <div id="chat-input">
-      <input type="text" id="message-input" placeholder="Tapez votre message...">
-      <button id="send-button">Envoyer</button>
+      #send-button {
+        margin-left: 10px;
+        padding: 8px 16px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-widget">
+      <div id="chat-messages"></div>
+      <div id="chat-input">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Tapez votre message..."
+        />
+        <button id="send-button">Envoyer</button>
+      </div>
     </div>
-  </div>
 
-  <script>
-    class DevanaChat {
-      constructor(apiKey, agentId) {
-        this.apiKey = apiKey;
-        this.agentId = agentId;
-        this.token = null;
-        this.conversationId = null;
-        this.messages = [];
+    <script>
+      class DevanaChat {
+        constructor(apiKey, agentId) {
+          this.apiKey = apiKey;
+          this.agentId = agentId;
+          this.token = null;
+          this.conversationId = null;
+          this.messages = [];
 
-        this.init();
-      }
+          this.init();
+        }
 
-      async init() {
-        // Obtenir un token de sécurité
-        await this.getSecurityToken();
+        async init() {
+          // Obtenir un token de sécurité
+          await this.getSecurityToken();
 
-        // Configurer les event listeners
-        document.getElementById('send-button').addEventListener('click', () => {
-          this.sendMessage();
-        });
+          // Configurer les event listeners
+          document
+            .getElementById("send-button")
+            .addEventListener("click", () => {
+              this.sendMessage();
+            });
 
-        document.getElementById('message-input').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            this.sendMessage();
-          }
-        });
-      }
+          document
+            .getElementById("message-input")
+            .addEventListener("keypress", (e) => {
+              if (e.key === "Enter") {
+                this.sendMessage();
+              }
+            });
+        }
 
-      async getSecurityToken() {
-        const response = await fetch('/v1/chat/conversation/public/message/token', {
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`
-          },
-          params: {
-            agentId: this.agentId
-          }
-        });
-
-        const data = await response.json();
-        this.token = data.token;
-        this.conversationId = data.conversationId;
-      }
-
-      async sendMessage() {
-        const input = document.getElementById('message-input');
-        const message = input.value.trim();
-
-        if (!message) return;
-
-        // Ajouter le message utilisateur à l'interface
-        this.addMessage('user', message);
-        input.value = '';
-
-        // Ajouter à l'historique
-        this.messages.push({ role: 'user', content: message });
-
-        // Créer un placeholder pour la réponse
-        const responseDiv = this.addMessage('assistant', '');
-        let responseText = '';
-
-        try {
-          // Envoyer le message avec streaming
-          const response = await fetch('/v1/chat/conversation/public/message', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Security-Token': this.token
-            },
-            body: JSON.stringify({
-              messages: this.messages,
-              stream: true,
-              lang: 'fr'
-            })
-          });
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value);
-
-            if (chunk.includes('[DONE]')) {
-              break;
+        async getSecurityToken() {
+          const response = await fetch(
+            "/v1/chat/conversation/public/message/token",
+            {
+              headers: {
+                Authorization: `Bearer ${this.apiKey}`,
+              },
+              params: {
+                agentId: this.agentId,
+              },
             }
+          );
 
-            responseText += chunk;
-            responseDiv.textContent = responseText;
+          const data = await response.json();
+          this.token = data.token;
+          this.conversationId = data.conversationId;
+        }
 
-            // Auto-scroll
-            this.scrollToBottom();
-          }
+        async sendMessage() {
+          const input = document.getElementById("message-input");
+          const message = input.value.trim();
+
+          if (!message) return;
+
+          // Ajouter le message utilisateur à l'interface
+          this.addMessage("user", message);
+          input.value = "";
 
           // Ajouter à l'historique
-          this.messages.push({ role: 'assistant', content: responseText });
+          this.messages.push({ role: "user", content: message });
 
-        } catch (error) {
-          console.error('Erreur:', error);
-          responseDiv.textContent = 'Désolé, une erreur est survenue.';
+          // Créer un placeholder pour la réponse
+          const responseDiv = this.addMessage("assistant", "");
+          let responseText = "";
+
+          try {
+            // Envoyer le message avec streaming
+            const response = await fetch(
+              "/v1/chat/conversation/public/message",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Security-Token": this.token,
+                },
+                body: JSON.stringify({
+                  messages: this.messages,
+                  stream: true,
+                  lang: "fr",
+                }),
+              }
+            );
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+
+              const chunk = decoder.decode(value);
+
+              if (chunk.includes("[DONE]")) {
+                break;
+              }
+
+              responseText += chunk;
+              responseDiv.textContent = responseText;
+
+              // Auto-scroll
+              this.scrollToBottom();
+            }
+
+            // Ajouter à l'historique
+            this.messages.push({ role: "assistant", content: responseText });
+          } catch (error) {
+            console.error("Erreur:", error);
+            responseDiv.textContent = "Désolé, une erreur est survenue.";
+          }
+        }
+
+        addMessage(role, content) {
+          const messagesDiv = document.getElementById("chat-messages");
+          const messageDiv = document.createElement("div");
+          messageDiv.className = `message ${role}-message`;
+          messageDiv.textContent = content;
+          messagesDiv.appendChild(messageDiv);
+          this.scrollToBottom();
+          return messageDiv;
+        }
+
+        scrollToBottom() {
+          const messagesDiv = document.getElementById("chat-messages");
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Méthode pour donner un feedback
+        async sendFeedback(messageId, isPositive) {
+          await fetch("/v1/chat/conversation/public/message/fiability", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Security-Token": this.token,
+            },
+            body: JSON.stringify({
+              messageId: messageId,
+              fiability: isPositive ? "GOOD" : "BAD",
+            }),
+          });
         }
       }
 
-      addMessage(role, content) {
-        const messagesDiv = document.getElementById('chat-messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${role}-message`;
-        messageDiv.textContent = content;
-        messagesDiv.appendChild(messageDiv);
-        this.scrollToBottom();
-        return messageDiv;
-      }
-
-      scrollToBottom() {
-        const messagesDiv = document.getElementById('chat-messages');
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      }
-
-      // Méthode pour donner un feedback
-      async sendFeedback(messageId, isPositive) {
-        await fetch('/v1/chat/conversation/public/message/fiability', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Security-Token': this.token
-          },
-          body: JSON.stringify({
-            messageId: messageId,
-            fiability: isPositive ? 'GOOD' : 'BAD'
-          })
-        });
-      }
-    }
-
-    // Initialiser le chat
-    const chat = new DevanaChat('YOUR_API_KEY', 'YOUR_AGENT_ID');
-  </script>
-</body>
+      // Initialiser le chat
+      const chat = new DevanaChat("YOUR_API_KEY", "YOUR_AGENT_ID");
+    </script>
+  </body>
 </html>
 ```
 
 ### Application mobile React Native
 
 ```javascript
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -733,12 +749,12 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  ActivityIndicator
-} from 'react-native';
+  ActivityIndicator,
+} from "react-native";
 
 const DevanaChat = ({ apiKey, agentId }) => {
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState(null);
   const scrollViewRef = useRef();
@@ -753,8 +769,8 @@ const DevanaChat = ({ apiKey, agentId }) => {
         `https://api.devana.ai/v1/chat/conversation/public/message/token?agentId=${agentId}`,
         {
           headers: {
-            'Authorization': `Bearer ${apiKey}`
-          }
+            Authorization: `Bearer ${apiKey}`,
+          },
         }
       );
 
@@ -764,13 +780,13 @@ const DevanaChat = ({ apiKey, agentId }) => {
       // Message de bienvenue
       setMessages([
         {
-          id: '1',
-          role: 'assistant',
-          content: 'Bonjour ! Comment puis-je vous aider ?'
-        }
+          id: "1",
+          role: "assistant",
+          content: "Bonjour ! Comment puis-je vous aider ?",
+        },
       ]);
     } catch (error) {
-      console.error('Erreur initialisation:', error);
+      console.error("Erreur initialisation:", error);
     }
   };
 
@@ -779,59 +795,59 @@ const DevanaChat = ({ apiKey, agentId }) => {
 
     const userMessage = {
       id: Date.now().toString(),
-      role: 'user',
-      content: inputText
+      role: "user",
+      content: inputText,
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputText("");
     setIsLoading(true);
 
     try {
       const response = await fetch(
-        'https://api.devana.ai/v1/chat/conversation/public/message',
+        "https://api.devana.ai/v1/chat/conversation/public/message",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'X-Security-Token': token
+            "Content-Type": "application/json",
+            "X-Security-Token": token,
           },
           body: JSON.stringify({
-            messages: [...messages, userMessage].map(m => ({
+            messages: [...messages, userMessage].map((m) => ({
               role: m.role,
-              content: m.content
+              content: m.content,
             })),
             stream: true,
-            lang: 'fr'
-          })
+            lang: "fr",
+          }),
         }
       );
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let assistantMessage = '';
+      let assistantMessage = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
         const chunk = decoder.decode(value);
-        if (chunk.includes('[DONE]')) break;
+        if (chunk.includes("[DONE]")) break;
 
         assistantMessage += chunk;
 
         // Mettre à jour le message en temps réel
-        setMessages(prev => {
+        setMessages((prev) => {
           const newMessages = [...prev];
           const lastMessage = newMessages[newMessages.length - 1];
 
-          if (lastMessage.role === 'assistant') {
+          if (lastMessage.role === "assistant") {
             lastMessage.content = assistantMessage;
           } else {
             newMessages.push({
               id: Date.now().toString(),
-              role: 'assistant',
-              content: assistantMessage
+              role: "assistant",
+              content: assistantMessage,
             });
           }
 
@@ -839,12 +855,15 @@ const DevanaChat = ({ apiKey, agentId }) => {
         });
       }
     } catch (error) {
-      console.error('Erreur envoi message:', error);
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: 'Désolé, une erreur est survenue.'
-      }]);
+      console.error("Erreur envoi message:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: "assistant",
+          content: "Désolé, une erreur est survenue.",
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -857,12 +876,14 @@ const DevanaChat = ({ apiKey, agentId }) => {
         style={styles.messagesContainer}
         onContentSizeChange={() => scrollViewRef.current.scrollToEnd()}
       >
-        {messages.map(message => (
+        {messages.map((message) => (
           <View
             key={message.id}
             style={[
               styles.message,
-              message.role === 'user' ? styles.userMessage : styles.assistantMessage
+              message.role === "user"
+                ? styles.userMessage
+                : styles.assistantMessage,
             ]}
           >
             <Text style={styles.messageText}>{message.content}</Text>
@@ -894,59 +915,59 @@ const DevanaChat = ({ apiKey, agentId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5'
+    backgroundColor: "#f5f5f5",
   },
   messagesContainer: {
     flex: 1,
-    padding: 10
+    padding: 10,
   },
   message: {
     marginVertical: 5,
     padding: 10,
     borderRadius: 10,
-    maxWidth: '80%'
+    maxWidth: "80%",
   },
   userMessage: {
-    backgroundColor: '#007bff',
-    alignSelf: 'flex-end'
+    backgroundColor: "#007bff",
+    alignSelf: "flex-end",
   },
   assistantMessage: {
-    backgroundColor: '#e9ecef',
-    alignSelf: 'flex-start'
+    backgroundColor: "#e9ecef",
+    alignSelf: "flex-start",
   },
   messageText: {
-    color: '#000'
+    color: "#000",
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: '#ddd'
+    borderTopColor: "#ddd",
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   sendButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   sendButtonText: {
-    color: 'white',
-    fontWeight: 'bold'
+    color: "white",
+    fontWeight: "bold",
   },
   loader: {
-    marginVertical: 10
-  }
+    marginVertical: 10,
+  },
 });
 
 export default DevanaChat;
@@ -957,16 +978,19 @@ export default DevanaChat;
 ## Bonnes pratiques
 
 1. **Gestion des tokens**
+
    - Réutiliser les tokens tant qu'ils sont valides
    - Régénérer après erreur 403
    - Stocker de manière sécurisée côté client
 
 2. **Streaming**
+
    - Implémenter un timeout pour éviter les connexions pendantes
    - Gérer proprement la fermeture des streams
    - Afficher un indicateur de chargement
 
 3. **Gestion d'erreur**
+
    - Retry avec backoff exponentiel
    - Messages d'erreur user-friendly
    - Logging des erreurs pour debugging
@@ -981,6 +1005,7 @@ export default DevanaChat;
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API Public Conversations :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Guide d'intégration iframe : [iframe.md](../integration/iframe.md)
 - Contactez le support technique : support@devana.ai

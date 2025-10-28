@@ -1,4 +1,4 @@
-# Conversations API - Devana.ai
+# Conversations API
 
 Documentation complète de l'API de gestion des conversations dans Devana.ai.
 
@@ -26,6 +26,7 @@ Documentation complète de l'API de gestion des conversations dans Devana.ai.
 ## Vue d'ensemble
 
 L'API Conversations permet de gérer les conversations existantes avec les agents IA :
+
 - Récupération des métriques détaillées (tokens, temps, sources)
 - Accès à l'historique complet des messages
 - Suppression sécurisée avec cascade
@@ -54,9 +55,9 @@ Récupère les métriques détaillées d'un message spécifique, incluant les st
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | ID du message de conversation |
+| Paramètre | Type          | Requis | Description                   |
+| --------- | ------------- | ------ | ----------------------------- |
+| `id`      | String (CUID) | Oui    | ID du message de conversation |
 
 #### Requête
 
@@ -116,19 +117,19 @@ Authorization: Bearer YOUR_API_KEY
 
 #### Champs de la réponse
 
-| Champ | Type | Description |
-|-------|------|-------------|
-| `id` | String | Identifiant unique du message |
-| `message` | String | Contenu du message |
-| `score` | Number | Score de pertinence (0-1) |
-| `type` | String | Rôle : `user`, `assistant`, `system` |
-| `model` | String | Modèle utilisé (ou modèle custom si défini) |
-| `sources` | Array | Sources utilisées pour la réponse |
-| `status` | String | Statut du message |
-| `agent` | String | ID de l'agent associé |
-| `tokens.message` | Number | Tokens utilisés pour ce message |
-| `tokens.context` | Number | Tokens de contexte utilisés |
-| `conversationCalls` | Array | Détails des appels API effectués |
+| Champ               | Type   | Description                                 |
+| ------------------- | ------ | ------------------------------------------- |
+| `id`                | String | Identifiant unique du message               |
+| `message`           | String | Contenu du message                          |
+| `score`             | Number | Score de pertinence (0-1)                   |
+| `type`              | String | Rôle : `user`, `assistant`, `system`        |
+| `model`             | String | Modèle utilisé (ou modèle custom si défini) |
+| `sources`           | Array  | Sources utilisées pour la réponse           |
+| `status`            | String | Statut du message                           |
+| `agent`             | String | ID de l'agent associé                       |
+| `tokens.message`    | Number | Tokens utilisés pour ce message             |
+| `tokens.context`    | Number | Tokens de contexte utilisés                 |
+| `conversationCalls` | Array  | Détails des appels API effectués            |
 
 #### Exemple avec curl
 
@@ -145,15 +146,15 @@ Récupère tous les messages d'une conversation, incluant le message principal e
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | ID de la conversation |
+| Paramètre | Type          | Requis | Description           |
+| --------- | ------------- | ------ | --------------------- |
+| `id`      | String (CUID) | Oui    | ID de la conversation |
 
 #### Query Parameters
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `flagged` | Boolean | Non | Si `true`, retourne uniquement les messages marqués par la modération |
+| Paramètre | Type    | Requis | Description                                                           |
+| --------- | ------- | ------ | --------------------------------------------------------------------- |
+| `flagged` | Boolean | Non    | Si `true`, retourne uniquement les messages marqués par la modération |
 
 #### Requête
 
@@ -215,18 +216,18 @@ Authorization: Bearer YOUR_API_KEY
 
 #### Structure des messages
 
-| Champ | Type | Description |
-|-------|------|-------------|
-| `id` | String | Identifiant unique du message |
-| `date` | DateTime | Date et heure du message |
-| `message` | String | Contenu du message |
-| `role` | String | `user`, `assistant`, ou `system` |
-| `model` | String | Modèle utilisé (null pour user) |
-| `score` | Number | Score de pertinence |
-| `sources` | Array | Sources référencées |
-| `tokens` | Number | Nombre de tokens du message |
-| `contextTokens` | Number | Tokens de contexte |
-| `toolCalls` | Object | Outils appelés pendant la génération |
+| Champ           | Type     | Description                          |
+| --------------- | -------- | ------------------------------------ |
+| `id`            | String   | Identifiant unique du message        |
+| `date`          | DateTime | Date et heure du message             |
+| `message`       | String   | Contenu du message                   |
+| `role`          | String   | `user`, `assistant`, ou `system`     |
+| `model`         | String   | Modèle utilisé (null pour user)      |
+| `score`         | Number   | Score de pertinence                  |
+| `sources`       | Array    | Sources référencées                  |
+| `tokens`        | Number   | Nombre de tokens du message          |
+| `contextTokens` | Number   | Tokens de contexte                   |
+| `toolCalls`     | Object   | Outils appelés pendant la génération |
 
 #### Exemple avec curl
 
@@ -248,9 +249,9 @@ Supprime une conversation et tous ses messages enfants de manière récursive (s
 
 #### Paramètres
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `id` | String (CUID) | Oui | ID de la conversation à supprimer |
+| Paramètre | Type          | Requis | Description                       |
+| --------- | ------------- | ------ | --------------------------------- |
+| `id`      | String (CUID) | Oui    | ID de la conversation à supprimer |
 
 #### Requête
 
@@ -293,16 +294,16 @@ curl -X DELETE https://api.devana.ai/v1/conversations/cm4conv789xyz \
 
 ```typescript
 interface ConversationMessage {
-  id: string;                    // CUID unique
-  date: DateTime;                // Date de création
-  message: string;               // Contenu du message
+  id: string; // CUID unique
+  date: DateTime; // Date de création
+  message: string; // Contenu du message
   role: "user" | "assistant" | "system";
-  model: string | null;          // Modèle utilisé
-  score: number | null;          // Score de qualité (0-1)
-  sources: Source[] | null;      // Sources référencées
-  tokens: number | null;         // Nombre de tokens du message
-  contextTokens: number | null;  // Tokens de contexte
-  toolCalls: object | null;      // Appels d'outils effectués
+  model: string | null; // Modèle utilisé
+  score: number | null; // Score de qualité (0-1)
+  sources: Source[] | null; // Sources référencées
+  tokens: number | null; // Nombre de tokens du message
+  contextTokens: number | null; // Tokens de contexte
+  toolCalls: object | null; // Appels d'outils effectués
 }
 ```
 
@@ -314,10 +315,10 @@ interface ConversationMetrics {
   message: string;
   score: number | null;
   type: "user" | "assistant" | "system";
-  model: string;                 // Nom du modèle custom ou standard
+  model: string; // Nom du modèle custom ou standard
   sources: Source[] | null;
   status: string | null;
-  agent: string;                 // ID de l'agent
+  agent: string; // ID de l'agent
   tokens: {
     message: number | null;
     context: number | null;
@@ -330,12 +331,12 @@ interface ConversationMetrics {
 
 ```typescript
 interface ConversationCall {
-  type: string;                  // Type d'appel (completion, embedding, etc.)
-  messages: object | null;       // Messages envoyés
+  type: string; // Type d'appel (completion, embedding, etc.)
+  messages: object | null; // Messages envoyés
   messagesTokens: number | null; // Tokens des messages
-  outputContent: string | null;  // Contenu généré
-  outputTokens: number | null;   // Tokens générés
-  timeMs: number | null;         // Temps d'exécution en ms
+  outputContent: string | null; // Contenu généré
+  outputTokens: number | null; // Tokens générés
+  timeMs: number | null; // Temps d'exécution en ms
 }
 ```
 
@@ -343,10 +344,10 @@ interface ConversationCall {
 
 ```typescript
 interface Source {
-  fileName: string;              // Nom du fichier source
-  page?: number;                 // Page (si applicable)
-  relevance: number;             // Score de pertinence (0-1)
-  excerpt?: string;              // Extrait pertinent
+  fileName: string; // Nom du fichier source
+  page?: number; // Page (si applicable)
+  relevance: number; // Score de pertinence (0-1)
+  excerpt?: string; // Extrait pertinent
 }
 ```
 
@@ -357,6 +358,7 @@ interface Source {
 ### Suppression récursive
 
 La suppression d'une conversation parent entraîne automatiquement :
+
 1. Identification de tous les messages enfants
 2. Suppression récursive des enfants
 3. Marquage avec `deletedAt` (soft delete)
@@ -365,6 +367,7 @@ La suppression d'une conversation parent entraîne automatiquement :
 ### Contrôle d'accès
 
 Chaque endpoint vérifie :
+
 1. Authentification via API Key
 2. Existence de la conversation
 3. Droits sur l'agent associé via `guardAuthorizedAgentRights`
@@ -373,6 +376,7 @@ Chaque endpoint vérifie :
 ### Support des modèles personnalisés
 
 Les endpoints retournent automatiquement :
+
 - Le nom du modèle personnalisé si configuré
 - Le modèle standard en fallback
 - Les métriques spécifiques au modèle utilisé
@@ -380,6 +384,7 @@ Les endpoints retournent automatiquement :
 ### Modération des contenus
 
 Le paramètre `flagged` permet de :
+
 - Filtrer les messages problématiques
 - Identifier les contenus nécessitant une revue
 - Implémenter des workflows de modération
@@ -394,7 +399,7 @@ Le paramètre `flagged` permet de :
 class ConversationMetrics {
   constructor(apiKey) {
     this.apiKey = apiKey;
-    this.baseUrl = 'https://api.devana.ai/v1';
+    this.baseUrl = "https://api.devana.ai/v1";
   }
 
   async getConversationStats(conversationId) {
@@ -403,8 +408,8 @@ class ConversationMetrics {
       `${this.baseUrl}/conversations/${conversationId}/messages`,
       {
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`
-        }
+          Authorization: `Bearer ${this.apiKey}`,
+        },
       }
     );
 
@@ -413,11 +418,12 @@ class ConversationMetrics {
     // Calculer les statistiques
     const stats = {
       totalMessages: messages.data.length,
-      userMessages: messages.data.filter(m => m.role === 'user').length,
-      assistantMessages: messages.data.filter(m => m.role === 'assistant').length,
+      userMessages: messages.data.filter((m) => m.role === "user").length,
+      assistantMessages: messages.data.filter((m) => m.role === "assistant")
+        .length,
       totalTokens: 0,
       averageScore: 0,
-      sourcesUsed: new Set()
+      sourcesUsed: new Set(),
     };
 
     // Analyser chaque message
@@ -431,7 +437,7 @@ class ConversationMetrics {
       }
 
       if (message.sources) {
-        message.sources.forEach(source => {
+        message.sources.forEach((source) => {
           stats.sourcesUsed.add(source.fileName);
         });
       }
@@ -442,7 +448,7 @@ class ConversationMetrics {
 
     // Récupérer les métriques détaillées du dernier message assistant
     const lastAssistant = messages.data
-      .filter(m => m.role === 'assistant')
+      .filter((m) => m.role === "assistant")
       .pop();
 
     if (lastAssistant) {
@@ -450,14 +456,16 @@ class ConversationMetrics {
         `${this.baseUrl}/conversations/${lastAssistant.id}/metrics`,
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`
-          }
+            Authorization: `Bearer ${this.apiKey}`,
+          },
         }
       );
 
       const metrics = await metricsResponse.json();
-      stats.lastResponseTime = metrics.data.conversationCalls
-        .reduce((sum, call) => sum + (call.timeMs || 0), 0);
+      stats.lastResponseTime = metrics.data.conversationCalls.reduce(
+        (sum, call) => sum + (call.timeMs || 0),
+        0
+      );
     }
 
     return stats;
@@ -467,7 +475,7 @@ class ConversationMetrics {
     const report = {
       conversations: [],
       totalTokens: 0,
-      totalCost: 0
+      totalCost: 0,
     };
 
     for (const id of conversationIds) {
@@ -475,8 +483,8 @@ class ConversationMetrics {
         `${this.baseUrl}/conversations/${id}/messages`,
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`
-          }
+            Authorization: `Bearer ${this.apiKey}`,
+          },
         }
       );
 
@@ -489,7 +497,7 @@ class ConversationMetrics {
       report.conversations.push({
         id,
         tokens: conversationTokens,
-        messages: messages.data.length
+        messages: messages.data.length,
       });
 
       report.totalTokens += conversationTokens;
@@ -503,19 +511,19 @@ class ConversationMetrics {
 }
 
 // Utilisation
-const metrics = new ConversationMetrics('YOUR_API_KEY');
+const metrics = new ConversationMetrics("YOUR_API_KEY");
 
 // Obtenir les statistiques d'une conversation
-const stats = await metrics.getConversationStats('cm4conv789xyz');
-console.log('Statistiques:', stats);
+const stats = await metrics.getConversationStats("cm4conv789xyz");
+console.log("Statistiques:", stats);
 
 // Rapport d'usage pour plusieurs conversations
 const report = await metrics.getTokenUsageReport([
-  'cm4conv001',
-  'cm4conv002',
-  'cm4conv003'
+  "cm4conv001",
+  "cm4conv002",
+  "cm4conv003",
 ]);
-console.log('Rapport de tokens:', report);
+console.log("Rapport de tokens:", report);
 ```
 
 ### Système de modération
@@ -711,12 +719,14 @@ echo "Archive created successfully"
 ## Différences avec l'API publique
 
 ### API Conversations (`/v1/conversations`)
+
 - **Usage** : Gestion CRUD des conversations existantes
 - **Authentification** : API Key requise
 - **Permissions** : Basées sur l'agent
 - **Fonctions** : Métriques, historique, suppression
 
 ### API Public Conversations (`/v1/chat/conversation`)
+
 - **Usage** : Conversations embedables et widgets
 - **Authentification** : Tokens de sécurité ou OAuth
 - **Permissions** : Publiques avec tokens
@@ -728,29 +738,30 @@ Pour les conversations publiques et widgets, consultez [Public Conversations API
 
 ## Codes d'erreur
 
-| Code | Message | Description | Solution |
-|------|---------|-------------|----------|
-| `400` | Bad Request | Paramètres invalides (ID non CUID) | Vérifier le format de l'ID |
-| `403` | Forbidden | Pas d'autorisation sur l'agent | Vérifier les permissions |
-| `404` | Not Found | Conversation/Message introuvable | Vérifier l'ID et la suppression |
-| `500` | Internal Server Error | Erreur serveur | Réessayer ou contacter le support |
+| Code  | Message               | Description                        | Solution                          |
+| ----- | --------------------- | ---------------------------------- | --------------------------------- |
+| `400` | Bad Request           | Paramètres invalides (ID non CUID) | Vérifier le format de l'ID        |
+| `403` | Forbidden             | Pas d'autorisation sur l'agent     | Vérifier les permissions          |
+| `404` | Not Found             | Conversation/Message introuvable   | Vérifier l'ID et la suppression   |
+| `500` | Internal Server Error | Erreur serveur                     | Réessayer ou contacter le support |
 
 ---
 
 ## Limites et quotas
 
-| Limite | Valeur | Description |
-|--------|--------|-------------|
-| Messages par requête | 1000 | Maximum retourné par `/messages` |
-| Profondeur récursive | Illimitée | Pour la suppression cascade |
-| Rétention soft delete | 30 jours | Avant suppression définitive |
-| Rate limit | 100 req/min | Par API Key |
+| Limite                | Valeur      | Description                      |
+| --------------------- | ----------- | -------------------------------- |
+| Messages par requête  | 1000        | Maximum retourné par `/messages` |
+| Profondeur récursive  | Illimitée   | Pour la suppression cascade      |
+| Rétention soft delete | 30 jours    | Avant suppression définitive     |
+| Rate limit            | 100 req/min | Par API Key                      |
 
 ---
 
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API Conversations :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Pour créer des conversations : [Chat Completions API](./completions.md)
 - Pour les conversations publiques : [Public Conversations API](./public-conversations.md)

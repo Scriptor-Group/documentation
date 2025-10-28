@@ -1,4 +1,4 @@
-# File Upload API - Devana.ai
+# File Upload API
 
 Documentation complète des endpoints d'upload de fichiers dans Devana.ai.
 
@@ -27,6 +27,7 @@ Documentation complète des endpoints d'upload de fichiers dans Devana.ai.
 ## Vue d'ensemble
 
 L'API d'upload de Devana.ai permet de télécharger des fichiers dans le système pour :
+
 - Ajouter des documents à la base de connaissances d'un agent
 - Attacher des fichiers à une conversation
 - Organiser des fichiers dans des dossiers virtuels avec hiérarchie de chemins
@@ -56,6 +57,7 @@ Le token peut être obtenu via l'endpoint de connexion `/v1/auth/login`.
 ### Description
 
 Endpoint multi-fonctions pour l'upload de fichiers avec support de:
+
 - Upload multiple (batch)
 - Organisation par dossiers
 - Attachement à des conversations
@@ -72,21 +74,21 @@ POST /api/upload
 
 #### Body (multipart/form-data)
 
-| Paramètre | Type | Requis | Description |
-|-----------|------|--------|-------------|
-| `file` | File[] | Oui | Fichier(s) à uploader. Utiliser le nom de champ "file" pour tous les fichiers. Maximum 5000 fichiers. |
-| `path_0`, `path_1`, ... | String | Non | Chemin spécifique pour chaque fichier (indexé). Permet d'organiser les fichiers dans une hiérarchie virtuelle. |
+| Paramètre               | Type   | Requis | Description                                                                                                    |
+| ----------------------- | ------ | ------ | -------------------------------------------------------------------------------------------------------------- |
+| `file`                  | File[] | Oui    | Fichier(s) à uploader. Utiliser le nom de champ "file" pour tous les fichiers. Maximum 5000 fichiers.          |
+| `path_0`, `path_1`, ... | String | Non    | Chemin spécifique pour chaque fichier (indexé). Permet d'organiser les fichiers dans une hiérarchie virtuelle. |
 
 #### Headers personnalisés
 
-| Header | Type | Requis | Description |
-|--------|------|--------|-------------|
-| `Authorization` | String | Conditionnel | Token Bearer JWT. Requis pour l'upload dans des dossiers. |
-| `folder` | String | Non | ID du dossier de destination. Active les vérifications de permissions. |
-| `conversation` | String | Non | ID de la conversation pour attacher les fichiers. |
-| `path` | String | Non | Chemin par défaut pour tous les fichiers (si pas de path spécifique). |
-| `wait` | Boolean | Non | Si `true`, attend la fin de l'extraction avant de répondre. Défaut: `false`. |
-| `disableFastMode` | Boolean | Non | Si `true`, désactive le mode Fast. Défaut: `false`. |
+| Header            | Type    | Requis       | Description                                                                  |
+| ----------------- | ------- | ------------ | ---------------------------------------------------------------------------- |
+| `Authorization`   | String  | Conditionnel | Token Bearer JWT. Requis pour l'upload dans des dossiers.                    |
+| `folder`          | String  | Non          | ID du dossier de destination. Active les vérifications de permissions.       |
+| `conversation`    | String  | Non          | ID de la conversation pour attacher les fichiers.                            |
+| `path`            | String  | Non          | Chemin par défaut pour tous les fichiers (si pas de path spécifique).        |
+| `wait`            | Boolean | Non          | Si `true`, attend la fin de l'extraction avant de répondre. Défaut: `false`. |
+| `disableFastMode` | Boolean | Non          | Si `true`, désactive le mode Fast. Défaut: `false`.                          |
 
 ### Format de la réponse
 
@@ -97,11 +99,7 @@ POST /api/upload
   "success": true,
   "data": {
     "message": "Files uploaded successfully",
-    "ids": [
-      "file-id-1",
-      "file-id-2",
-      "file-id-3"
-    ]
+    "ids": ["file-id-1", "file-id-2", "file-id-3"]
   }
 }
 ```
@@ -109,20 +107,21 @@ POST /api/upload
 #### Structure des IDs retournés
 
 Les IDs retournés correspondent aux identifiants uniques des fichiers créés dans la base de données. Ils peuvent être utilisés pour :
+
 - Récupérer les métadonnées du fichier
 - Vérifier le statut de l'extraction
 - Référencer le fichier dans d'autres opérations
 
 ### Codes d'erreur
 
-| Code | Message | Description |
-|------|---------|-------------|
-| `400` | "No files uploaded" | Aucun fichier n'a été fourni dans la requête |
-| `400` | "Too many files, max 5000" | Dépassement de la limite de 5000 fichiers |
-| `400` | "Invalid files uploaded" | Format de fichier invalide ou corrompu |
-| `401` | "Unauthorized" | Token manquant ou invalide pour l'opération demandée |
-| `401` | "You are not authorized to perform this action" | Permissions insuffisantes sur le dossier ou l'agent |
-| `413` | File too large | Fichier dépassant la limite de 10GB |
+| Code  | Message                                         | Description                                          |
+| ----- | ----------------------------------------------- | ---------------------------------------------------- |
+| `400` | "No files uploaded"                             | Aucun fichier n'a été fourni dans la requête         |
+| `400` | "Too many files, max 5000"                      | Dépassement de la limite de 5000 fichiers            |
+| `400` | "Invalid files uploaded"                        | Format de fichier invalide ou corrompu               |
+| `401` | "Unauthorized"                                  | Token manquant ou invalide pour l'opération demandée |
+| `401` | "You are not authorized to perform this action" | Permissions insuffisantes sur le dossier ou l'agent  |
+| `413` | File too large                                  | Fichier dépassant la limite de 10GB                  |
 
 ### Exemples d'utilisation
 
@@ -181,10 +180,10 @@ curl -X POST https://api.devana.ai/api/upload \
 
 ### Limites par fichier
 
-| Limite | Valeur |
-|--------|--------|
-| Taille maximale par fichier | 10 GB |
-| Nombre maximum de fichiers par requête | 5000 |
+| Limite                                 | Valeur    |
+| -------------------------------------- | --------- |
+| Taille maximale par fichier            | 10 GB     |
+| Nombre maximum de fichiers par requête | 5000      |
 | Timeout de traitement (mode synchrone) | 5 minutes |
 
 ### Limites de noms de fichiers
@@ -261,6 +260,7 @@ curl -X POST https://api.devana.ai/api/upload \
 L'endpoint vérifie automatiquement les permissions selon le contexte :
 
 1. **Dossiers de base (isBase=true)** :
+
    - Le propriétaire a tous les droits
    - Les autres utilisateurs nécessitent des permissions d'écriture sur l'agent associé
 
@@ -271,6 +271,7 @@ L'endpoint vérifie automatiquement les permissions selon le contexte :
 ### Détection de duplicatas
 
 Le système détecte automatiquement les fichiers dupliqués basés sur :
+
 - **Hash MD5** : Empêche l'upload de fichiers identiques dans le même dossier
 - **URL d'origine** : Pour les fichiers provenant d'URLs externes
 
@@ -294,6 +295,7 @@ curl -X POST https://api.devana.ai/api/upload \
 ### Gestion des erreurs d'extraction
 
 Si une erreur survient lors de l'extraction :
+
 - Le fichier reste en base avec le statut `ERROR`
 - Le message d'erreur est stocké dans le champ `errorMessage`
 - Le fichier peut être re-traité ultérieurement
@@ -317,6 +319,7 @@ Pour les uploads dans des dossiers, un événement WebSocket est publié :
 ## Support et assistance
 
 Pour toute question ou problème concernant l'API d'upload :
+
 - Consultez la [documentation générale de l'API](../README.md)
 - Contactez le support technique : support@devana.ai
 - Reportez les bugs sur notre [GitHub](https://github.com/devana-ai/api-issues)

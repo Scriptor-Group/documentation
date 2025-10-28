@@ -1,4 +1,4 @@
-# Variables d'Environnement - Devana.ai
+# Variables d'Environnement
 
 Ce document décrit toutes les variables d'environnement nécessaires à la configuration des services Devana.ai.
 
