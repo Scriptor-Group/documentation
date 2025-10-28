@@ -14,6 +14,7 @@ Documentation complète de l'API Devana.ai pour intégrer l'intelligence artific
 1. [Authentification](#authentification)
 2. [Endpoints](#endpoints)
    - [Agents](#agents)
+   - [Gestion des fichiers](#gestion-des-fichiers)
    - [Conversations & Completions](#conversations--completions)
 3. [Intégration](#intégration)
 4. [Démarrage rapide](#démarrage-rapide)
@@ -60,6 +61,17 @@ Authorization: Bearer YOUR_API_KEY
 **Documentation complète :**
 - [Agents API](./endpoints/agents.md) - Endpoints internes (gestion complète)
 - [Agents Public API](./endpoints/agents-public.md) - Endpoints publics (accès restreint)
+
+### Gestion des fichiers
+
+**Upload et gestion de documents**
+
+| Endpoint | Description | Documentation |
+|----------|-------------|---------------|
+| `POST /api/upload` | Upload multi-fichiers (jusqu'à 5000) | [files.md](./endpoints/files.md) |
+
+**Documentation complète :**
+- [File Upload API](./endpoints/files.md) - Upload de fichiers avec extraction de contenu
 
 ### Conversations & Completions
 
