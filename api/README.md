@@ -78,6 +78,7 @@ Authorization: Bearer YOUR_API_KEY
 - [File Upload API](./endpoints/files.md) - Upload de fichiers avec extraction de contenu
 - [Folders API](./endpoints/folders.md) - Gestion des dossiers (bases de connaissances)
 - [Documents API](./endpoints/documents.md) - Extraction et traitement de documents
+- [Formats supportés](./reference/supported-formats.md) - Liste complète des formats de fichiers acceptés
 
 ### Conversations & Completions
 
@@ -86,15 +87,15 @@ Authorization: Bearer YOUR_API_KEY
 | Endpoint | Description | Documentation |
 |----------|-------------|---------------|
 | `POST /v1/chat/completions` | Créer une conversation avec un agent | [completions.md](./endpoints/completions.md) |
-| `GET /v1/conversations` | Lister les conversations | [conversations/](./endpoints/conversations/) |
-| `GET /v1/conversations/:id` | Récupérer une conversation | [conversations/](./endpoints/conversations/) |
-| `GET /v1/conversations/:id/metrics` | Métriques détaillées d'une conversation | [conversations/](./endpoints/conversations/) |
-| `DELETE /v1/conversations/:id` | Supprimer une conversation | [conversations/](./endpoints/conversations/) |
+| `GET /v1/conversations` | Lister les conversations | [conversations.md](./endpoints/conversations.md) |
+| `GET /v1/conversations/:id` | Récupérer une conversation | [conversations.md](./endpoints/conversations.md) |
+| `GET /v1/conversations/:id/metrics` | Métriques détaillées d'une conversation | [conversations.md](./endpoints/conversations.md) |
+| `DELETE /v1/conversations/:id` | Supprimer une conversation | [conversations.md](./endpoints/conversations.md) |
 | `POST /v1/interactions` | Gérer les interactions utilisateur | [interactions.md](./endpoints/interactions.md) |
 
 **Documentation complète :**
 - [Chat Completions](./endpoints/completions.md) - Endpoint principal pour converser avec les agents
-- [Conversations API](./endpoints/conversations/) - CRUD des conversations et métriques
+- [Conversations API](./endpoints/conversations.md) - CRUD des conversations et métriques
 - [Public Conversations](./endpoints/public-conversations.md) - Conversations publiques et widgets embedables
 - [Interactions](./endpoints/interactions.md) - Feedback et actions utilisateur
 
@@ -286,7 +287,7 @@ Configurable par agent via l'interface d'administration :
 
 - [Guide de déploiement](../deployment/README.md) - Déployer Devana.ai on-premise
 - [Changelogs](../changelogs/devana/) - Historique des versions
-- [Formats supportés](../docs/supported-formats.md) - Types de fichiers acceptés
+- [Formats supportés](./reference/supported-formats.md) - Types de fichiers acceptés
 - [Requirements](../deployment/requirements.md) - Spécifications techniques
 
 ---

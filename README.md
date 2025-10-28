@@ -24,6 +24,16 @@ Documentation complète de l'API REST pour intégrer Devana.ai dans vos applicat
 - **Authentification** : OAuth 2.0
 - **Endpoints** : Agents, Conversations, Completions
 - **Intégration** : IFrame, Tools, Webhooks
+- **[Formats supportés](./api/reference/supported-formats.md)** : Types de fichiers et formats de données
+
+### 🛠️ [SDKs et Intégrations](./sdks/README.md)
+
+Kits de développement et modules d'intégration pour Devana.ai.
+
+- **[devana-ws-tools](./sdks/devana-ws-tools.md)** : Client WebSocket pour connexions temps réel
+- **[n8n-nodes-devana](./sdks/n8n-nodes-devana.md)** : Module n8n pour l'automatisation de workflows
+- **Outils dynamiques** : Enregistrement et exécution d'outils personnalisés
+- **Intégrations** : IoT, Office, bases de données
 
 ### 🚀 [Déploiement](./deployment/README.md)
 
@@ -41,10 +51,6 @@ Historique des versions et fonctionnalités.
 
 - [Devana.ai](./changelogs/devana/README.md) - Plateforme principale
 - [Odin](./changelogs/odin/README.md) - Service de traitement de documents
-
-### 📖 [Documentation générale](./docs/)
-
-- [Formats supportés](./docs/supported-formats.md) - Types de fichiers et formats de données
 
 ## 🚀 Démarrage rapide
 
