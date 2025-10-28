@@ -64,31 +64,6 @@ Historique des versions et fonctionnalités.
 - **Cloud** : Créez un compte sur [devana.ai](https://www.devana.ai), obtenez votre clé API → [Documentation API](./api/README.md)
 - **On-Premise** : Consultez les [requirements](./deployment/requirements.md) puis suivez le [guide de déploiement](./deployment/README.md)
 
-## 💡 Exemples d'utilisation
-
-### Appel API simple
-
-```bash
-curl -X POST https://api.devana.ai/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "agentId": "your-agent-id",
-    "messages": [{"role": "user", "content": "Bonjour!"}]
-  }'
-```
-
-### Intégration IFrame
-
-```html
-<iframe
-  src="https://app.devana.ai/embed/your-agent-id"
-  width="100%"
-  height="600px"
-  frameborder="0"
-></iframe>
-```
-
 ## 🏗️ Architecture
 
 Devana.ai est composé de plusieurs services interconnectés :
@@ -104,8 +79,6 @@ Pour une vue détaillée de l'architecture, des flux de données et du dimension
 
 - 🌐 [Site web](https://www.devana.ai)
 - 📱 [Application](https://app.devana.ai)
-- 🐙 [GitHub - Devana](https://github.com/Scriptor-Group/devana.ai)
-- 🐙 [GitHub - Odin](https://github.com/Scriptor-Group/odin)
 
 ## 💬 Support
 
@@ -119,8 +92,3 @@ Pour obtenir de l'aide :
 ## 📄 Licence
 
 © 2025 Scriptor Group - Tous droits réservés
-
----
-
-**Dernière mise à jour** : Octobre 2025
-**Version** : v0.6.0108
