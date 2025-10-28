@@ -1,7 +1,3 @@
-![Devana](https://app.devana.ai/static/logo-small.png)
-
-# Documentation Devana.ai
-
 Bienvenue dans la documentation officielle de Devana.ai - Votre plateforme d'IA d'entreprise.
 
 ## 🎯 Pour qui ?
