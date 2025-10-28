@@ -4,6 +4,13 @@
 
 Bienvenue dans la documentation officielle de Devana.ai - Votre plateforme d'IA d'entreprise.
 
+## 🎯 Pour qui ?
+
+- **Développeurs** → Consultez la [documentation API](./api/README.md) pour intégrer Devana.ai
+- **DevOps/SysAdmins** → Suivez le [guide de déploiement](./deployment/README.md) pour l'installation
+- **Product Managers** → Découvrez les nouveautés dans les [changelogs](./changelogs/)
+- **Intégrateurs** → Explorez les [SDKs et outils](./sdks/README.md) disponibles
+
 ## 🌟 Présentation
 
 Devana.ai est une plateforme d'IA avancée qui permet aux organisations de :
@@ -54,17 +61,8 @@ Historique des versions et fonctionnalités.
 
 ## 🚀 Démarrage rapide
 
-### Solution Cloud
-
-1. Créez un compte sur [devana.ai](https://www.devana.ai)
-2. Obtenez votre clé API
-3. Suivez la [documentation API](./api/README.md) pour intégrer
-
-### Solution On-Premise
-
-1. Consultez le [guide de déploiement](./deployment/README.md)
-2. Configurez votre environnement
-3. Déployez avec Kubernetes
+- **Cloud** : Créez un compte sur [devana.ai](https://www.devana.ai), obtenez votre clé API → [Documentation API](./api/README.md)
+- **On-Premise** : Consultez les [requirements](./deployment/requirements.md) puis suivez le [guide de déploiement](./deployment/README.md)
 
 ## 💡 Exemples d'utilisation
 
@@ -93,13 +91,14 @@ curl -X POST https://api.devana.ai/v1/chat/completions \
 
 ## 🏗️ Architecture
 
-```
-Devana.ai Platform
-├── Front-end (Next.js)
-├── API Server (Node.js + GraphQL)
-├── Odin (Document Processing)
-└── Database (PostgreSQL + Vector DB)
-```
+Devana.ai est composé de plusieurs services interconnectés :
+
+- **Front-end** (Next.js) - Interface utilisateur web
+- **API Server** (Node.js + GraphQL) - Backend principal
+- **Odin** - Service de traitement et extraction de documents
+- **Database** - PostgreSQL avec extensions vectorielles (pgvector)
+
+Pour une vue détaillée de l'architecture, des flux de données et du dimensionnement, consultez la [documentation architecture complète](./deployment/architecture.md).
 
 ## 🔗 Liens utiles
 
@@ -110,10 +109,12 @@ Devana.ai Platform
 
 ## 💬 Support
 
-Pour le support technique :
+Pour obtenir de l'aide :
 
-- Consultez la documentation dans ce repository
-- Contactez support-it@devana.ai pour les questions spécifiques
+- 📖 **Documentation** : Consultez les guides dans ce repository
+- 📧 **Support technique** : support-it@devana.ai
+- 🐛 **Bugs & Issues** : Créez un ticket sur [tyr.devana.ai](https://tyr.devana.ai)
+- 🔧 **Problèmes de déploiement** : Consultez le [troubleshooting guide](./deployment/troubleshooting/common-issues.md)
 
 ## 📄 Licence
 
@@ -121,5 +122,5 @@ Pour le support technique :
 
 ---
 
-**Dernière mise à jour** : Septembre 2025
-**Version** : v0.6.0053
+**Dernière mise à jour** : Octobre 2025
+**Version** : v0.6.0108

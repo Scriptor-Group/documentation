@@ -22,14 +22,14 @@ Follow these steps to integrate Devana into your web application using an IFrame
 3. Configure the agent according to your requirements.
 4. Make the agent public. This will allow it to be accessed via the IFrame.
 
-![Agent Creation Step](../assets/AgentCreation.png)
+![Agent Creation Step](../../api/assets/AgentCreation.png)
 
 ### Step 2: Retrieve the Agent Link
 
 1. Once your public agent is set up, navigate to the agent's settings.
 2. Copy the agent's unique link. You will use this link to connect the agent to your website.
 
-![Agent Link Step](../assets/GetPublicLink.png)
+![Agent Link Step](../../api/assets/GetPublicLink.png)
 
 ### Step 3: Embed the Agent Link in an IFrame
 
@@ -62,7 +62,7 @@ To implement this, follow the steps outlined in the "[Devana IFrame as a Chatbot
 
 ## Support and Feedback
 
-If you encounter any issues during the integration process or have any questions, please refer to the documentation or reach out to our support team at support@devana.ai. We are here to assist you and ensure a smooth integration experience.
+If you encounter any issues during the integration process or have any questions, please refer to the documentation or reach out to our support team at support-it@devana.ai. We are here to assist you and ensure a smooth integration experience.
 
 We value your feedback and are continuously working to improve Devana's capabilities. If you have any suggestions or feature requests, please let us know.
 

@@ -24,7 +24,7 @@ Les *tools* (ou outils) représentent des fonctions ou modules externes auxquels
 
 L’objectif de cette documentation est de fournir une vue d’ensemble technique des tools utilisés dans Devana, en expliquant leur rôle et leur intégration avec le LLM.
 
-![Workflow Tools process](assets/workflow_tools.svg)
+![Workflow Tools process](../assets/workflow_tools.svg)
 
 ## 2. Architecture et Fonctionnement des Tools
 
@@ -47,12 +47,12 @@ Chaque type de tool peut être configuré de plusieurs façons pour répondre au
 
 Sur Devana, pour créer un tool, il faut accéder à l'interface d'un agent, puis cliquer la barre d'outils en haut à droite, puis choisir "Outils personnalisés".
 
-![Interface agent](assets/agent_sidebar.png)
-![Sidebar Agent Tools](assets/option_tool.png)
+![Interface agent](../assets/agent_sidebar.png)
+![Sidebar Agent Tools](../assets/option_tool.png)
 
 Par la suite un formulaire s'ouvre, permettant de renseigner les différentes propriétés du tool.
 
-![Formulaire Tool](assets/form_tool.png)
+![Formulaire Tool](../assets/form_tool.png)
 
 Voici une description des différents champs :
 
@@ -84,16 +84,16 @@ Vous trouverez ci-dessous des informations supplémentaires sur la configuration
 ##### Accésibilité du Tool
 Chaque tool personnalisé est accessible pour tous les agents, il suffit juste de les activer pour chaque agent.
 
-![Tools agent](assets/tools_list.png)
+![Tools agent](../assets/tools_list.png)
 
 ##### Limitation du nombre d'appels
-Dans l'interface d'un agent, vous pouvez accéder aux paramètres de l'agent en cliquant sur le bouton en forme de rouage en haut à droite. 
+Dans l'interface d'un agent, vous pouvez accéder aux paramètres de l'agent en cliquant sur le bouton en forme de rouage en haut à droite.
 
-![Paramètres agent](assets/agent_settings.png)
+![Paramètres agent](../assets/agent_settings.png)
 
 Vous pouvez alors renseigner le nombre maximum d'appels pour les tools.
 
-![Paramètres tools maximum](assets/params_tools_max.png)
+![Paramètres tools maximum](../assets/params_tools_max.png)
 
 ##### Ajout du header `x-user-id` lors de l'utilisation des tools personnalisés
 

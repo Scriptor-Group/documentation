@@ -26,4 +26,4 @@ Odin est le service de traitement et d'analyse de documents pour Devana.ai. Il g
 
 - [Documentation Odin](../../deployment/services/odin.md)
 - [Changelogs Devana](../devana/README.md)
-- [Formats supportés](../../docs/supported-formats.md)
+- [Formats supportés](../../api/reference/supported-formats.md)
