@@ -236,7 +236,6 @@ Internet
 **Configuration recommandée :**
 
 - Version : 17.x
-- Extensions : pgvector (si embeddings en DB), pg_stat_statements
 - Replication : Streaming replication (HA)
 - Backup : WAL archiving + snapshots quotidiens
 

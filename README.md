@@ -1,13 +1,8 @@
-<div align="center">
-
 **Enterprise AI Platform for Intelligent Applications**
 
 [Getting Started](#getting-started) • [API Reference](./api/README.md) • [Deployment](./deployment/README.md) • [Examples](#examples)
 
-[![Version](https://img.shields.io/badge/version-0.6.0108-blue.svg)](./changelogs/devana/README.md)
-[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](#)
-
-</div>
+[![Version](https://img.shields.io/badge/version-0.6.0108-blue.svg)](./changelogs/devana/README.md) [![License](https://img.shields.io/badge/license-Proprietary-red.svg)](#)
 
 ---
 
@@ -66,7 +61,7 @@ Deploy Devana.ai in your infrastructure for full control:
 **Prerequisites:**
 
 - Kubernetes 1.24+
-- PostgreSQL 14+ with pgvector
+- PostgreSQL 14+
 - 16GB RAM minimum (see [requirements](./deployment/requirements.md) for production sizing)
 
 ---
@@ -75,11 +70,7 @@ Deploy Devana.ai in your infrastructure for full control:
 
 ### For Developers
 
-<table>
-<tr>
-<td width="50%">
-
-**[API Reference](./api/README.md)**
+#### [API Reference](./api/README.md)
 
 Complete REST API documentation for building AI-powered applications.
 
@@ -88,10 +79,7 @@ Complete REST API documentation for building AI-powered applications.
 - [Completions](./api/endpoints/completions.md) - Streaming responses
 - [Documents](./api/endpoints/documents.md) - Upload & process files
 
-</td>
-<td width="50%">
-
-**[SDKs & Tools](./sdks/README.md)**
+#### [SDKs & Tools](./sdks/README.md)
 
 Client libraries and integration packages.
 
@@ -99,12 +87,7 @@ Client libraries and integration packages.
 - [n8n-nodes-devana](./sdks/n8n-nodes-devana.md) - Workflow automation
 - Custom integrations via [Tools API](./api/integration/tools.md)
 
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**[Integration Guides](./api/integration/README.md)**
+#### [Integration Guides](./api/integration/README.md)
 
 Embed Devana.ai in your applications.
 
@@ -112,10 +95,7 @@ Embed Devana.ai in your applications.
 - [Custom Tools](./api/integration/tools.md) - Extend with your APIs
 - [Webhooks](./api/endpoints/interactions.md) - Event-driven flows
 
-</td>
-<td width="50%">
-
-**[Supported Formats](./api/reference/supported-formats.md)**
+#### [Supported Formats](./api/reference/supported-formats.md)
 
 File types and data formats.
 
@@ -123,17 +103,11 @@ File types and data formats.
 - Images with OCR support
 - Structured data (JSON, CSV)
 
-</td>
-</tr>
-</table>
+---
 
 ### For DevOps & SysAdmins
 
-<table>
-<tr>
-<td width="50%">
-
-**[Deployment Guide](./deployment/README.md)**
+#### [Deployment Guide](./deployment/README.md)
 
 Production-ready deployment.
 
@@ -142,10 +116,7 @@ Production-ready deployment.
 - [PostgreSQL](./deployment/infrastructure/database/db/postgresql.md) - Database setup
 - [LLM Providers](./deployment/configuration/llm-providers.md) - Model configuration
 
-</td>
-<td width="50%">
-
-**[Operations](./deployment/monitoring/health-checks.md)**
+#### [Operations](./deployment/monitoring/health-checks.md)
 
 Monitor and maintain your deployment.
 
@@ -153,12 +124,7 @@ Monitor and maintain your deployment.
 - [License Management](./deployment/monitoring/license.md) - Usage tracking
 - [Troubleshooting](./deployment/troubleshooting/common-issues.md) - Common issues
 
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**[Authentication](./deployment/authentication/README.md)**
+#### [Authentication](./deployment/authentication/README.md)
 
 Enterprise identity integration.
 
@@ -166,10 +132,7 @@ Enterprise identity integration.
 - LDAP, OIDC, SAML
 - Custom SSO providers
 
-</td>
-<td width="50%">
-
-**[Architecture](./deployment/architecture.md)**
+#### [Architecture](./deployment/architecture.md)
 
 System design and scaling.
 
@@ -177,9 +140,7 @@ System design and scaling.
 - Data flows and security
 - Performance optimization
 
-</td>
-</tr>
-</table>
+---
 
 ### For Product Teams
 
@@ -285,7 +246,7 @@ await client.connect();
 │         └────────────────┼─────────────────────┘            │
 │                          ▼                                  │
 │            ┌───────────────────────────┐                    │
-│            │  PostgreSQL + pgvector    │                    │
+│            │  PostgreSQL               │                    │
 │            │  (Relational + Vector DB) │                    │
 │            └───────────────────────────┘                    │
 │                                                             │
