@@ -69,9 +69,15 @@ Authorization: Bearer YOUR_API_KEY
 | Endpoint | Description | Documentation |
 |----------|-------------|---------------|
 | `POST /api/upload` | Upload multi-fichiers (jusqu'à 5000) | [files.md](./endpoints/files.md) |
+| `GET /v1/folders` | Lister tous les dossiers | [folders.md](./endpoints/folders.md) |
+| `POST /v1/folders` | Créer un dossier | [folders.md](./endpoints/folders.md) |
+| `GET /v1/documents/:id` | Récupérer le contenu d'un document | [documents.md](./endpoints/documents.md) |
+| `POST /v1/documents` | Upload et extraction de document | [documents.md](./endpoints/documents.md) |
 
 **Documentation complète :**
 - [File Upload API](./endpoints/files.md) - Upload de fichiers avec extraction de contenu
+- [Folders API](./endpoints/folders.md) - Gestion des dossiers (bases de connaissances)
+- [Documents API](./endpoints/documents.md) - Extraction et traitement de documents
 
 ### Conversations & Completions
 
@@ -82,13 +88,26 @@ Authorization: Bearer YOUR_API_KEY
 | `POST /v1/chat/completions` | Créer une conversation avec un agent | [completions.md](./endpoints/completions.md) |
 | `GET /v1/conversations` | Lister les conversations | [conversations/](./endpoints/conversations/) |
 | `GET /v1/conversations/:id` | Récupérer une conversation | [conversations/](./endpoints/conversations/) |
+| `GET /v1/conversations/:id/metrics` | Métriques détaillées d'une conversation | [conversations/](./endpoints/conversations/) |
 | `DELETE /v1/conversations/:id` | Supprimer une conversation | [conversations/](./endpoints/conversations/) |
 | `POST /v1/interactions` | Gérer les interactions utilisateur | [interactions.md](./endpoints/interactions.md) |
 
 **Documentation complète :**
 - [Chat Completions](./endpoints/completions.md) - Endpoint principal pour converser avec les agents
-- [Conversations API](./endpoints/conversations/) - CRUD des conversations
+- [Conversations API](./endpoints/conversations/) - CRUD des conversations et métriques
+- [Public Conversations](./endpoints/public-conversations.md) - Conversations publiques et widgets embedables
 - [Interactions](./endpoints/interactions.md) - Feedback et actions utilisateur
+
+### Système & Monitoring
+
+**Suivi et gestion des tâches asynchrones**
+
+| Endpoint | Description | Documentation |
+|----------|-------------|---------------|
+| `GET /v1/jobs` | Liste et suivi des tâches asynchrones | [jobs.md](./endpoints/jobs.md) |
+
+**Documentation complète :**
+- [Jobs API](./endpoints/jobs.md) - Monitoring des tâches asynchrones (extraction, embeddings, etc.)
 
 ---
 
