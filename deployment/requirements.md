@@ -1,7 +1,7 @@
 # Requirements pour le Déploiement de Devana.ai
 
-**Version:** 1.0
-**Date:** Septembre 2025
+**Version:** 1.1
+**Date:** Novembre 2025
 **Audience:** Architectes d'entreprise, DevOps, Décideurs IT
 
 ---
@@ -18,6 +18,7 @@
    - [Scénario 1 : Cloud Providers](#scénario-1--cloud-providers-openai-azure-openai-anthropic)
    - [Scénario 2 : Auto-hébergé](#scénario-2--llm-auto-hébergés-recommandé-pour-entreprises)
    - [Scénario 3 : Hybride](#scénario-3--hybride-recommandé-pour-flexibilité)
+   - [Scénario 4 : Clusters Mac](#scénario-4--clusters-mac-apple-silicon)
 5. [Requirements Réseau](#-requirements-réseau)
 6. [Requirements Stockage](#-requirements-stockage)
 7. [Requirements Sécurité](#-requirements-sécurité)
@@ -236,6 +237,218 @@ replicas: 2                # Haute disponibilité
 - Résilience maximale
 - Optimisation coûts
 - Conformité assurée sur données critiques
+
+---
+
+### Scénario 4 : Clusters Mac (Apple Silicon)
+
+> ⚠️ **AVERTISSEMENT : Limitations macOS pour usage serveur**
+>
+> **macOS n'est PAS conçu comme système d'exploitation serveur.** Apple a discontinué macOS Server en avril 2022.
+>
+> **Limitations opérationnelles majeures :**
+> - **Authentification obligatoire** : macOS requiert login/mot de passe au démarrage, compliquant l'automatisation et les redémarrages non supervisés
+> - **Gestion à distance complexe** : Pas d'équivalent SSH headless natif sans session utilisateur active, configuration VNC/Screen Sharing requise
+> - **Updates disruptives** : Mises à jour macOS nécessitent redémarrages fréquents et intervention manuelle, pas de stratégie de patching automatisée enterprise-grade
+> - **File descriptors limités** : Maximum 12,288 FD (vs quasi-illimité sur Linux), risque de "too many files open" sous charge
+> - **Absence d'outils enterprise** : Pas de clustering OS natif, gestion de flotte limitée, monitoring système rudimentaire
+>
+> **Limitations matérielles :**
+> - **Hardware consumer** : Mac Mini/Studio non certifiés pour opérations datacenter 24/7 critiques
+> - **Aucune redondance** : Pas de PSU doubles, RAID matériel, ou hot-swap
+> - **Form factor instable** : Changements dimensionnels entre générations compliquant le rack-mounting standardisé
+>
+> **Recommandations d'usage :**
+> - ✅ **Acceptable** : Développement, staging, prototypage, CI/CD (Xcode/iOS builds)
+> - ⚠️ **Acceptable avec réserves** : Production légère (<500 users), avec monitoring humain et tolérance aux interruptions
+> - ❌ **Non recommandé** : Production critique 24/7, environnements nécessitant SLA >99.9%, compliance stricte (SOC 2, ISO 27001)
+>
+> Pour production enterprise critique, privilégier **Scénario 2 (Linux + GPU NVIDIA)** ou **Scénario 3 (Hybride)**.
+
+**Cas d'usage appropriés :**
+- Organisations avec infrastructure Mac existante et équipes macOS expérimentées
+- Environnements nécessitant efficacité énergétique maximale
+- Déploiements on-premise avec contraintes de bruit/chaleur (bureaux)
+- Prototypage et développement avant scale-out GPU
+- Workloads non-critiques avec tolérance aux interruptions planifiées
+- Build farms Xcode/iOS (cas d'usage historique des Mac en datacenter)
+
+**Avantages :**
+- **Efficacité énergétique** : 3-5x moins de consommation vs serveurs GPU
+- **Mémoire unifiée** : CPU/GPU/Neural Engine partagent la RAM (jusqu'à 512 GB)
+- **Architecture zero-copy** : Pas de transfert PCIe entre CPU et GPU
+- **Silence opérationnel** : Idéal pour bureaux et petits datacenters
+- **Infrastructure simplifiée** : Pas de serveur GPU dédié requis
+
+#### Requirements matériels par configuration
+
+**Configuration développement / test (< 50 utilisateurs)**
+
+| Matériel | Specs | Performance LLM | Use Case |
+|----------|-------|-----------------|----------|
+| **Mac Mini M4** | 16 cores CPU, 64 GB RAM | 11-12 tok/s (32B Q4) | Tests, embeddings |
+| **Mac Mini M4 Pro** | 14 cores CPU, 64 GB RAM | 15-18 tok/s (32B Q4) | Prototypage |
+| **Mac Studio M2 Ultra** | 24 cores CPU, 192 GB RAM | 41 tok/s (70B FP16) | LLM 70B |
+| **Mac Studio M3 Ultra** | 32 cores CPU, 512 GB RAM | 76 tok/s (8B Q4), 17-19 tok/s (672B Q4) | LLM ultra-large |
+
+**Configuration production (100-500 utilisateurs)**
+
+| Composant | Configuration | Performance estimée |
+|-----------|--------------|---------------------|
+| **LLM Principal** | 2x Mac Studio M3 Ultra (256 GB) | ~35-40 tok/s (70B Q4) |
+| **Embeddings** | 2x Mac Mini M4 (64 GB) | ~500 embeddings/s |
+| **Networking** | Switch 25 Gbps RoCEv2 | Latence cluster < 5ms |
+| **TOTAL** | 4 machines + réseau | - |
+
+**Configuration cluster haute performance (500-2000 utilisateurs)**
+
+| Configuration | Machines | RAM totale | Performance |
+|--------------|----------|------------|-------------|
+| **Cluster homogène** | 4x Mac Studio M3 Ultra (256 GB) | 1 TB | ~70-80 tok/s (70B Q4) |
+| **Cluster hétérogène** | 2x M3 Ultra + 4x M4 Pro | 640 GB | ~50-60 tok/s (70B Q4) |
+| **Cluster économique** | 8x Mac Mini M4 (64 GB) | 512 GB | ~40-50 tok/s (32B Q4) |
+
+**Exemple cluster économique (démontré par Exo Labs) :**
+- 4x Mac Mini M4 + 1x MacBook Pro M4 Max
+- **RAM totale** : 496 GB de mémoire unifiée
+- **Use case** : Développement, staging, petites productions
+
+#### Performances mesurées (benchmarks 2025)
+
+| Modèle | Hardware | Quantization | Tokens/sec | Notes |
+|--------|----------|--------------|------------|-------|
+| **Llama 3 8B** | M3 Ultra | Q4_K_M | 76 tok/s | Optimal pour petits modèles |
+| **Llama 3 70B** | M2 Ultra | FP16 | 41 tok/s | Via llama.cpp |
+| **Qwen 2.5 32B** | M4 Pro (64 GB) | Q4 | 11-12 tok/s | Single machine |
+| **Qwen 2.5 72B** | M3 Ultra (256 GB) | Q4 | 25-30 tok/s | Estimé |
+| **DeepSeek R1 672B** | M3 Ultra (512 GB) | Q4 | 17-19 tok/s | Compute-bound |
+| **DBRX 132B** | Cluster M2 Ultra (25 Gbps) | - | 16.3 tok/s | Cluster networking critique |
+
+**Formule approximative (M-series avec FP16) :**
+- **Tokens/sec ≈ Bandwidth (GB/s) / 160**
+- M2 (100 GB/s) : ~6.5 tok/s
+- M2 Pro (200 GB/s) : ~13 tok/s
+- M2 Max (400 GB/s) : ~25 tok/s
+- M2 Ultra (800 GB/s) : ~41 tok/s
+- M3 Ultra (819 GB/s) : ~51 tok/s (théorique, 40 tok/s réel avec compute bottleneck)
+
+#### Frameworks et stack logiciel
+
+| Framework | Support Apple Silicon | Use Case | Performance |
+|-----------|----------------------|----------|-------------|
+| **MLX** | ✅ Natif Apple | Production Mac | Optimisé unified memory |
+| **Ollama** | ✅ MLX backend | Déploiement simplifié | Production ready |
+| **llama.cpp** | ✅ Metal support | Haute performance | Quantization avancée |
+| **vLLM** | ❌ NVIDIA uniquement | N/A | Non compatible Mac |
+| **TGI** | ❌ NVIDIA/AMD | N/A | Non compatible Mac |
+
+**Stack recommandé pour production Mac :**
+
+**Option 1 : Ollama (simplicité)**
+- Ollama avec MLX backend
+- API OpenAI-compatible
+- Gestion automatique des ressources
+
+**Option 2 : llama.cpp (performance)**
+- Compilation Metal optimisée
+- Quantization personnalisée (Q4_K_M, Q5_K_M, Q8)
+- Contrôle fin des paramètres
+
+**Option 3 : MLX natif (flexibilité)**
+- Python direct avec mlx-lm
+- Fine-tuning local possible
+- Intégration custom
+
+#### Configuration réseau pour clustering
+
+**Requirements réseau :**
+- **Minimum** : 10 Gbps Ethernet (latence ~8-10ms inter-node)
+- **Recommandé** : 25 Gbps RoCEv2 (latence ~3-5ms inter-node)
+- **Optimal** : Thunderbolt 5 direct (120 GB/s entre 2 machines)
+
+**Impact réseau mesuré (cluster DBRX) :**
+- 10 Gbps : ~14 tok/s
+- 25 Gbps : ~16.3 tok/s (+16% performance)
+- Note : Communication inter-nodes peut égaler ou dépasser le temps de calcul
+
+**Topologie cluster recommandée :**
+
+```mermaid
+graph TD
+    LB[Load Balancer]
+    SW1[Switch 25 Gbps]
+    SW2[Switch 10 Gbps]
+    M3_1[Mac Studio M3 Ultra]
+    M3_2[Mac Studio M3 Ultra]
+    M4_1[Mac Mini M4 Pro]
+    M4_2[Mac Mini M4 Pro]
+    M4_3[Mac Mini M4]
+    M4_4[Mac Mini M4]
+    M4_5[Mac Mini M4]
+
+    LB --> SW1
+    SW1 --> M3_1
+    SW1 --> M3_2
+    SW1 --> M4_1
+    SW1 --> M4_2
+
+    LB --> SW2
+    SW2 --> M4_3
+    SW2 --> M4_4
+    SW2 --> M4_5
+
+    M3_1:::llm
+    M3_2:::llm
+    M4_1:::llm
+    M4_2:::llm
+    M4_3:::emb
+    M4_4:::emb
+    M4_5:::emb
+
+    classDef llm fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef emb fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+```
+
+**Légende :**
+- 🔵 Bleu : LLM nodes (Mac Studio M3 Ultra + Mac Mini M4 Pro)
+- 🟣 Violet : Embeddings nodes (Mac Mini M4)
+
+#### Limitations et considérations
+
+**Avantages comparés à NVIDIA :**
+- ✅ **Efficacité énergétique** : ~400W vs ~2000W pour serveur GPU équivalent
+- ✅ **Mémoire** : Jusqu'à 512 GB unifiée (vs 80 GB VRAM H100)
+- ✅ **Architecture** : Mémoire unifiée zero-copy CPU/GPU/Neural Engine
+- ✅ **Bruit/chaleur** : Déploiement bureau possible (opération silencieuse)
+
+**Limitations vs NVIDIA :**
+- ❌ **Compute brut** : 38 TOPS (Neural Engine) vs 2000 TFLOPS (H100)
+- ❌ **Scaling** : Clustering complexe vs NVLink natif
+- ❌ **Écosystème** : MLX/Ollama uniquement vs vLLM/TGI/TensorRT
+- ❌ **Modèles >70B** : Performance dégradée (17-19 tok/s pour 672B)
+- ❌ **Multi-GPU** : Pas de support natif type NVLink
+
+**Cas d'usage IDÉAUX pour Mac :**
+- Modèles 7B-70B en production légère/moyenne
+- Environnements contraints (énergie, bruit, espace)
+- Organisations Mac-first (Apple Silicon déjà déployé)
+- Prototypage avant déploiement GPU cloud/on-prem
+- Embeddings haute volumétrie (mémoire importante)
+
+**Cas d'usage NON RECOMMANDÉS :**
+- Modèles >100B en production intensive (>2000 users)
+- Requirements >100 tok/s
+- Workloads nécessitant vLLM/TGI spécifiquement
+- Scaling horizontal massif (>10 nodes)
+
+#### Roadmap Apple (2025+)
+
+**M5 (fin 2025) :**
+- Coprocesseurs dédiés Transformers
+- Performance LLM prévue : 2-3x M3 Ultra
+- Efficacité énergétique encore améliorée
+
+**Recommandation :** Pour projets 2025+ nécessitant Mac, considérer attente M5 ou déploiement hybride (M3/M4 + GPU NVIDIA pour scale-out).
 
 ---
 
@@ -538,6 +751,7 @@ provisioner: ru.yandex.s3.csi
 
 | Version | Date | Auteur | Modifications |
 |---------|------|--------|---------------|
+| 1.1 | Nov 2025 | Devana.ai | Ajout Scénario 4 : Clusters Mac (Apple Silicon M2/M3/M4) |
 | 1.0 | Sept 2025 | Devana.ai | Création initiale |
 
 ---
