@@ -47,16 +47,16 @@ Ce document spécifie les exigences techniques pour le déploiement de la platef
 
 La plateforme Devana.ai s'articule autour de 8 composants critiques :
 
-| Composant | Technologie | Rôle | Criticité |
-|-----------|-------------|------|-----------|
-| **Devana API** | Node.js 22.x | Backend principal, orchestration | ⭐⭐⭐ Critique |
-| **Devana Frontend** | Next.js 15.x | Interface utilisateur web | ⭐⭐⭐ Critique |
-| **Odin** | Python 3.12 | Traitement de documents, OCR, vectorisation | ⭐⭐⭐ Critique |
-| **PostgreSQL** | 17.x | Base de données relationnelle | ⭐⭐⭐ Critique |
-| **ChromaDB** | 1.0.6+ | Base de données vectorielle (RAG) | ⭐⭐⭐ Critique |
-| **Meilisearch** | 1.13.3+ | Moteur de recherche plein texte | ⭐⭐ Important |
-| **Redis** | 7.4+ | Cache, sessions, files d'attente | ⭐⭐⭐ Critique |
-| **S3/MinIO** | Compatible S3 | Stockage objets (fichiers utilisateurs) | ⭐⭐⭐ Critique |
+| Composant           | Technologie   | Rôle                                        | Criticité       |
+| ------------------- | ------------- | ------------------------------------------- | --------------- |
+| **Devana API**      | Node.js 22.x  | Backend principal, orchestration            | ⭐⭐⭐ Critique |
+| **Devana Frontend** | Next.js 15.x  | Interface utilisateur web                   | ⭐⭐⭐ Critique |
+| **Odin**            | Python 3.12   | Traitement de documents, OCR, vectorisation | ⭐⭐⭐ Critique |
+| **PostgreSQL**      | 17.x          | Base de données relationnelle               | ⭐⭐⭐ Critique |
+| **ChromaDB**        | 1.0.6+        | Base de données vectorielle (RAG)           | ⭐⭐⭐ Critique |
+| **Meilisearch**     | 1.13.3+       | Moteur de recherche plein texte             | ⭐⭐ Important  |
+| **Redis**           | 7.4+          | Cache, sessions, files d'attente            | ⭐⭐⭐ Critique |
+| **S3/MinIO**        | Compatible S3 | Stockage objets (fichiers utilisateurs)     | ⭐⭐⭐ Critique |
 
 ### Dépendances externes
 
@@ -70,51 +70,52 @@ La plateforme Devana.ai s'articule autour de 8 composants critiques :
 
 ### Configuration minimale (Environnement de test / < 50 utilisateurs)
 
-| Composant | CPU | RAM | Stockage | GPU | Notes |
-|-----------|-----|-----|----------|-----|-------|
-| **Devana API** | 2 cores | 4 GB | 20 GB SSD | - | Node.js + PM2 |
-| **Frontend** | 1 core | 2 GB | 10 GB SSD | - | Next.js SSR |
-| **Odin** | 2 cores | 4 GB | 30 GB SSD | - | Sans GPU : OCR basique |
-| **PostgreSQL** | 2 cores | 8 GB | 100 GB SSD | - | + WAL logs |
-| **ChromaDB** | 1 core | 4 GB | 50 GB SSD | - | Données vectorielles |
-| **Meilisearch** | 1 core | 2 GB | 20 GB SSD | - | Index de recherche |
-| **Redis** | 1 core | 2 GB | 10 GB SSD | - | Cache en mémoire |
-| **S3/MinIO** | 1 core | 2 GB | 500 GB+ | - | Selon volumétrie |
-| **TOTAL** | **11 cores** | **28 GB** | **740 GB** | - | Configuration de base |
+| Composant       | CPU          | RAM       | Stockage   | GPU | Notes                  |
+| --------------- | ------------ | --------- | ---------- | --- | ---------------------- |
+| **Devana API**  | 2 cores      | 4 GB      | 20 GB SSD  | -   | Node.js + PM2          |
+| **Frontend**    | 1 core       | 2 GB      | 10 GB SSD  | -   | Next.js SSR            |
+| **Odin**        | 2 cores      | 4 GB      | 30 GB SSD  | -   | Sans GPU : OCR basique |
+| **PostgreSQL**  | 2 cores      | 8 GB      | 100 GB SSD | -   | + WAL logs             |
+| **ChromaDB**    | 1 core       | 4 GB      | 50 GB SSD  | -   | Données vectorielles   |
+| **Meilisearch** | 1 core       | 2 GB      | 20 GB SSD  | -   | Index de recherche     |
+| **Redis**       | 1 core       | 2 GB      | 10 GB SSD  | -   | Cache en mémoire       |
+| **S3/MinIO**    | 1 core       | 2 GB      | 500 GB+    | -   | Selon volumétrie       |
+| **TOTAL**       | **11 cores** | **28 GB** | **740 GB** | -   | Configuration de base  |
 
 ### Configuration recommandée (Production / 100-500 utilisateurs)
 
-| Composant | CPU | RAM | Stockage | GPU | Réplicas HA |
-|-----------|-----|-----|----------|-----|-------------|
-| **Devana API** | 3 cores | 4 GB | 20 GB SSD | - | 2-3 pods |
-| **Frontend** | 2 cores | 4 GB | 10 GB SSD | - | 2-3 pods |
-| **Odin** | 3 cores | 6 GB | 50 GB SSD | Optionnel* | 2 pods |
-| **PostgreSQL** | 4 cores | 16 GB | 500 GB SSD | - | 1 master + 2 replicas |
-| **ChromaDB** | 2 cores | 8 GB | 200 GB SSD | - | 2-3 replicas |
-| **Meilisearch** | 2 cores | 4 GB | 50 GB SSD | - | 2 replicas |
-| **Redis** | 2 cores | 8 GB | 20 GB SSD | - | 1 master + 2 replicas |
-| **S3/MinIO** | 2 cores | 8 GB | 2 TB+ | - | Cluster 4 nodes |
-| **Load Balancer** | 2 cores | 4 GB | 10 GB | - | Nginx/HAProxy |
-| **TOTAL (par nœud)** | **8-12 cores** | **24-32 GB** | **1-3 TB** | - | 3 nœuds min |
+| Composant            | CPU            | RAM          | Stockage   | GPU         | Réplicas HA           |
+| -------------------- | -------------- | ------------ | ---------- | ----------- | --------------------- |
+| **Devana API**       | 3 cores        | 4 GB         | 20 GB SSD  | -           | 2-3 pods              |
+| **Frontend**         | 2 cores        | 4 GB         | 10 GB SSD  | -           | 2-3 pods              |
+| **Odin**             | 3 cores        | 6 GB         | 50 GB SSD  | Optionnel\* | 2 pods                |
+| **PostgreSQL**       | 4 cores        | 16 GB        | 500 GB SSD | -           | 1 master + 2 replicas |
+| **ChromaDB**         | 2 cores        | 8 GB         | 200 GB SSD | -           | 2-3 replicas          |
+| **Meilisearch**      | 2 cores        | 4 GB         | 50 GB SSD  | -           | 2 replicas            |
+| **Redis**            | 2 cores        | 8 GB         | 20 GB SSD  | -           | 1 master + 2 replicas |
+| **S3/MinIO**         | 2 cores        | 8 GB         | 2 TB+      | -           | Cluster 4 nodes       |
+| **Load Balancer**    | 2 cores        | 4 GB         | 10 GB      | -           | Nginx/HAProxy         |
+| **TOTAL (par nœud)** | **8-12 cores** | **24-32 GB** | **1-3 TB** | -           | 3 nœuds min           |
 
 \* GPU pour Odin : recommandé pour l'OCR haute performance (NVIDIA T4 ou supérieur)
 
 ### Configuration entreprise (1000-10 000+ utilisateurs)
 
-| Composant | CPU | RAM | Stockage | GPU | Réplicas HA |
-|-----------|-----|-----|----------|-----|-------------|
-| **Devana API** | 4 cores/pod | 6 GB/pod | 30 GB SSD | - | 5-10 pods (HPA) |
-| **Frontend** | 2 cores/pod | 4 GB/pod | 15 GB SSD | - | 5-10 pods (HPA) |
-| **Odin** | 4 cores/pod | 8 GB/pod | 100 GB SSD | 1 GPU/pod | 3-5 pods |
-| **PostgreSQL** | 8-16 cores | 64-128 GB | 2-5 TB NVMe | - | Cluster 3-5 nodes |
-| **ChromaDB** | 4 cores/pod | 16 GB/pod | 1 TB SSD | - | 3-5 replicas |
-| **Meilisearch** | 4 cores/pod | 8 GB/pod | 200 GB SSD | - | 3 replicas |
-| **Redis** | 4 cores | 16 GB | 50 GB SSD | - | Cluster 6 nodes |
-| **S3/MinIO** | 4 cores/node | 16 GB/node | 10+ TB | - | Cluster 8+ nodes |
-| **Load Balancer** | 4 cores | 8 GB | 20 GB | - | HA pair |
-| **Monitoring** | 4 cores | 16 GB | 500 GB | - | Prometheus+Grafana |
+| Composant         | CPU          | RAM        | Stockage    | GPU       | Réplicas HA        |
+| ----------------- | ------------ | ---------- | ----------- | --------- | ------------------ |
+| **Devana API**    | 4 cores/pod  | 6 GB/pod   | 30 GB SSD   | -         | 5-10 pods (HPA)    |
+| **Frontend**      | 2 cores/pod  | 4 GB/pod   | 15 GB SSD   | -         | 5-10 pods (HPA)    |
+| **Odin**          | 4 cores/pod  | 8 GB/pod   | 100 GB SSD  | 1 GPU/pod | 3-5 pods           |
+| **PostgreSQL**    | 8-16 cores   | 64-128 GB  | 2-5 TB NVMe | -         | Cluster 3-5 nodes  |
+| **ChromaDB**      | 4 cores/pod  | 16 GB/pod  | 1 TB SSD    | -         | 3-5 replicas       |
+| **Meilisearch**   | 4 cores/pod  | 8 GB/pod   | 200 GB SSD  | -         | 3 replicas         |
+| **Redis**         | 4 cores      | 16 GB      | 50 GB SSD   | -         | Cluster 6 nodes    |
+| **S3/MinIO**      | 4 cores/node | 16 GB/node | 10+ TB      | -         | Cluster 8+ nodes   |
+| **Load Balancer** | 4 cores      | 8 GB       | 20 GB       | -         | HA pair            |
+| **Monitoring**    | 4 cores      | 16 GB      | 500 GB      | -         | Prometheus+Grafana |
 
 **Cluster Kubernetes recommandé :**
+
 - **Nœuds de calcul** : 10-20 nœuds (32 cores, 128 GB RAM chacun)
 - **Nœuds GPU** (LLM 70B+) : 4-8 nœuds GPU (NVIDIA H100/H200)
 - **Nœuds GPU** (Embeddings) : 2-3 nœuds GPU (NVIDIA L4 ou L40S)
@@ -128,12 +129,14 @@ La plateforme Devana.ai s'articule autour de 8 composants critiques :
 ### Scénario 1 : Cloud Providers (OpenAI, Azure OpenAI, Anthropic)
 
 **Avantages :**
+
 - Pas d'infrastructure GPU nécessaire
 - Scalabilité automatique
 - Latence optimisée (CDN global)
 - Coûts prévisibles (pay-per-token)
 
 **Requirements :**
+
 - **Bande passante** : 100 Mbps minimum (synchrone), 1 Gbps recommandé
 - **Latence** : < 100ms vers endpoints API (idéalement < 50ms)
 - **Disponibilité** : SLA 99.9% minimum (Azure/OpenAI)
@@ -142,6 +145,7 @@ La plateforme Devana.ai s'articule autour de 8 composants critiques :
   - Embeddings : $500-$2,000/mois
 
 **Configuration réseau :**
+
 ```bash
 # Whitelist endpoints
 api.openai.com           # OpenAI
@@ -150,6 +154,7 @@ api.anthropic.com        # Claude
 ```
 
 **Limitations :**
+
 - Dépendance externe critique
 - Données transitent hors infrastructure (conformité RGPD/HIPAA)
 - Contrôle limité sur latence et disponibilité
@@ -159,6 +164,7 @@ api.anthropic.com        # Claude
 ### Scénario 2 : LLM Auto-hébergés (Recommandé pour entreprises)
 
 **Avantages :**
+
 - Contrôle total des données (on-premise)
 - Latence prévisible (<10ms en réseau local)
 - Conformité réglementaire garantie
@@ -168,24 +174,26 @@ api.anthropic.com        # Claude
 
 **Modèles de production (recommandés)**
 
-| Modèle | Taille | GPU Recommandé | VRAM | RAM système | Latence | Throughput |
-|--------|--------|----------------|------|-------------|---------|------------|
-| **Llama 3.1 70B** | 70B params | 2x H100 (80GB) | 160 GB | 512 GB | ~80ms | 100 tokens/s |
-| **Llama 3.3 70B** | 70B params | 2x H100 (80GB) | 160 GB | 512 GB | ~80ms | 100 tokens/s |
-| **Mixtral 8x22B** | 141B params | 4x H100 (80GB) | 320 GB | 768 GB | ~150ms | 60 tokens/s |
-| **Qwen 2.5 72B** | 72B params | 2x H100 (80GB) | 160 GB | 512 GB | ~85ms | 95 tokens/s |
-| **DeepSeek V3** | 671B params | 8x H200 (141GB) | 1128 GB | 2048 GB | ~300ms | 40 tokens/s |
+| Modèle            | Taille      | GPU Recommandé  | VRAM    | RAM système | Latence | Throughput   |
+| ----------------- | ----------- | --------------- | ------- | ----------- | ------- | ------------ |
+| **Llama 3.1 70B** | 70B params  | 2x H100 (80GB)  | 160 GB  | 512 GB      | ~80ms   | 100 tokens/s |
+| **Llama 3.3 70B** | 70B params  | 2x H100 (80GB)  | 160 GB  | 512 GB      | ~80ms   | 100 tokens/s |
+| **Mixtral 8x22B** | 141B params | 4x H100 (80GB)  | 320 GB  | 768 GB      | ~150ms  | 60 tokens/s  |
+| **Qwen 2.5 72B**  | 72B params  | 2x H100 (80GB)  | 160 GB  | 512 GB      | ~85ms   | 95 tokens/s  |
+| **DeepSeek V3**   | 671B params | 8x H200 (141GB) | 1128 GB | 2048 GB     | ~300ms  | 40 tokens/s  |
 
 **GPU nouvelle génération (recommandés)**
 
-| GPU | VRAM | Architecture | Use Case | Disponibilité |
-|-----|------|--------------|----------|---------------|
-| **NVIDIA H100 SXM** | 80 GB | Hopper | Production 70B-141B | ⭐ Recommandé |
-| **NVIDIA H200** | 141 GB | Hopper+ | Production 141B-671B | ⭐⭐ Optimal |
-| **NVIDIA A100** | 80 GB | Ampere | Alternative 70B | Acceptable |
+| GPU                 | VRAM   | Architecture | Use Case             | Disponibilité |
+| ------------------- | ------ | ------------ | -------------------- | ------------- |
+| **NVIDIA H100 SXM** | 80 GB  | Hopper       | Production 70B-141B  | ⭐ Recommandé |
+| **NVIDIA H200**     | 141 GB | Hopper+      | Production 141B-671B | ⭐⭐ Optimal  |
+| **NVIDIA A100**     | 80 GB  | Ampere       | Alternative 70B      | Acceptable    |
 
 **Configuration recommandée (production) :**
+
 - **LLM principal** : 2x serveurs GPU (Llama 3.3 70B ou Qwen 2.5 72B)
+
   - GPU : 2x NVIDIA H100 80GB par serveur (ou 2x H200 141GB pour modèles >100B)
   - CPU : 64 cores (AMD EPYC 9004 series ou Intel Xeon Sapphire Rapids)
   - RAM : 512 GB DDR5
@@ -200,23 +208,26 @@ api.anthropic.com        # Claude
   - Réseau : 25 Gbps
 
 **Architectures supportées :**
+
 - **vLLM** : Plateforme de serving haute performance (recommandé)
 - **TGI** (Text Generation Inference) : Solution Hugging Face
 - **Ollama** : Déploiement simplifié (dev/test uniquement)
 - **TensorRT-LLM** : Performance maximale (NVIDIA)
 
 **Exemple de déploiement vLLM (Kubernetes) :**
+
 ```yaml
 # Voir cluster-embeddings/embedding.yml pour référence complète
 resources:
   limits:
-    nvidia.com/gpu: 1     # Par réplica
+    nvidia.com/gpu: 1 # Par réplica
     cpu: "4"
     memory: "24Gi"
-replicas: 2                # Haute disponibilité
+replicas: 2 # Haute disponibilité
 ```
 
 **Scalabilité (modèles 70B+) :**
+
 - **100-500 utilisateurs** : 2x H100 80GB (Llama 3.3 70B)
 - **500-2000 utilisateurs** : 4x H100 80GB (2 serveurs en load balancing)
 - **2000-5000 utilisateurs** : 8x H100 80GB (4 serveurs) ou 4x H200 141GB
@@ -229,11 +240,13 @@ replicas: 2                # Haute disponibilité
 ### Scénario 3 : Hybride (Recommandé pour flexibilité)
 
 **Configuration :**
+
 - LLM principal : Auto-hébergé (données sensibles)
 - LLM secondaire : Cloud (fallback, pic de charge)
 - Embeddings : Auto-hébergé (volumétrie élevée)
 
 **Bénéfices :**
+
 - Résilience maximale
 - Optimisation coûts
 - Conformité assurée sur données critiques
@@ -247,6 +260,7 @@ replicas: 2                # Haute disponibilité
 > **macOS n'est PAS conçu comme système d'exploitation serveur.** Apple a discontinué macOS Server en avril 2022.
 >
 > **Limitations opérationnelles majeures :**
+>
 > - **Authentification obligatoire** : macOS requiert login/mot de passe au démarrage, compliquant l'automatisation et les redémarrages non supervisés
 > - **Gestion à distance complexe** : Pas d'équivalent SSH headless natif sans session utilisateur active, configuration VNC/Screen Sharing requise
 > - **Updates disruptives** : Mises à jour macOS nécessitent redémarrages fréquents et intervention manuelle, pas de stratégie de patching automatisée enterprise-grade
@@ -254,11 +268,13 @@ replicas: 2                # Haute disponibilité
 > - **Absence d'outils enterprise** : Pas de clustering OS natif, gestion de flotte limitée, monitoring système rudimentaire
 >
 > **Limitations matérielles :**
+>
 > - **Hardware consumer** : Mac Mini/Studio non certifiés pour opérations datacenter 24/7 critiques
 > - **Aucune redondance** : Pas de PSU doubles, RAID matériel, ou hot-swap
 > - **Form factor instable** : Changements dimensionnels entre générations compliquant le rack-mounting standardisé
 >
 > **Recommandations d'usage :**
+>
 > - ✅ **Acceptable** : Développement, staging, prototypage, CI/CD (Xcode/iOS builds)
 > - ⚠️ **Acceptable avec réserves** : Production légère (<500 users), avec monitoring humain et tolérance aux interruptions
 > - ❌ **Non recommandé** : Production critique 24/7, environnements nécessitant SLA >99.9%, compliance stricte (SOC 2, ISO 27001)
@@ -266,6 +282,7 @@ replicas: 2                # Haute disponibilité
 > Pour production enterprise critique, privilégier **Scénario 2 (Linux + GPU NVIDIA)** ou **Scénario 3 (Hybride)**.
 
 **Cas d'usage appropriés :**
+
 - Organisations avec infrastructure Mac existante et équipes macOS expérimentées
 - Environnements nécessitant efficacité énergétique maximale
 - Déploiements on-premise avec contraintes de bruit/chaleur (bureaux)
@@ -274,6 +291,7 @@ replicas: 2                # Haute disponibilité
 - Build farms Xcode/iOS (cas d'usage historique des Mac en datacenter)
 
 **Avantages :**
+
 - **Efficacité énergétique** : 3-5x moins de consommation vs serveurs GPU
 - **Mémoire unifiée** : CPU/GPU/Neural Engine partagent la RAM (jusqu'à 512 GB)
 - **Architecture zero-copy** : Pas de transfert PCIe entre CPU et GPU
@@ -284,47 +302,49 @@ replicas: 2                # Haute disponibilité
 
 **Configuration développement / test (< 50 utilisateurs)**
 
-| Matériel | Specs | Performance LLM | Use Case |
-|----------|-------|-----------------|----------|
-| **Mac Mini M4** | 16 cores CPU, 64 GB RAM | 11-12 tok/s (32B Q4) | Tests, embeddings |
-| **Mac Mini M4 Pro** | 14 cores CPU, 64 GB RAM | 15-18 tok/s (32B Q4) | Prototypage |
-| **Mac Studio M2 Ultra** | 24 cores CPU, 192 GB RAM | 41 tok/s (70B FP16) | LLM 70B |
-| **Mac Studio M3 Ultra** | 32 cores CPU, 512 GB RAM | 76 tok/s (8B Q4), 17-19 tok/s (672B Q4) | LLM ultra-large |
+| Matériel                | Specs                    | Performance LLM                         | Use Case          |
+| ----------------------- | ------------------------ | --------------------------------------- | ----------------- |
+| **Mac Mini M4**         | 16 cores CPU, 64 GB RAM  | 11-12 tok/s (32B Q4)                    | Tests, embeddings |
+| **Mac Mini M4 Pro**     | 14 cores CPU, 64 GB RAM  | 15-18 tok/s (32B Q4)                    | Prototypage       |
+| **Mac Studio M2 Ultra** | 24 cores CPU, 192 GB RAM | 41 tok/s (70B FP16)                     | LLM 70B           |
+| **Mac Studio M3 Ultra** | 32 cores CPU, 512 GB RAM | 76 tok/s (8B Q4), 17-19 tok/s (672B Q4) | LLM ultra-large   |
 
 **Configuration production (100-500 utilisateurs)**
 
-| Composant | Configuration | Performance estimée |
-|-----------|--------------|---------------------|
+| Composant         | Configuration                   | Performance estimée   |
+| ----------------- | ------------------------------- | --------------------- |
 | **LLM Principal** | 2x Mac Studio M3 Ultra (256 GB) | ~35-40 tok/s (70B Q4) |
-| **Embeddings** | 2x Mac Mini M4 (64 GB) | ~500 embeddings/s |
-| **Networking** | Switch 25 Gbps RoCEv2 | Latence cluster < 5ms |
-| **TOTAL** | 4 machines + réseau | - |
+| **Embeddings**    | 2x Mac Mini M4 (64 GB)          | ~500 embeddings/s     |
+| **Networking**    | Switch 25 Gbps RoCEv2           | Latence cluster < 5ms |
+| **TOTAL**         | 4 machines + réseau             | -                     |
 
 **Configuration cluster haute performance (500-2000 utilisateurs)**
 
-| Configuration | Machines | RAM totale | Performance |
-|--------------|----------|------------|-------------|
-| **Cluster homogène** | 4x Mac Studio M3 Ultra (256 GB) | 1 TB | ~70-80 tok/s (70B Q4) |
-| **Cluster hétérogène** | 2x M3 Ultra + 4x M4 Pro | 640 GB | ~50-60 tok/s (70B Q4) |
-| **Cluster économique** | 8x Mac Mini M4 (64 GB) | 512 GB | ~40-50 tok/s (32B Q4) |
+| Configuration          | Machines                        | RAM totale | Performance           |
+| ---------------------- | ------------------------------- | ---------- | --------------------- |
+| **Cluster homogène**   | 4x Mac Studio M3 Ultra (256 GB) | 1 TB       | ~70-80 tok/s (70B Q4) |
+| **Cluster hétérogène** | 2x M3 Ultra + 4x M4 Pro         | 640 GB     | ~50-60 tok/s (70B Q4) |
+| **Cluster économique** | 8x Mac Mini M4 (64 GB)          | 512 GB     | ~40-50 tok/s (32B Q4) |
 
 **Exemple cluster économique (démontré par Exo Labs) :**
+
 - 4x Mac Mini M4 + 1x MacBook Pro M4 Max
 - **RAM totale** : 496 GB de mémoire unifiée
 - **Use case** : Développement, staging, petites productions
 
 #### Performances mesurées (benchmarks 2025)
 
-| Modèle | Hardware | Quantization | Tokens/sec | Notes |
-|--------|----------|--------------|------------|-------|
-| **Llama 3 8B** | M3 Ultra | Q4_K_M | 76 tok/s | Optimal pour petits modèles |
-| **Llama 3 70B** | M2 Ultra | FP16 | 41 tok/s | Via llama.cpp |
-| **Qwen 2.5 32B** | M4 Pro (64 GB) | Q4 | 11-12 tok/s | Single machine |
-| **Qwen 2.5 72B** | M3 Ultra (256 GB) | Q4 | 25-30 tok/s | Estimé |
-| **DeepSeek R1 672B** | M3 Ultra (512 GB) | Q4 | 17-19 tok/s | Compute-bound |
-| **DBRX 132B** | Cluster M2 Ultra (25 Gbps) | - | 16.3 tok/s | Cluster networking critique |
+| Modèle               | Hardware                   | Quantization | Tokens/sec  | Notes                       |
+| -------------------- | -------------------------- | ------------ | ----------- | --------------------------- |
+| **Llama 3 8B**       | M3 Ultra                   | Q4_K_M       | 76 tok/s    | Optimal pour petits modèles |
+| **Llama 3 70B**      | M2 Ultra                   | FP16         | 41 tok/s    | Via llama.cpp               |
+| **Qwen 2.5 32B**     | M4 Pro (64 GB)             | Q4           | 11-12 tok/s | Single machine              |
+| **Qwen 2.5 72B**     | M3 Ultra (256 GB)          | Q4           | 25-30 tok/s | Estimé                      |
+| **DeepSeek R1 672B** | M3 Ultra (512 GB)          | Q4           | 17-19 tok/s | Compute-bound               |
+| **DBRX 132B**        | Cluster M2 Ultra (25 Gbps) | -            | 16.3 tok/s  | Cluster networking critique |
 
 **Formule approximative (M-series avec FP16) :**
+
 - **Tokens/sec ≈ Bandwidth (GB/s) / 160**
 - M2 (100 GB/s) : ~6.5 tok/s
 - M2 Pro (200 GB/s) : ~13 tok/s
@@ -334,27 +354,30 @@ replicas: 2                # Haute disponibilité
 
 #### Frameworks et stack logiciel
 
-| Framework | Support Apple Silicon | Use Case | Performance |
-|-----------|----------------------|----------|-------------|
-| **MLX** | ✅ Natif Apple | Production Mac | Optimisé unified memory |
-| **Ollama** | ✅ MLX backend | Déploiement simplifié | Production ready |
-| **llama.cpp** | ✅ Metal support | Haute performance | Quantization avancée |
-| **vLLM** | ❌ NVIDIA uniquement | N/A | Non compatible Mac |
-| **TGI** | ❌ NVIDIA/AMD | N/A | Non compatible Mac |
+| Framework     | Support Apple Silicon | Use Case              | Performance             |
+| ------------- | --------------------- | --------------------- | ----------------------- |
+| **MLX**       | ✅ Natif Apple        | Production Mac        | Optimisé unified memory |
+| **Ollama**    | ✅ MLX backend        | Déploiement simplifié | Production ready        |
+| **llama.cpp** | ✅ Metal support      | Haute performance     | Quantization avancée    |
+| **vLLM**      | ❌ NVIDIA uniquement  | N/A                   | Non compatible Mac      |
+| **TGI**       | ❌ NVIDIA/AMD         | N/A                   | Non compatible Mac      |
 
 **Stack recommandé pour production Mac :**
 
 **Option 1 : Ollama (simplicité)**
+
 - Ollama avec MLX backend
 - API OpenAI-compatible
 - Gestion automatique des ressources
 
 **Option 2 : llama.cpp (performance)**
+
 - Compilation Metal optimisée
 - Quantization personnalisée (Q4_K_M, Q5_K_M, Q8)
 - Contrôle fin des paramètres
 
 **Option 3 : MLX natif (flexibilité)**
+
 - Python direct avec mlx-lm
 - Fine-tuning local possible
 - Intégration custom
@@ -362,11 +385,13 @@ replicas: 2                # Haute disponibilité
 #### Configuration réseau pour clustering
 
 **Requirements réseau :**
+
 - **Minimum** : 10 Gbps Ethernet (latence ~8-10ms inter-node)
 - **Recommandé** : 25 Gbps RoCEv2 (latence ~3-5ms inter-node)
 - **Optimal** : Thunderbolt 5 direct (120 GB/s entre 2 machines)
 
 **Impact réseau mesuré (cluster DBRX) :**
+
 - 10 Gbps : ~14 tok/s
 - 25 Gbps : ~16.3 tok/s (+16% performance)
 - Note : Communication inter-nodes peut égaler ou dépasser le temps de calcul
@@ -410,18 +435,21 @@ graph TD
 ```
 
 **Légende :**
+
 - 🔵 Bleu : LLM nodes (Mac Studio M3 Ultra + Mac Mini M4 Pro)
 - 🟣 Violet : Embeddings nodes (Mac Mini M4)
 
 #### Limitations et considérations
 
 **Avantages comparés à NVIDIA :**
+
 - ✅ **Efficacité énergétique** : ~400W vs ~2000W pour serveur GPU équivalent
 - ✅ **Mémoire** : Jusqu'à 512 GB unifiée (vs 80 GB VRAM H100)
 - ✅ **Architecture** : Mémoire unifiée zero-copy CPU/GPU/Neural Engine
 - ✅ **Bruit/chaleur** : Déploiement bureau possible (opération silencieuse)
 
 **Limitations vs NVIDIA :**
+
 - ❌ **Compute brut** : 38 TOPS (Neural Engine) vs 2000 TFLOPS (H100)
 - ❌ **Scaling** : Clustering complexe vs NVLink natif
 - ❌ **Écosystème** : MLX/Ollama uniquement vs vLLM/TGI/TensorRT
@@ -429,6 +457,7 @@ graph TD
 - ❌ **Multi-GPU** : Pas de support natif type NVLink
 
 **Cas d'usage IDÉAUX pour Mac :**
+
 - Modèles 7B-70B en production légère/moyenne
 - Environnements contraints (énergie, bruit, espace)
 - Organisations Mac-first (Apple Silicon déjà déployé)
@@ -436,6 +465,7 @@ graph TD
 - Embeddings haute volumétrie (mémoire importante)
 
 **Cas d'usage NON RECOMMANDÉS :**
+
 - Modèles >100B en production intensive (>2000 users)
 - Requirements >100 tok/s
 - Workloads nécessitant vLLM/TGI spécifiquement
@@ -444,6 +474,7 @@ graph TD
 #### Roadmap Apple (2025+)
 
 **M5 (fin 2025) :**
+
 - Coprocesseurs dédiés Transformers
 - Performance LLM prévue : 2-3x M3 Ultra
 - Efficacité énergétique encore améliorée
@@ -456,43 +487,45 @@ graph TD
 
 ### Bande passante
 
-| Usage | Minimum | Recommandé | Notes |
-|-------|---------|------------|-------|
-| **Interne (pod-to-pod)** | 1 Gbps | 10 Gbps | Latence critique |
-| **Externe (utilisateurs)** | 100 Mbps | 1 Gbps | Selon charge |
-| **LLM Cloud** | 50 Mbps | 500 Mbps | Streaming tokens |
-| **Backup & Sync** | - | 1 Gbps+ | Hors heures de pointe |
+| Usage                      | Minimum  | Recommandé | Notes                 |
+| -------------------------- | -------- | ---------- | --------------------- |
+| **Interne (pod-to-pod)**   | 1 Gbps   | 10 Gbps    | Latence critique      |
+| **Externe (utilisateurs)** | 100 Mbps | 1 Gbps     | Selon charge          |
+| **LLM Cloud**              | 50 Mbps  | 500 Mbps   | Streaming tokens      |
+| **Backup & Sync**          | -        | 1 Gbps+    | Hors heures de pointe |
 
 ### Latence maximale acceptable
 
-| Connexion | Max acceptable | Optimal | Impact si dépassé |
-|-----------|----------------|---------|-------------------|
-| Frontend ↔ API | 200ms | < 50ms | UX dégradée |
-| API ↔ PostgreSQL | 10ms | < 2ms | Performance critique |
-| API ↔ ChromaDB | 50ms | < 10ms | Lenteur RAG |
-| API ↔ LLM | 500ms | < 100ms | Timeout utilisateur |
-| API ↔ Redis | 5ms | < 1ms | Cache inefficace |
+| Connexion        | Max acceptable | Optimal | Impact si dépassé    |
+| ---------------- | -------------- | ------- | -------------------- |
+| Frontend ↔ API   | 200ms          | < 50ms  | UX dégradée          |
+| API ↔ PostgreSQL | 10ms           | < 2ms   | Performance critique |
+| API ↔ ChromaDB   | 50ms           | < 10ms  | Lenteur RAG          |
+| API ↔ LLM        | 500ms          | < 100ms | Timeout utilisateur  |
+| API ↔ Redis      | 5ms            | < 1ms   | Cache inefficace     |
 
 ### Ports requis
 
 #### Externes (Internet)
-| Port | Protocole | Service | Justification |
-|------|-----------|---------|---------------|
-| 443 | HTTPS | Frontend, API | Accès utilisateurs |
-| 80 | HTTP | Redirection HTTPS | Automatique |
+
+| Port | Protocole | Service           | Justification      |
+| ---- | --------- | ----------------- | ------------------ |
+| 443  | HTTPS     | Frontend, API     | Accès utilisateurs |
+| 80   | HTTP      | Redirection HTTPS | Automatique        |
 
 #### Internes (Cluster)
-| Port | Service | Notes |
-|------|---------|-------|
-| 4666 | Devana API | HTTP/GraphQL |
-| 5001 | WebSocket | Temps réel |
-| 3000 | Frontend | Next.js SSR |
-| 3003 | Odin | API interne |
-| 5432 | PostgreSQL | Base de données |
-| 8000 | ChromaDB | Vector DB |
-| 7700 | Meilisearch | Recherche |
-| 6379 | Redis | Cache |
-| 9000 | MinIO | S3-compatible |
+
+| Port | Service     | Notes           |
+| ---- | ----------- | --------------- |
+| 4666 | Devana API  | HTTP/GraphQL    |
+| 5001 | WebSocket   | Temps réel      |
+| 3000 | Frontend    | Next.js SSR     |
+| 3003 | Odin        | API interne     |
+| 5432 | PostgreSQL  | Base de données |
+| 8000 | ChromaDB    | Vector DB       |
+| 7700 | Meilisearch | Recherche       |
+| 6379 | Redis       | Cache           |
+| 9000 | MinIO       | S3-compatible   |
 
 ### Règles Firewall (exemples)
 
@@ -527,14 +560,15 @@ Odin -> Embeddings:8000 (ALLOW)
 ### Dimensionnement par volume
 
 | Utilisateurs | Documents/user | Stockage total | Croissance annuelle |
-|--------------|----------------|----------------|---------------------|
-| 100 | 500 | 500 GB | +200 GB/an |
-| 500 | 500 | 2 TB | +1 TB/an |
-| 1,000 | 500 | 5 TB | +2 TB/an |
-| 5,000 | 500 | 25 TB | +10 TB/an |
-| 10,000 | 500 | 50 TB | +20 TB/an |
+| ------------ | -------------- | -------------- | ------------------- |
+| 100          | 500            | 500 GB         | +200 GB/an          |
+| 500          | 500            | 2 TB           | +1 TB/an            |
+| 1,000        | 500            | 5 TB           | +2 TB/an            |
+| 5,000        | 500            | 25 TB          | +10 TB/an           |
+| 10,000       | 500            | 50 TB          | +20 TB/an           |
 
 **Calcul détaillé (1000 utilisateurs) :**
+
 - **Fichiers utilisateurs** (S3/MinIO) : 5 TB (500 docs × 10 MB avg × 1000 users)
 - **Base de données PostgreSQL** : 500 GB (métadonnées, conversations, logs)
 - **ChromaDB** (vecteurs) : 200 GB (1000 dims × 4 bytes × 50M chunks)
@@ -547,12 +581,12 @@ Odin -> Embeddings:8000 (ALLOW)
 
 ### Performances requises
 
-| Composant | IOPS | Throughput | Type de stockage |
-|-----------|------|------------|------------------|
-| **PostgreSQL** | 10,000+ | 500 MB/s | NVMe SSD (local) |
-| **ChromaDB** | 5,000+ | 300 MB/s | SSD (local ou SAN) |
-| **S3/MinIO** | 1,000+ | 1 GB/s | HDD RAID ou SSD |
-| **Logs** | 500+ | 50 MB/s | SSD |
+| Composant      | IOPS    | Throughput | Type de stockage   |
+| -------------- | ------- | ---------- | ------------------ |
+| **PostgreSQL** | 10,000+ | 500 MB/s   | NVMe SSD (local)   |
+| **ChromaDB**   | 5,000+  | 300 MB/s   | SSD (local ou SAN) |
+| **S3/MinIO**   | 1,000+  | 1 GB/s     | HDD RAID ou SSD    |
+| **Logs**       | 500+    | 50 MB/s    | SSD                |
 
 ### Stratégie de backup
 
@@ -570,22 +604,24 @@ Odin -> Embeddings:8000 (ALLOW)
 
 ### Conformité réglementaire
 
-| Standard | Requis si | Mesures Devana.ai |
-|----------|-----------|-------------------|
-| **RGPD** | Données UE | ✅ Chiffrement at-rest/in-transit, droit à l'oubli |
-| **ISO 27001** | Certification sécurité | ⚠️ Conformité aux bonnes pratiques (non certifié) |
-| **SOC 2 Type II** | SaaS compliance | ⚠️ Conformité aux bonnes pratiques (non certifié) |
-| **HIPAA** | Données santé US | ⚠️ Configuration spécifique requise |
-| **HDS** | Hébergement santé FR | ⚠️ Datacenter certifié requis |
+| Standard          | Requis si              | Mesures Devana.ai                                  |
+| ----------------- | ---------------------- | -------------------------------------------------- |
+| **RGPD**          | Données UE             | ✅ Chiffrement at-rest/in-transit, droit à l'oubli |
+| **ISO 27001**     | Certification sécurité | ⚠️ Conformité aux bonnes pratiques (non certifié)  |
+| **SOC 2 Type II** | SaaS compliance        | ⚠️ Conformité aux bonnes pratiques (non certifié)  |
+| **HIPAA**         | Données santé US       | ⚠️ Configuration spécifique requise                |
+| **HDS**           | Hébergement santé FR   | ⚠️ Datacenter certifié requis                      |
 
 ### Chiffrement
 
 **At-Rest :**
+
 - PostgreSQL : Chiffrement TDE (Transparent Data Encryption)
 - S3/MinIO : AES-256 (SSE-S3 ou SSE-KMS)
 - Disques : LUKS ou équivalent
 
 **In-Transit :**
+
 - TLS 1.3 minimum (1.2 acceptable avec ciphers forts)
 - Certificats signés (Let's Encrypt ou CA interne)
 - Mutual TLS pour services internes (optionnel mais recommandé)
@@ -593,11 +629,13 @@ Odin -> Embeddings:8000 (ALLOW)
 ### Authentification & Autorisation
 
 **SSO requis (production) :**
+
 - OIDC / OAuth 2.0
 - SAML 2.0
 - LDAP / Active Directory
 
 **RBAC (Role-Based Access Control) :**
+
 - Admin système
 - Admin organisation
 - Gestionnaire d'agents
@@ -605,6 +643,7 @@ Odin -> Embeddings:8000 (ALLOW)
 - Utilisateur lecture seule
 
 **Audit Logs :**
+
 - Toutes actions admin
 - Accès aux données sensibles
 - Modifications de configuration
@@ -613,12 +652,14 @@ Odin -> Embeddings:8000 (ALLOW)
 ### Isolation réseau
 
 **Zones de sécurité :**
+
 ```
 [Internet] → [DMZ: LB, WAF] → [App: Frontend, API] → [Data: DB, Storage]
                                                     → [AI: LLM, Embeddings]
 ```
 
 **Segmentation réseau (VLANs/Subnets) :**
+
 - **DMZ** : Load Balancers, Reverse Proxy (10.0.1.0/24)
 - **Application** : Frontend, API (10.0.10.0/24)
 - **Services** : Odin, Redis, Meilisearch (10.0.20.0/24)
@@ -643,25 +684,25 @@ Odin -> Embeddings:8000 (ALLOW)
 
 ### Addons conseillés
 
-| Addon | Usage | Recommandation |
-|-------|-------|----------------|
-| **Ingress Controller** | Routing HTTP/S | Nginx Ingress ou Traefik |
-| **Cert Manager** | Certificats TLS | Let's Encrypt ou CA interne |
-| **MetalLB** | Load Balancer on-prem | Si pas de LB matériel |
-| **CSI Driver** | Stockage persistant | Rook-Ceph, Longhorn, ou SAN |
-| **GPU Operator** | Support GPU NVIDIA | Si LLM auto-hébergés |
-| **Prometheus** | Monitoring | + Grafana pour visualisation |
-| **Loki** | Logs agrégés | Ou ELK stack |
+| Addon                  | Usage                 | Recommandation               |
+| ---------------------- | --------------------- | ---------------------------- |
+| **Ingress Controller** | Routing HTTP/S        | Nginx Ingress ou Traefik     |
+| **Cert Manager**       | Certificats TLS       | Let's Encrypt ou CA interne  |
+| **MetalLB**            | Load Balancer on-prem | Si pas de LB matériel        |
+| **CSI Driver**         | Stockage persistant   | Rook-Ceph, Longhorn, ou SAN  |
+| **GPU Operator**       | Support GPU NVIDIA    | Si LLM auto-hébergés         |
+| **Prometheus**         | Monitoring            | + Grafana pour visualisation |
+| **Loki**               | Logs agrégés          | Ou ELK stack                 |
 
 ### Namespaces recommandés
 
 ```yaml
-- devana-prod          # Application production
-- devana-staging       # Pre-production
-- devana-services      # Services partagés (DB, Redis)
-- devana-ai            # LLM & Embeddings
-- monitoring           # Prometheus, Grafana, Loki
-- cert-manager         # Gestion certificats
+- devana-prod # Application production
+- devana-staging # Pre-production
+- devana-services # Services partagés (DB, Redis)
+- devana-ai # LLM & Embeddings
+- monitoring # Prometheus, Grafana, Loki
+- cert-manager # Gestion certificats
 ```
 
 ### Storage Classes
@@ -687,16 +728,16 @@ provisioner: ru.yandex.s3.csi
 
 ### Métriques critiques à surveiller
 
-| Catégorie | Métrique | Seuil d'alerte | Action |
-|-----------|----------|----------------|--------|
-| **API** | Latency p95 | > 500ms | Scale horizontalement |
-| **API** | Error rate | > 1% | Investigate logs |
-| **PostgreSQL** | Connections | > 80% max | Scale ou optimize queries |
-| **PostgreSQL** | Slow queries | > 1s | Index manquants |
-| **ChromaDB** | Query latency | > 200ms | Scale ou optimize embeddings |
-| **Redis** | Memory usage | > 80% | Increase RAM ou eviction |
-| **LLM** | Tokens/sec | < 50 | Scale GPU ou model |
-| **Odin** | Queue size | > 100 | Scale pods |
+| Catégorie      | Métrique      | Seuil d'alerte | Action                       |
+| -------------- | ------------- | -------------- | ---------------------------- |
+| **API**        | Latency p95   | > 500ms        | Scale horizontalement        |
+| **API**        | Error rate    | > 1%           | Investigate logs             |
+| **PostgreSQL** | Connections   | > 80% max      | Scale ou optimize queries    |
+| **PostgreSQL** | Slow queries  | > 1s           | Index manquants              |
+| **ChromaDB**   | Query latency | > 200ms        | Scale ou optimize embeddings |
+| **Redis**      | Memory usage  | > 80%          | Increase RAM ou eviction     |
+| **LLM**        | Tokens/sec    | < 50           | Scale GPU ou model           |
+| **Odin**       | Queue size    | > 100          | Scale pods                   |
 
 ### Stack recommandé
 
@@ -749,13 +790,13 @@ provisioner: ru.yandex.s3.csi
 
 ## 🔄 Historique des révisions
 
-| Version | Date | Auteur | Modifications |
-|---------|------|--------|---------------|
-| 1.1 | Nov 2025 | Devana.ai | Ajout Scénario 4 : Clusters Mac (Apple Silicon M2/M3/M4) |
-| 1.0 | Sept 2025 | Devana.ai | Création initiale |
+| Version | Date      | Auteur    | Modifications                                            |
+| ------- | --------- | --------- | -------------------------------------------------------- |
+| 1.1     | Nov 2025  | Devana.ai | Ajout Scénario 4 : Clusters Mac (Apple Silicon M2/M3/M4) |
+| 1.0     | Sept 2025 | Devana.ai | Création initiale                                        |
 
 ---
 
-**Note légale :** Ce document est confidentiel et destiné uniquement aux clients et partenaires de Scriptor Group. Toute reproduction ou diffusion est interdite sans autorisation écrite.
+**Note légale :** Ce document est confidentiel et destiné uniquement aux clients et partenaires de Scriptor Artis. Toute reproduction ou diffusion est interdite sans autorisation écrite.
 
-**© 2025 Scriptor Group - Tous droits réservés**
+**© 2025 Scriptor Artis - Tous droits réservés**
