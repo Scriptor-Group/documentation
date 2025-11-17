@@ -1,6 +1,6 @@
 # Odin Service
 
-Le **service Odin** fournit un OCR avancé (Reconnaissance Optique de Caractères) pour extraire et analyser le texte de vos documents. Il s’appuie sur différentes technologies pour garantir un traitement fiable et performant. Celui-ci permet le traitement des Tableaux/Images/Diagrames/....
+Le **service Odin** fournit un OCR avancé (Reconnaissance Optique de Caractères) pour extraire et analyser le texte de vos documents. Il s’appuie sur différentes technologies pour garantir un traitement fiable et performant. Celui-ci permet le traitement des Tableaux/Images/Diagrammes/....
 
 ## Fonctionnalités principales
 
