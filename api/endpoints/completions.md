@@ -86,6 +86,7 @@ POST /v1/chat/completions
 | `identity`             | object       | Non         | Informations d'identité de l'utilisateur pour personnaliser le comportement de l'agent.                      |
 | `asyncRagScore`        | boolean      | Non         | Si vrai, on n'attend pas le calcul du score RAG.                                                             |
 | `attachementsFastMode` | boolean      | Non         | Si vrai, nous ignorons la vision sur les attachements                                                        |
+| `hiddenMode`           | boolean      | Non         | Si vrai, la conversation ne sera pas visible dans l'interface utilisateur Devana.                            |
 
 ### Vérifications et limites
 
