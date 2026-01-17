@@ -224,7 +224,12 @@ Paramètres de bas niveau pour ajuster le comportement du RAG (Retrieval-Augment
 
 ---
 
-## Odin (Service de traitement)
+## 11. Logging
+| Variable           | Description                                         | Valeur par défaut |
+| :----------------- | :-------------------------------------------------- | :---------------- |
+| `LOGS_HIDDEN_PERSONAL_INFORMATIONS`        | Masquer les informations personnelles dans les logs (`true`/`false`). | `false`            |
+
+## Odin
 
 ## 1. Services de Base
 
