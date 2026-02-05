@@ -30,6 +30,7 @@ Configuration pour les tâches automatisées qui s'exécutent à des intervalles
 | :---------------------- | :-------------------------------------------------------------------------------------------- | :------------------------------ |
 | `RUN_CRON`              | Active (`true`) ou désactive (`false`) l'exécution globale des tâches cron.                   | `false`                         |
 | `CRON_UPDATE_PROVIDERS` | Expression Cron pour la planification de la tâche de mise à jour des fournisseurs de données. | `0 * * * *` (toutes les heures) |
+| `CRON_DELETE_ATTACHMENTS` | Expression Cron pour la planification de la tâche de suppression des pièces jointes obsolètes. | `0 2 * * *` (toutes les nuits à 2h) |
 
 ---
 
