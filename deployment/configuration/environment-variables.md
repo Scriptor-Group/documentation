@@ -245,6 +245,7 @@ Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâch
 | `REDIS_HOST`     | Hôte du serveur Redis.                              |
 | `REDIS_PORT`     | Port d'écoute du serveur Redis.                     |
 | `REDIS_PASSWORD` | (Optionnel) Mot de passe pour la connexion à Redis. |
+| `CONCURRENCY_QUEUE` | Nombre de jobs/tâches pouvant être traités simultanément par le worker BullMQ. Contrôle le parallélisme du traitement des tâches dans la file d'attente. |
 
 ---
 
@@ -295,6 +296,23 @@ Paramètres de configuration liés à la sécurité du réseau et aux certificat
 | `NODE_EXTRA_CA_CERTS` | (Optionnel) Chemin d'accès à un fichier de certificats d'autorité (CA) supplémentaires. Utile pour les environnements d'entreprise utilisant des certificats TLS/SSL auto-signés. | `/certs/ca.crt` |
 
 ---
+
+
+## 6. Workers & Performance
+Paramètres pour la gestion des workers et l'optimisation des performances.
+
+| Variable                 | Description                                                                                         | Valeur par défaut |
+| :----------------------- | :-------------------------------------------------------------------------------------------------- | :---------------- |
+| `MAX_PAGES_PARALLEL`     | Nombre maximum de pages qui sont traitées en parallèle pour l'extraction de contenu.                                      | `20`               |
+| `MAX_VISION_CONCURRENT`        | Nombre maximum de tâches de vision (LLM avec capacité de vision) qui peuvent s'exécuter simultanément. | `15`                |
+| `CHUNK_SIZE`         | Nombre maximum de pages qui sont traitées en parallèle pour le traitement base de donnée                                                                 | `10`             |
+| `MEMORY_THRESHOLD`         | Seuil de mémoire heap (en bytes) au-delà duquel un avertissement est émis et un garbage collection est forcé pour libérer de la mémoire. | `1073741824` (1 Go)             |
+
+## 7. Retries
+Paramètres pour la gestion des tentatives de réexécution (retries) en cas d'échec de certaines tâches.
+| Variable                 | Description                                                                                         | Valeur par défaut |
+| :----------------------- | :-------------------------------------------------------------------------------------------------- | :---------------- |
+| `MAX_RETRY_ATTEMPTS`     | Nombre maximum de tentatives de réexécution pour une tâche qui a échoué avant d'être marquée comme définitivement échouée.                                      | `3`               |
 
 ## Frontend
 
