@@ -31,23 +31,33 @@ La **Delivery API** doit être activée et configurée sur l'instance Magnolia :
 
 `restEndpoints/delivery/pages.yaml` :
 ```yaml
-class: info.magnolia.rest.delivery.jcr.v2.JcrDeliveryEndpointDefinition
+$type: jcrDeliveryEndpoint_v2
 workspace: website
+depth: 3
 nodeTypes:
   - mgnl:page
-depth: 10
 includeSystemProperties: true
+bypassWorkspaceAcls: true
+limit: 50
 ```
 
 `restEndpoints/delivery/assets.yaml` :
 ```yaml
-class: info.magnolia.rest.delivery.jcr.v2.JcrDeliveryEndpointDefinition
+$type: jcrDeliveryEndpoint_v2
 workspace: dam
+depth: 2
 nodeTypes:
   - mgnl:asset
   - mgnl:folder
-depth: 10
 includeSystemProperties: true
+bypassWorkspaceAcls: true
+limit: 50
+references:
+  - name: categories
+    propertyName: categories
+    referenceResolver:
+      $type: jcrReferenceResolver
+      targetWorkspace: category
 ```
 
 > `includeSystemProperties: true` est **obligatoire**. Le connecteur utilise les propriétés système (`@name`, `@path`, `@id`, `@nodeType`, `@nodes`) pour la navigation, l'identification des types et le téléchargement des assets.
