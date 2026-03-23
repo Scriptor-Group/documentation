@@ -161,10 +161,74 @@ L'initialisation et les migrations de la base de données sont gérées automati
 
 ### Sauvegarde et Restauration
 
+#### Stratégie de sauvegarde recommandée
+
+Une politique de sauvegarde robuste doit couvrir les aspects suivants :
+
+**Fréquence et rétention**
+
+| Type de sauvegarde | Fréquence | Rétention minimale |
+|---|---|---|
+| Sauvegarde complète (full) | Quotidienne | 30 jours |
+| Sauvegarde incrémentale / WAL archiving | Continue (temps réel) | 7 jours |
+| Sauvegarde longue durée | Hebdomadaire | 90 jours minimum |
+
+**Objectifs de reprise**
+
+Définissez et documentez vos objectifs de reprise avant la mise en production :
+
+- **RPO (Recovery Point Objective)** — perte de données maximale acceptable. Avec l'archivage WAL continu, le RPO peut être ramené à quelques secondes.
+- **RTO (Recovery Time Objective)** — durée maximale d'indisponibilité acceptable. Dépend de la taille de la base et de l'infrastructure (réplication, failover automatique).
+
+> **Recommandation** : documentez vos RPO/RTO cibles et validez-les par des tests réguliers.
+
+**Stockage des sauvegardes**
+
+- Conservez les sauvegardes dans un **emplacement géographiquement distinct** de la base de production
+- Utilisez un stockage chiffré (au repos et en transit)
+- Appliquez le principe du **3-2-1** : 3 copies, 2 supports différents, 1 copie hors site
+
+#### Tests de restauration
+
+> **Les sauvegardes qui ne sont pas testées ne sont pas des sauvegardes.**
+
+Mettez en place une procédure de test de restauration régulière :
+
+- **Fréquence** : au minimum **trimestrielle**, idéalement **mensuelle**
+- **Périmètre** : restauration complète sur un environnement isolé (staging ou dédié)
+- **Validation** : vérifiez l'intégrité des données restaurées (comptage de tables, cohérence applicative, requêtes de contrôle)
+- **Chronométrage** : mesurez le temps de restauration réel et comparez-le à votre RTO cible
+- **Documentation** : consignez chaque test dans un **rapport de restauration** incluant :
+  - Date du test
+  - Sauvegarde utilisée (date, type)
+  - Temps de restauration constaté
+  - Résultat (succès / échec / anomalies)
+  - Actions correctives si nécessaire
+
+```bash
+# Exemple de test de restauration sur un environnement isolé
+createdb -U devana devana_restore_test
+pg_restore -U devana -d devana_restore_test -v backup.dump
+
+# Vérification de l'intégrité
+psql -U devana -d devana_restore_test -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';"
+
+# Nettoyage après test
+dropdb -U devana devana_restore_test
+```
+
+#### Supervision des sauvegardes
+
+- **Alerting** : configurez des alertes en cas d'échec de sauvegarde (email, webhook, monitoring)
+- **Journalisation** : conservez un historique horodaté des sauvegardes réalisées et de leur statut
+- **Audit** : revoyez périodiquement la politique de sauvegarde (au moins annuellement) et après tout incident majeur
+
 #### Pour la Production (Services Cloud)
 - Utilisez les fonctionnalités de sauvegarde automatique de votre fournisseur cloud
-- Configurez la rétention des sauvegardes selon vos besoins
+- Configurez la rétention selon la politique décrite ci-dessus
 - Activez la réplication multi-zones si disponible
+- **Activez le Point-in-Time Recovery (PITR)** pour permettre une restauration à un instant précis
+- Vérifiez que votre fournisseur permet l'**export des sauvegardes** vers un stockage externe
 
 #### Pour le Développement Local
 ```bash
