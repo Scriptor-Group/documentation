@@ -29,6 +29,8 @@ La **Delivery API** doit être activée et configurée sur l'instance Magnolia :
 
 ### Configuration des endpoints Delivery
 
+Pour mon local, j'ai utilisé les lights modules de Magnolia pour configurer rapidement les endpoints REST.
+
 `restEndpoints/delivery/pages.yaml` :
 ```yaml
 $type: jcrDeliveryEndpoint_v2
