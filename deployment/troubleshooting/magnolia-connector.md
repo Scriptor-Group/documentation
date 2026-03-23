@@ -75,14 +75,12 @@ Le connecteur envoie un header `Authorization: Basic <base64(username:password)>
 
 ---
 
-### Téléchargement binaire d'un asset
+## Routes API utilisées
 
-```
-GET /dam/jcr:{uuid} → fichier binaire (ex: /dam/jcr:a1b2c3d4-e5f6-7890)
-```
+Le connecteur utilise les endpoints delivery standards (`/.rest/delivery/pages`, `/.rest/delivery/assets`) et le servlet DAM (`/dam/jcr:{uuid}`) pour le téléchargement binaire des assets.
 
-> Cette route utilise le **servlet DAM** de Magnolia, pas la Delivery API. Elle supporte les mêmes modes d'authentification (anonymous ou basic auth).
-
-**Headers attendus dans la réponse :**
-- `Content-Type` : type MIME du fichier
-- `Content-Disposition` : nom du fichier (utile pour l'API Devana)
+| Route | Usage |
+|-------|-------|
+| `/.rest/delivery/pages` | Navigation et contenu des pages |
+| `/.rest/delivery/assets` | Navigation et résolution des assets |
+| `/dam/jcr:{uuid}` | Téléchargement binaire d'un asset |
