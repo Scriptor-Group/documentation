@@ -6,7 +6,156 @@ Cette documentation décrit la configuration et l'utilisation du type d'authenti
 
 ### Infrastructure (Système & Réseau)
 
-<!-- TODO: Section à compléter par Tony -->
+Cette section décrit les prérequis et la configuration système nécessaires pour que l'authentification Kerberos fonctionne avec le connecteur SharePoint. Elle s'adresse aux administrateurs système et réseau responsables de l'infrastructure hébergeant Devana.
+
+#### Prérequis Active Directory
+
+Avant toute configuration côté serveur, les éléments suivants doivent être en place dans l'Active Directory (AD) :
+
+**Compte de service AD** — Créer un compte de service dédié dans l'AD pour l'authentification Kerberos SharePoint (ex. `svc_sharepoint`) avec les droits nécessaires.
+
+#### Configuration du fichier `krb5.conf`
+
+Le fichier `/etc/krb5.conf` doit être présent sur le serveur (ou monté dans le conteneur) pour que le client Kerberos sache comment joindre le KDC (Key Distribution Center).
+
+Exemple de configuration minimale :
+
+```ini
+[libdefaults]
+    default_realm = EXAMPLE.COM
+    dns_lookup_realm = false
+    dns_lookup_kdc = true
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+    default_ccache_name = FILE:/tmp/krb5cc_%{uid}
+
+[realms]
+    EXAMPLE.COM = {
+        kdc = dc01.example.com
+        admin_server = dc01.example.com
+    }
+
+[domain_realm]
+    .example.com = EXAMPLE.COM
+    example.com = EXAMPLE.COM
+```
+
+| Section | Description |
+|---------|-------------|
+| `[libdefaults]` | Configuration par défaut du client Kerberos : realm, durée de vie des tickets, chemin du cache. |
+| `[realms]` | Adresse du KDC et du serveur d'administration pour chaque realm. Remplacer `dc01.example.com` par le FQDN de votre contrôleur de domaine. |
+| `[domain_realm]` | Mapping entre les noms de domaine DNS et les realms Kerberos. |
+
+> :warning: **Important :** Le `default_realm` doit être en **MAJUSCULES** et correspondre exactement au realm configuré dans l'AD.
+
+Pour monter ce fichier dans le pod Kubernetes, créer un `ConfigMap` puis le référencer comme volume :
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: krb5-config
+data:
+  krb5.conf: |
+    [libdefaults]
+        default_realm = EXAMPLE.COM
+        dns_lookup_realm = false
+        dns_lookup_kdc = true
+        ticket_lifetime = 24h
+        renew_lifetime = 7d
+        forwardable = true
+        default_ccache_name = FILE:/tmp/krb5cc_0
+    [realms]
+        EXAMPLE.COM = {
+            kdc = dc01.example.com
+            admin_server = dc01.example.com
+        }
+    [domain_realm]
+        .example.com = EXAMPLE.COM
+        example.com = EXAMPLE.COM
+```
+
+Puis dans le `Deployment` :
+
+```yaml
+spec:
+  containers:
+    - name: devana
+      volumeMounts:
+        - name: krb5-config
+          mountPath: /etc/krb5.conf
+          subPath: krb5.conf
+          readOnly: true
+  volumes:
+    - name: krb5-config
+      configMap:
+        name: krb5-config
+```
+
+Vous pouvez également définir la variable d'environnement `KRB5_CONFIG` si le fichier se trouve à un emplacement non standard :
+
+```yaml
+env:
+  - name: KRB5_CONFIG
+    value: /chemin/vers/krb5.conf
+```
+
+#### Génération et déploiement du fichier keytab
+
+Le fichier keytab contient les clés chiffrées du compte de service, permettant une authentification Kerberos sans mot de passe interactif.
+
+##### Génération du keytab (sur le contrôleur de domaine ou une machine jointe au domaine)
+
+```bash
+ktpass -princ HTTP/portal.example.com@EXAMPLE.COM \
+       -mapuser svc_sharepoint@EXAMPLE.COM \
+       -pass <mot_de_passe_du_compte> \
+       -crypto AES256-SHA1 \
+       -ptype KRB5_NT_PRINCIPAL \
+       -out svc_sharepoint.keytab
+```
+
+| Option | Description |
+|--------|-------------|
+| `-princ` | Le SPN complet avec le realm (doit correspondre au SPN enregistré via `setspn`). |
+| `-mapuser` | Le compte AD auquel le SPN est associé. |
+| `-crypto` | L'algorithme de chiffrement. Privilégier `AES256-SHA1` pour la sécurité. |
+| `-out` | Le chemin de sortie du fichier keytab généré. |
+
+##### Déploiement du keytab sur le serveur
+
+1. Créer un `Secret` Kubernetes contenant le keytab :
+   ```yaml
+   apiVersion: v1
+   kind: Secret
+   metadata:
+     name: krb5-keytab
+   type: Opaque
+   data:
+     svc_sharepoint.keytab: <contenu_du_keytab>
+   ```
+
+2. Monter le secret dans le `Deployment` :
+   ```yaml
+   spec:
+     containers:
+       - name: devana
+         volumeMounts:
+           - name: krb5-keytab
+             mountPath: /etc/svc_sharepoint.keytab
+             subPath: svc_sharepoint.keytab
+             readOnly: true
+     volumes:
+       - name: krb5-keytab
+         secret:
+           secretName: krb5-keytab
+           defaultMode: 0400
+   ```
+
+#### Initialisation et renouvellement des tickets Kerberos
+
+Le connecteur SharePoint utilise le ticket Kerberos stocké dans le fichier cache (ccache) référencé par le champ **Chemin ticket** du compte de service (ex. `/tmp/krb5cc_0`).
 
 ### Application
 
