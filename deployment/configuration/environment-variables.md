@@ -45,6 +45,7 @@ Paramètres de base concernant les points d'accès réseau, les URL publiques et
 | `CLIENT_URI`           | URL publique complète de l'application cliente (front-end). | -                 |
 | `ODIN_API_URL`         | URL pour l'API ODIN.                                        | -                 |
 | `LICENCE` ou `LICENSE` | Clé de licence de l'application.                            | -                 |
+| `MEMORY_THRESHOLD_MB` | Seuil de mémoire (en Mo) pour déclencher des alertes ou des actions spécifiques. |             |
 
 ## 4. Services Internes
 
