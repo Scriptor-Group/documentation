@@ -4,14 +4,20 @@ Historique des versions d'Odin, le service de traitement de documents de Devana.
 
 ## 📋 Versions récentes
 
-- [v0.1.25](./v0.1.25.md) - Dernière version
-- [v0.1.24](./v0.1.24.md)
-- [v0.1.23](./v0.1.23.md)
-- [v0.1.22](./v0.1.22.md)
-- [v0.1.21](./v0.1.21.md)
-- [v0.1.20](./v0.1.20.md)
-- [v0.1.19](./v0.1.19.md)
-- [v0.1.18](./v0.1.18.md)
+### v2
+
+- [v2.0.21](./v2/2.0.21.md) - Dernière version
+
+### v1
+
+- [v0.1.25](./v1/v0.1.25.md)
+- [v0.1.24](./v1/v0.1.24.md)
+- [v0.1.23](./v1/v0.1.23.md)
+- [v0.1.22](./v1/v0.1.22.md)
+- [v0.1.21](./v1/v0.1.21.md)
+- [v0.1.20](./v1/v0.1.20.md)
+- [v0.1.19](./v1/v0.1.19.md)
+- [v0.1.18](./v1/v0.1.18.md)
 
 ## 🔍 À propos d'Odin
 
