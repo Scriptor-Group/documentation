@@ -141,7 +141,7 @@ wget -qO- http://votre-domaine/health/services
 curl -X GET http://votre-domaine/health/service/redis
 ```
 
-2. **Exemple de script de surveillance**
+2. **Exemple de script — tous les services**
 ```bash
 #!/bin/bash
 
@@ -156,7 +156,23 @@ if [ "$status" != "healthy" ]; then
 fi
 ```
 
-3. **Configuration Crontab**
+3. **Exemple de script — un service unique**
+```bash
+#!/bin/bash
+
+SERVICE="redis"
+HEALTH_ENDPOINT="http://votre-domaine/health/service/$SERVICE"
+ALERT_EMAIL="admin@votre-domaine.com"
+
+response=$(curl -s $HEALTH_ENDPOINT)
+status=$(echo $response | jq -r '.status')
+
+if [ "$status" != "healthy" ]; then
+    echo "Service $SERVICE défaillant: $response" | mail -s "Alerte Santé ($SERVICE)" $ALERT_EMAIL
+fi
+```
+
+4. **Configuration Crontab**
 ```bash
 */5 * * * * /chemin/vers/script-surveillance.sh
 ```
