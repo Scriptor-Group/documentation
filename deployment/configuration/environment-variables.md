@@ -294,6 +294,14 @@ Paramètres de configuration liés à la sécurité du réseau et aux certificat
 | :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------- |
 | `NODE_EXTRA_CA_CERTS` | (Optionnel) Chemin d'accès à un fichier de certificats d'autorité (CA) supplémentaires. Utile pour les environnements d'entreprise utilisant des certificats TLS/SSL auto-signés. | `/certs/ca.crt` |
 
+
+## 6. Paramètres Avancés
+
+Paramètres techniques avancés pour ajuster le comportement du service Odin.
+
+| Variable              | Description                                                                                                                                                                       | Par défaut     |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------- |
+| `DOCUMENT_INTEGRITY_THRESHOLD_PERCENTAGE` | Seuil de pourcentage pour vérifier l'intégrité des documents traités. Si le pourcentage de réussite est inférieur à cette valeur, le document est considéré comme corrompu ou incomplet. | `80`               |
 ---
 
 ## Frontend
