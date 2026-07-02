@@ -168,6 +168,7 @@ Gestion de l'accès aux différentes sources de données (ex: SharePoint, Jira).
 | :----------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- | :---------------- |
 | `ALLOW_PROVIDER_MULTIACCOUNT_ACCESS` | (Optionnel) Permet à un utilisateur de se connecter à plusieurs comptes pour un même fournisseur (ex: plusieurs comptes SharePoint). | `false`           |
 | `AUTO_DELETE_FILES_PROVIDERS`        | (Optionnel) Supprime automatiquement les fichiers importés par les fournisseurs après traitement dans le bucket du client.           | `false`           |
+| `DISABLE_VIDEO_EXTRACTION`  | (Optionnel) Désactive l'extraction de fichiers vidéo sur le connecteur SharePoint.                                         | `false`           |
 
 ---
 
