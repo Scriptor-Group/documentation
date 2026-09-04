@@ -149,7 +149,7 @@ System design and scaling.
 Track new features and improvements.
 
 - [Devana Platform](./changelogs/devana/README.md) - Main platform updates (v0.6.0108)
-- [Odin Service](./changelogs/odin/README.md) - Document processing engine (v0.1.25)
+- [Odin Service](./changelogs/odin/README.md) - Document processing engine (v2.0.26)
 
 ---
 
