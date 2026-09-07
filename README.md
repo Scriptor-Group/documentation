@@ -2,7 +2,7 @@
 
 [Getting Started](#getting-started) • [API Reference](./api/README.md) • [Deployment](./deployment/README.md) • [Examples](#examples)
 
-[![Version](https://img.shields.io/badge/version-0.6.0108-blue.svg)](./changelogs/devana/README.md) [![License](https://img.shields.io/badge/license-Proprietary-red.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)](./changelogs/devana/README.md) [![License](https://img.shields.io/badge/license-Proprietary-red.svg)](#)
 
 ---
 
@@ -148,7 +148,7 @@ System design and scaling.
 
 Track new features and improvements.
 
-- [Devana Platform](./changelogs/devana/README.md) - Main platform updates (v0.6.0108)
+- [Devana Platform](./changelogs/devana/README.md) - Main platform updates (v1.3.1)
 - [Odin Service](./changelogs/odin/README.md) - Document processing engine (v2.0.26)
 
 ---
