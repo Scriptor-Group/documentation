@@ -1,0 +1,31 @@
+# Argos — configuration non sensible (ConfigMap « argos-config »).
+# Adapter les valeurs marquées « À ADAPTER » puis :
+#   kubectl -n argos apply -f argos-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argos-config
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+
+  # À ADAPTER : URL du dashboard vue par les utilisateurs (retour de connexion
+  # <PUBLIC_URL>/auth/callback, adresse MCP affichée).
+  PUBLIC_URL: "https://argos.example.com"
+  FRONTEND_URL: "https://argos.example.com"
+
+  # À ADAPTER : API de votre plateforme Devana (connexion au dashboard).
+  DEVANA_API_URL: "https://api.devana.example.com"
+
+  # Emails promus administrateurs à la première connexion (virgules).
+  BOOTSTRAP_ADMIN_EMAILS: ""
+
+  # Redis dédié (redis.yaml), base 0 partagée avec Odin et Zeus.
+  REDIS_URL: "redis://argos-redis:6379/0"
+
+  # À ADAPTER : stockage S3 (bucket UNIQUE partagé avec Odin et Zeus).
+  # S3_ENDPOINT vide = AWS S3 ; sinon MinIO, Ceph, stockage objet compatible S3.
+  S3_ENDPOINT: "https://s3.example.com"
+  S3_REGION: "us-east-1"
+  S3_BUCKET: "argos"
+  S3_FORCE_PATH_STYLE: "true"

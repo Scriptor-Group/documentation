@@ -1,0 +1,179 @@
+# Argos — serveur : API (dashboard, MCP, connexion Devana) et workers
+# (synchronisation SharePoint, traitements). Même image, deux rôles.
+#   kubectl -n argos apply -f argos-serveur.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argos
+automountServiceAccountToken: false
+# Identifiants du registre des images (fournis par Devana) :
+#   kubectl -n argos create secret docker-registry argos-registry \
+#     --docker-server=registry.devana.ai --docker-username=… --docker-password=…
+imagePullSecrets:
+  - name: argos-registry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argos-api
+  labels:
+    app.kubernetes.io/name: argos-api
+    app.kubernetes.io/part-of: argos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argos-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argos-api
+        app.kubernetes.io/part-of: argos
+    spec:
+      serviceAccountName: argos
+      terminationGracePeriodSeconds: 45
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      # Migrations de la base, idempotentes (sûres avec plusieurs réplicas).
+      initContainers:
+        - name: migrate
+          image: registry.devana.ai/devana/argos-serveur:1.0.0
+          args: ["migrate"]
+          envFrom:
+            - configMapRef:
+                name: argos-config
+            - secretRef:
+                name: argos-secrets
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { memory: 512Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      containers:
+        - name: argos
+          image: registry.devana.ai/devana/argos-serveur:1.0.0
+          args: ["api"]
+          ports:
+            - { name: http, containerPort: 4000 }
+          envFrom:
+            - configMapRef:
+                name: argos-config
+            - secretRef:
+                name: argos-secrets
+          startupProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 5
+            failureThreshold: 24
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 4
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { memory: 1Gi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argos-api
+  labels:
+    app.kubernetes.io/name: argos-api
+spec:
+  selector:
+    app.kubernetes.io/name: argos-api
+  ports:
+    - { name: http, port: 4000, targetPort: http }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argos-worker
+  labels:
+    app.kubernetes.io/name: argos-worker
+    app.kubernetes.io/part-of: argos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argos-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argos-worker
+        app.kubernetes.io/part-of: argos
+    spec:
+      serviceAccountName: argos
+      # Laisse aux traitements en cours le temps de se terminer.
+      terminationGracePeriodSeconds: 75
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: argos
+          image: registry.devana.ai/devana/argos-serveur:1.0.0
+          args: ["worker"]
+          ports:
+            - { name: http, containerPort: 4000 }
+          envFrom:
+            - configMapRef:
+                name: argos-config
+            - secretRef:
+                name: argos-secrets
+          startupProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 5
+            failureThreshold: 24
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 4
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+            periodSeconds: 10
+            timeoutSeconds: 3
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { memory: 1536Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        # Téléchargements en cours et caches Kerberos
+        - name: tmp
+          emptyDir:
+            sizeLimit: 4Gi

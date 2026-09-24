@@ -1,0 +1,91 @@
+# Odin — extraction du contenu des documents, instance DÉDIÉE à Argos.
+# Base « odin » sur le même PostgreSQL (DATABASE_URL dans odin-secrets).
+#   kubectl -n argos apply -f odin.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: odin-config
+data:
+  NODE_ENV: "production"
+  HOME: "/tmp"
+  PORT: "3009"
+  HOST: "http://argos-odin:3009"
+  LOG_LEVEL: "info"
+  # Même stockage et même bucket qu'Argos (argos-config).
+  S3_ENDPOINT: "https://s3.example.com"
+  S3_REGION: "us-east-1"
+  S3_BUCKET: "argos"
+  REDIS_HOST: "argos-redis"
+  REDIS_PORT: "6379"
+  # ≥ total des slots Odin d'Argos (Paramètres › Traitement : 16 + 4 + 4).
+  BULLMQ_CONCURRENCY: "24"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argos-odin
+  labels:
+    app.kubernetes.io/name: argos-odin
+    app.kubernetes.io/part-of: argos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argos-odin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argos-odin
+        app.kubernetes.io/part-of: argos
+    spec:
+      serviceAccountName: argos
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: odin
+          image: registry.devana.ai/devana/odin:2.0.26
+          ports:
+            - { name: http, containerPort: 3009 }
+          envFrom:
+            - configMapRef:
+                name: odin-config
+            - secretRef:
+                name: odin-secrets
+          # Odin applique ses propres migrations au démarrage.
+          startupProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            requests: { cpu: 250m, memory: 1Gi }
+            limits: { memory: 2Gi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argos-odin
+  labels:
+    app.kubernetes.io/name: argos-odin
+spec:
+  selector:
+    app.kubernetes.io/name: argos-odin
+  ports:
+    - { name: http, port: 3009, targetPort: http }

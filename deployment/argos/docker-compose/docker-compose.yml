@@ -1,0 +1,237 @@
+# =============================================================================
+# Argos — installation sur un serveur (Docker Compose)
+#
+#   cp env.example .env && chmod 600 .env   # renseigner les valeurs obligatoires
+#   docker login registry.devana.ai         # identifiants fournis par Devana
+#   docker compose up -d --wait             # dashboard : http://<serveur>:3100
+#
+# Services :
+#   postgres        PostgreSQL 17 + pgvector (bases argos et odin)
+#   redis           files de traitement (dédié à Argos, Odin et Zeus)
+#   minio           stockage S3 local ; minio-init crée le bucket
+#   migrate         migrations de la base (une fois, avant l'API et les workers)
+#   serveur-api     dashboard (API), serveur MCP (/mcp), connexion Devana
+#   serveur-worker  synchronisation SharePoint et traitements
+#   front-end       dashboard web ; relaie /graphql /auth /files /mcp vers l'API
+#   odin, zeus      extraction de contenu (instance dédiée à Argos)
+#
+# Seul le dashboard est publié sur toutes les interfaces ; les autres ports ne
+# le sont que sur PUBLISH_ADDR (127.0.0.1 par défaut).
+# =============================================================================
+name: argos
+
+x-s3-env: &s3-env
+  S3_ENDPOINT: http://minio:9000
+  S3_REGION: us-east-1
+  # Bucket UNIQUE partagé par Argos, Odin et Zeus.
+  S3_BUCKET: ${S3_BUCKET:-argos}
+  S3_ACCESS_KEY: ${MINIO_ROOT_USER:-argos}
+  S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?Définir MINIO_ROOT_PASSWORD dans .env}
+
+x-serveur-env: &serveur-env
+  <<: *s3-env
+  NODE_ENV: production
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+  DATABASE_URL: postgresql://argos:${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans .env}@postgres:5432/argos
+  REDIS_URL: redis://redis:6379/0
+  S3_FORCE_PATH_STYLE: "true"
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Définir ENCRYPTION_KEY (32 caractères minimum) dans .env}
+  DEVANA_API_URL: ${DEVANA_API_URL:?Définir DEVANA_API_URL dans .env}
+  DEVANA_CLIENT_ID: ${DEVANA_CLIENT_ID:?Définir DEVANA_CLIENT_ID dans .env}
+  DEVANA_CLIENT_SECRET: ${DEVANA_CLIENT_SECRET:?Définir DEVANA_CLIENT_SECRET dans .env}
+  PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3100}
+  FRONTEND_URL: ${PUBLIC_URL:-http://localhost:3100}
+  BOOTSTRAP_ADMIN_EMAILS: ${BOOTSTRAP_ADMIN_EMAILS:-}
+
+x-serveur-healthcheck: &serveur-healthcheck
+  test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/readyz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+  interval: 15s
+  timeout: 5s
+  retries: 3
+  start_period: 60s
+
+x-serveur: &serveur
+  image: ${REGISTRY:-registry.devana.ai/devana}/argos-serveur:${ARGOS_VERSION:-latest}
+  environment: *serveur-env
+  restart: unless-stopped
+
+x-odin-redis-env: &odin-redis-env
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: argos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: argos
+    configs:
+      - source: postgres-init
+        target: /docker-entrypoint-initdb.d/10-init.sql
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${PUBLISH_ADDR:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U argos -d argos"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4-alpine
+    # Files de traitement : refuser les écritures plutôt qu'évincer des tâches.
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  minio:
+    image: ${MINIO_IMAGE:-pgsty/minio:RELEASE.2026-08-04T00-00-00Z}
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-argos}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Définir MINIO_ROOT_PASSWORD dans .env}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "${PUBLISH_ADDR:-127.0.0.1}:${MINIO_CONSOLE_PORT:-9001}:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  minio-init:
+    image: ${MINIO_IMAGE:-pgsty/minio:RELEASE.2026-08-04T00-00-00Z}
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >
+        mc alias set local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}" &&
+        mc mb --ignore-existing "local/$${S3_BUCKET}"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-argos}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Définir MINIO_ROOT_PASSWORD dans .env}
+      S3_BUCKET: ${S3_BUCKET:-argos}
+    restart: "no"
+
+  migrate:
+    <<: *serveur
+    command: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  serveur-api:
+    <<: *serveur
+    command: ["api"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck: *serveur-healthcheck
+    ports:
+      - "${PUBLISH_ADDR:-127.0.0.1}:${API_PORT:-4000}:4000"
+    stop_grace_period: 45s
+
+  serveur-worker:
+    <<: *serveur
+    command: ["worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck: *serveur-healthcheck
+    # Laisse aux traitements en cours le temps de se terminer.
+    stop_grace_period: 75s
+
+  front-end:
+    image: ${REGISTRY:-registry.devana.ai/devana}/argos-front-end:${ARGOS_VERSION:-latest}
+    environment:
+      SERVEUR_URL: http://serveur-api:4000
+    depends_on:
+      serveur-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3100/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    ports:
+      - "${FRONT_PORT:-3100}:3100"
+    restart: unless-stopped
+
+  # Instance Odin dédiée : ne jamais la partager avec une plateforme Devana.
+  odin:
+    image: ${ODIN_IMAGE:-registry.devana.ai/devana/odin:latest}
+    environment:
+      <<: [*s3-env, *odin-redis-env]
+      NODE_ENV: production
+      HOME: /tmp
+      PORT: "3009"
+      HOST: http://odin:3009
+      DATABASE_URL: postgresql://argos:${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans .env}@postgres:5432/odin
+      BULLMQ_CONCURRENCY: ${ODIN_CONCURRENCY:-24}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3009/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped
+
+  zeus:
+    image: ${ZEUS_IMAGE:-registry.devana.ai/devana/zeus:latest}
+    environment:
+      <<: [*s3-env, *odin-redis-env]
+      RUST_LOG: ${ZEUS_LOG:-info}
+      BULLMQ_CONCURRENCY: ${ZEUS_CONCURRENCY:-4}
+      TESSERACT_LANG: ${ZEUS_TESSERACT_LANG:-fra+eng}
+      # Modèle de vision (pages scannées, images)
+      LLM_VISION_API_URL: ${LLM_VISION_API_URL:-https://api.openai.com/v1}
+      LLM_VISION_API_KEY: ${LLM_VISION_API_KEY:-}
+      LLM_VISION_MODEL: ${LLM_VISION_MODEL:-gpt-4.1-mini}
+    depends_on:
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+configs:
+  postgres-init:
+    content: |
+      CREATE EXTENSION IF NOT EXISTS vector;
+      CREATE EXTENSION IF NOT EXISTS pg_trgm;
+      CREATE DATABASE odin;
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:

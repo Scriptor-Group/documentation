@@ -1,0 +1,67 @@
+# Zeus — analyse des documents (PDF, Office, OCR) et descriptions d'images par
+# un modèle de vision, pour Odin. Worker sans port HTTP.
+#   kubectl -n argos apply -f zeus.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zeus-config
+data:
+  RUST_LOG: "info"
+  # Même stockage et même bucket qu'Argos (argos-config).
+  S3_ENDPOINT: "https://s3.example.com"
+  S3_REGION: "us-east-1"
+  S3_BUCKET: "argos"
+  REDIS_HOST: "argos-redis"
+  REDIS_PORT: "6379"
+  BULLMQ_CONCURRENCY: "4"
+  TESSERACT_LANG: "fra+eng"
+  # Modèle de vision : API compatible OpenAI (clé dans zeus-secrets).
+  LLM_VISION_API_URL: "https://api.openai.com/v1"
+  LLM_VISION_MODEL: "gpt-4.1-mini"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argos-zeus
+  labels:
+    app.kubernetes.io/name: argos-zeus
+    app.kubernetes.io/part-of: argos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argos-zeus
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argos-zeus
+        app.kubernetes.io/part-of: argos
+    spec:
+      serviceAccountName: argos
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: zeus
+          image: registry.devana.ai/devana/zeus:0.1.37
+          envFrom:
+            - configMapRef:
+                name: zeus-config
+            - secretRef:
+                name: zeus-secrets
+          resources:
+            requests: { cpu: 500m, memory: 2Gi }
+            limits: { memory: 3Gi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
