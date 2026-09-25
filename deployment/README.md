@@ -37,6 +37,13 @@ Documentation complète pour le déploiement de Devana.ai en environnement on-pr
 - [Gestion des licences](./monitoring/license.md) - Monitoring d'utilisation
 - [Architecture des services](./services/services/) - Devana API, Odin
 
+### 🔌 [Argos — Connecteur SharePoint MCP](./argos/README.md)
+Indexation de sites SharePoint on-premise et mise à disposition de leurs documents aux agents IA via un serveur MCP.
+
+- [Installation Docker Compose](./argos/installation-docker-compose.md) et [Kubernetes / OpenShift](./argos/installation-kubernetes.md)
+- [Configuration](./argos/configuration.md), [Connexions SharePoint](./argos/sharepoint.md), [Serveur MCP](./argos/mcp.md)
+- [Exploitation](./argos/exploitation.md) - Supervision, sauvegardes, mises à jour, dépannage
+
 ### 🔧 Troubleshooting
 - [Problèmes courants](./troubleshooting/common-issues.md) - Guide de résolution
 - [Migrations](./troubleshooting/migration-sharepoint.md) - Guides de migration spécifiques

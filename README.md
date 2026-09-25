@@ -115,6 +115,7 @@ Production-ready deployment.
 - [Kubernetes](./deployment/infrastructure/kubernetes/kube/README.md) - K8s/OpenShift
 - [PostgreSQL](./deployment/infrastructure/database/db/postgresql.md) - Database setup
 - [LLM Providers](./deployment/configuration/llm-providers.md) - Model configuration
+- [Argos](./deployment/argos/README.md) - On-premise SharePoint connector for AI agents (MCP)
 
 #### [Operations](./deployment/monitoring/health-checks.md)
 

@@ -1,0 +1,62 @@
+# Argos — exposition HTTPS (exemple Ingress NGINX). Un seul hôte :
+#   /                          → dashboard
+#   /graphql, /auth, /files    → API (corps jusqu'à 20 Mo : keytabs, certificats)
+#   /mcp (et /mcp/<espace>)    → API, délai long : une lecture peut attendre
+#                                l'extraction d'un document (jusqu'à 15 min)
+# À ADAPTER : hôte, classe d'ingress, certificat TLS.
+#   kubectl -n argos apply -f ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argos
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [argos.example.com]
+      secretName: argos-tls
+  rules:
+    - host: argos.example.com
+      http:
+        paths:
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service: { name: argos-api, port: { number: 4000 } }
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service: { name: argos-api, port: { number: 4000 } }
+          - path: /files
+            pathType: Prefix
+            backend:
+              service: { name: argos-api, port: { number: 4000 } }
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: argos-front-end, port: { number: 3100 } }
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argos-mcp
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "960"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "960"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [argos.example.com]
+      secretName: argos-tls
+  rules:
+    - host: argos.example.com
+      http:
+        paths:
+          - path: /mcp
+            pathType: Prefix
+            backend:
+              service: { name: argos-api, port: { number: 4000 } }
