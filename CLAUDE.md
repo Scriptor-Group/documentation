@@ -132,7 +132,7 @@ Follow the convention of the file you are editing rather than making links files
 
 ### Anchors
 
-The site generates heading anchors by dropping every non-ASCII character (accents and emoji): `## 🔒 Requirements Sécurité` becomes `#requirements-scurit`, `## Démarrage rapide` becomes `#dmarrage-rapide`. GitHub-style anchors (`#-requirements-sécurité`, `#démarrage-rapide`) therefore work on GitHub but not on doc.devana.ai. For links read on the site, use the site form, and check it on the live page (`document.querySelectorAll('.prose h2')` ids). The site already shows an « On this page » outline, so a manual table of contents is optional.
+The site generates heading ids by dropping every non-ASCII character (accents and emoji): `## 🔒 Requirements Sécurité` gets the id `requirements-scurit`. Same-page links (`[x](#démarrage-rapide)`) are normalized by the site, so any form works. Cross-page links with an anchor (`./page.md#section`) currently break on the site: the `.md` extension is only stripped at the end of the link, so the reader lands on « No content available ». Until the docs app handles it, link to the page without an anchor (`./page.md`); the site shows an « On this page » outline. Six such links remain in `deployment/argos/`.
 
 ## Commits
 
