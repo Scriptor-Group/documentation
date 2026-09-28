@@ -8,13 +8,13 @@ Cette documentation s'adresse aux développeurs qui intègrent Devana, aux équi
 
 | Vous souhaitez | Point d'entrée |
 |---|---|
-| Appeler l'API depuis une application | [Démarrage rapide de l'API](./api/README.md#dmarrage-rapide) |
+| Appeler l'API depuis une application | [Démarrage rapide de l'API](./api/README.md) |
 | Intégrer un assistant dans un site web | [Intégration par iframe](./api/integration/iframe.md) |
 | Donner aux agents l'accès à vos services | [Outils personnalisés](./api/integration/tools.md) |
 | Automatiser des traitements | [Nœuds n8n](./sdks/n8n-nodes-devana.md) |
 | Installer Devana sur votre infrastructure | [Prérequis et dimensionnement](./deployment/requirements.md) |
 | Connecter votre annuaire d'entreprise | [Authentification unique (SSO)](./deployment/authentication/README.md) |
-| Évaluer la sécurité et la protection des données | [Exigences de sécurité](./deployment/requirements.md#requirements-scurit) et [politique de confidentialité](./others/RGPD.md) |
+| Évaluer la sécurité et la protection des données | [Exigences de sécurité](./deployment/requirements.md) et [politique de confidentialité](./others/RGPD.md) |
 
 ## Produits
 
@@ -53,8 +53,8 @@ Le champ `model` contient l'identifiant de l'agent qui répond. Paramètres, str
 
 ## Sécurité et conformité
 
-- **Maîtrise de l'hébergement** : la plateforme peut être déployée entièrement sur l'infrastructure de l'organisation, avec des [modèles de langage hébergés en interne](./deployment/requirements.md#requirements-llm-embeddings).
-- **Exigences de sécurité** : chiffrement en transit et au repos, authentification unique, contrôle d'accès par rôles, journalisation et segmentation réseau sont détaillés dans les [exigences de sécurité](./deployment/requirements.md#requirements-scurit).
+- **Maîtrise de l'hébergement** : la plateforme peut être déployée entièrement sur l'infrastructure de l'organisation, avec des [modèles de langage hébergés en interne](./deployment/requirements.md).
+- **Exigences de sécurité** : chiffrement en transit et au repos, authentification unique, contrôle d'accès par rôles, journalisation et segmentation réseau sont détaillés dans les [exigences de sécurité](./deployment/requirements.md).
 - **Protection des données** : [politique de confidentialité et de conservation des données](./others/RGPD.md) et [sous-traitants du support situés hors de l'EEE](./others/sous-traitants-hors-ue.md).
 
 ## Dernières versions
