@@ -25,9 +25,11 @@ Several directories are genuinely doubled on disk — `infrastructure/kubernetes
 
 ## Language
 
-Mixed, per file. `api/`, `deployment/`, `changelogs/` and `others/` are **French**; root `README.md` and `sdks/` are **English**. Match the language already in the file you are editing; do not translate existing pages.
+Mixed, per file. `api/`, `deployment/`, `changelogs/`, `others/` and the root `README.md` (the site home, rewritten in French on 2026-09-28: the site is served in French only) are **French**; `sdks/` is mostly **English**. Match the language already in the file you are editing; do not translate existing pages.
 
 Section headings use emoji prefixes throughout (`## 🚀 Nouvelles fonctionnalités`, `## 🐛 Corrections de bugs`, `## 📑 Table des matières`). Keep the style of the surrounding file.
+
+New pages and the home are written **without emoji and without em dashes** (the site is read by public-sector clients): plain headings, `Oui` / `Non` / `Inconnu` instead of check marks, punctuation (colon, semicolon, parentheses) instead of dashes. Do not rewrite existing pages to this style unless asked. Mermaid diagrams and `> [!NOTE]` alerts do not render well on the site (default light theme on dark background, alert marker shown as text): prefer tables and plain blockquotes.
 
 ## Adding a changelog
 
@@ -40,7 +42,7 @@ For each new release, touch three places:
 
 1. the version file itself;
 2. the product index `changelogs/<product>/README.md` (add the entry, move the "Dernière version" marker);
-3. root `README.md` — the version badge (line 5) and the changelog bullets (~line 151).
+3. root `README.md`: the version column of the « Dernières versions » table.
 
 ### Template — identique pour Devana et Odin
 
@@ -127,6 +129,10 @@ Un changement sans effet observable par le client n'a pas de ligne. Mieux vaut u
 - `deployment/authentication/README.md` links `./azure.md` for `./sso/azure.md`; `changelogs/odin/README.md` links `../../deployment/services/odin.md` for `deployment/services/services/odin.md` — i.e. one directory level is elided.
 
 Follow the convention of the file you are editing rather than making links filesystem-correct. If you believe a link is genuinely wrong, verify against the live site before changing it.
+
+### Anchors
+
+The site generates heading anchors by dropping every non-ASCII character (accents and emoji): `## 🔒 Requirements Sécurité` becomes `#requirements-scurit`, `## Démarrage rapide` becomes `#dmarrage-rapide`. GitHub-style anchors (`#-requirements-sécurité`, `#démarrage-rapide`) therefore work on GitHub but not on doc.devana.ai. For links read on the site, use the site form, and check it on the live page (`document.querySelectorAll('.prose h2')` ids). The site already shows an « On this page » outline, so a manual table of contents is optional.
 
 ## Commits
 
