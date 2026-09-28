@@ -116,6 +116,7 @@ Production-ready deployment.
 - [PostgreSQL](./deployment/infrastructure/database/db/postgresql.md) - Database setup
 - [LLM Providers](./deployment/configuration/llm-providers.md) - Model configuration
 - [Argos](./deployment/argos/README.md) - On-premise SharePoint connector for AI agents (MCP)
+- [Office Add-ins](./deployment/office-addins/README.md) - Suite 366 assistant in Word, Excel, PowerPoint and Outlook: supported Office versions and tools
 
 #### [Operations](./deployment/monitoring/health-checks.md)
 

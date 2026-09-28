@@ -44,6 +44,9 @@ Indexation de sites SharePoint on-premise et mise à disposition de leurs docume
 - [Configuration](./argos/configuration.md), [Connexions SharePoint](./argos/sharepoint.md), [Serveur MCP](./argos/mcp.md)
 - [Exploitation](./argos/exploitation.md) - Supervision, sauvegardes, mises à jour, dépannage
 
+### [Compléments Office Suite 366](./office-addins/README.md)
+Assistant IA dans Word, Excel, PowerPoint et Outlook : prérequis, versions d'Office prises en charge et outils disponibles par version.
+
 ### 🔧 Troubleshooting
 - [Problèmes courants](./troubleshooting/common-issues.md) - Guide de résolution
 - [Migrations](./troubleshooting/migration-sharepoint.md) - Guides de migration spécifiques
