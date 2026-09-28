@@ -44,7 +44,7 @@ Nombre d'outils disponibles, par version d'Office sur Windows. La version et le 
 | Office pour Mac (version à jour) | 33 / 33 | 38 / 38 | 22 / 22 | 16 / 19 ² | 19 / 19 ³ |
 
 1. À partir du build **16130.20332**. Un build 2302 antérieur limite Word à 28 / 33.
-2. Exchange Server on-premises (2016, 2019, Subscription Edition) plafonne à Mailbox 1.5. Les 3 outils de niveau supérieur peuvent fonctionner si le client Outlook les prend en charge : à vérifier sur poste (voir [Vérifier un poste](#vérifier-un-poste)).
+2. Exchange Server on-premises (2016, 2019, Subscription Edition) plafonne à Mailbox 1.5. Le statut des 3 outils de niveau supérieur est inconnu : ils peuvent fonctionner si le client Outlook les prend en charge (voir [Vérifier un poste](#vérifier-un-poste)).
 3. Nouvelle interface d'Outlook pour Mac (16.38.506 ou ultérieure).
 
 **Non pris en charge** : Office 2016 et 2019 (fin de support Microsoft en octobre 2025). PowerPoint 2019 en licence en volume ne charge pas le complément. Office sur le web et Outlook mobile ne sont pas ciblés.
@@ -150,7 +150,7 @@ Le complément se charge à partir de **Mailbox 1.3**. Le niveau garanti est le 
 
 ## Outils par version
 
-Légende : **Oui** disponible ; **Non** indisponible ; **À vérifier** non garanti, dépend du client Outlook. *Lecture* : l'outil consulte le document ; *Écriture* : il le modifie (ou prépare un brouillon dans Outlook).
+Légende : **Oui** disponible ; **Non** indisponible ; **Inconnu** non documenté par Microsoft et non encore constaté sur poste, dépend du client Outlook. *Lecture* : l'outil consulte le document ; *Écriture* : il le modifie (ou prépare un brouillon dans Outlook).
 
 ### Word
 
@@ -288,9 +288,9 @@ Colonnes : Outlook de bureau (Windows ou Mac) connecté à Exchange on-premises 
 | `outlook_get_body` | Lire le corps du message (historique compris) | Lecture | 1.3 | Oui | Oui |
 | `outlook_get_draft` | Lire le brouillon en cours | Lecture | 1.3 | Oui | Oui |
 | `outlook_set_body` | Réécrire le brouillon (historique et signature conservés) | Écriture | 1.3 | Oui | Oui |
-| `outlook_new_message` | Ouvrir un nouveau message pré-rempli | Écriture | 1.6 | À vérifier | Oui |
-| `outlook_add_categories` | Ajouter des catégories | Écriture | 1.8 | À vérifier | Oui |
-| `outlook_read_attachment` | Lire le contenu d'une pièce jointe (Word, Excel, PowerPoint, OpenDocument, texte, e-mail, invitation) | Lecture | 1.8 | À vérifier | Oui |
+| `outlook_new_message` | Ouvrir un nouveau message pré-rempli | Écriture | 1.6 | Inconnu | Oui |
+| `outlook_add_categories` | Ajouter des catégories | Écriture | 1.8 | Inconnu | Oui |
+| `outlook_read_attachment` | Lire le contenu d'une pièce jointe (Word, Excel, PowerPoint, OpenDocument, texte, e-mail, invitation) | Lecture | 1.8 | Inconnu | Oui |
 
 Les outils affichés dépendent aussi du contexte : message reçu, brouillon, réunion reçue ou rendez-vous en cours de création. Le texte des pièces jointes est extrait sur le poste, puis transmis à l'assistant comme le reste de la conversation (voir [Données et sécurité](#données-et-sécurité)). Les PDF et les images ne sont pas lus par le complément : les enregistrer dans le Drive Suite 366 pour en extraire le texte.
 
