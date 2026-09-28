@@ -130,9 +130,9 @@ Un changement sans effet observable par le client n'a pas de ligne. Mieux vaut u
 
 Follow the convention of the file you are editing rather than making links filesystem-correct. If you believe a link is genuinely wrong, verify against the live site before changing it.
 
-### Anchors
+### Anchors and links since the docs app redesign
 
-The site generates heading ids by dropping every non-ASCII character (accents and emoji): `## 🔒 Requirements Sécurité` gets the id `requirements-scurit`. Same-page links (`[x](#démarrage-rapide)`) are normalized by the site, so any form works. Cross-page links with an anchor (`./page.md#section`) currently break on the site: the `.md` extension is only stripped at the end of the link, so the reader lands on « No content available ». Until the docs app handles it, link to the page without an anchor (`./page.md`); the site shows an « On this page » outline. Six such links remain in `deployment/argos/`.
+Since `Scriptor-Group/docs-devana` PR #3 (2026-09-28), the site resolves relative links from the file's folder, as GitHub does, and normalizes anchors to its own heading ids (non-ASCII characters dropped). Write links the GitHub way: `./page.md`, `../other/page.md`, `./page.md#démarrage-rapide`, `#-requirements-sécurité` all work on both GitHub and doc.devana.ai. Links written for the old resolution (the `../../../` prefixes above) still work: when the GitHub-style target does not exist, the site falls back to the old calculation. Existing links can therefore be fixed one by one, never by a mass rewrite. `CLAUDE.md`, `AGENTS.md` and hidden entries are not published on the site.
 
 ## Commits
 
