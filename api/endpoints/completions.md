@@ -77,7 +77,7 @@ POST /v1/chat/completions
 | `stream`               | boolean      | Non         | Si vrai, les deltas de messages partiels seront envoyés.                                                     |
 | `conversation_id`      | string       | Non         | ID de la conversation existante à continuer.                                                                 |
 | `response_format`      | string       | Non         | Format de réponse souhaité (par exemple, { type: "text" \| "json_object"}). (compatible selon le LLM actif)  |
-| `lang`                 | string       | Non         | Langue pour la réponse. Par défaut, locale de l'utilisateur ou 'fr'.                                         |
+| `lang`                 | string       | Non         | Langue pour la réponse. Par défaut, langue de la question (depuis la 1.3.6 ; auparavant, langue du compte).   |
 | `files`                | array        | Non         | Tableau des IDs de fichiers à inclure dans le contexte.                                                      |
 | `clientModel`          | string       | Non         | Modèle spécifique à utiliser avec la configuration Devana AI. Défaut: valeur de DEFAULT_MODEL.               |
 | `custom`               | object       | Non         | Options de configuration personnalisées, comme `disableAutomaticIdentity`.                                   |
