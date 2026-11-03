@@ -246,6 +246,7 @@ Utilisé pour la mise en cache, la gestion des files d'attente et d'autres tâch
 | `REDIS_HOST`     | Hôte du serveur Redis.                              |
 | `REDIS_PORT`     | Port d'écoute du serveur Redis.                     |
 | `REDIS_PASSWORD` | (Optionnel) Mot de passe pour la connexion à Redis. |
+| `REDIS_USERNAME` | (Optionnel) Nom d'utilisateur Redis, pour une instance qui exige une authentification par utilisateur nommé (ACL). |
 | `CONCURRENCY_QUEUE` | Nombre de jobs/tâches pouvant être traités simultanément par le worker BullMQ. Contrôle le parallélisme du traitement des tâches dans la file d'attente. |
 
 ---
@@ -308,6 +309,7 @@ Paramètres pour la gestion des workers et l'optimisation des performances.
 | `MAX_VISION_CONCURRENT`        | Nombre maximum de tâches de vision (LLM avec capacité de vision) qui peuvent s'exécuter simultanément. | `15`                |
 | `CHUNK_SIZE`         | Nombre maximum de pages qui sont traitées en parallèle pour le traitement base de donnée                                                                 | `10`             |
 | `MEMORY_THRESHOLD`         | Seuil de mémoire heap (en bytes) au-delà duquel un avertissement est émis et un garbage collection est forcé pour libérer de la mémoire. | `1073741824` (1 Go)             |
+| `DISABLE_FILE_CACHE`       | `true` ou `1` : un fichier au contenu identique à un fichier déjà traité est extrait à nouveau, au lieu de reprendre le résultat précédent. Toute autre valeur laisse ce cache actif. Disponible depuis Odin 2.0.32. | Cache actif |
 
 ## 7. Retries
 Paramètres pour la gestion des tentatives de réexécution (retries) en cas d'échec de certaines tâches.
