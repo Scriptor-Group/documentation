@@ -21,7 +21,7 @@ Choisissez le type d'authentification :
 
 Lors de l'ajout du connecteur Magnolia sur une **base de connaissances** ou un **agent**, un dialogue vous demande de renseigner le **domaine** de votre instance Magnolia.
 
-**Format attendu** : `host:port/context` (sans `http://`)
+**Format attendu** : `host:port/context`. Sans protocole, le connecteur appelle l'instance en HTTPS ; préfixez le domaine par `http://` si l'instance ne répond qu'en HTTP.
 
 **Exemples** :
 - `magnolia.mycompany.com` — instance en production
@@ -36,10 +36,11 @@ Lors de l'ajout du connecteur Magnolia sur une **base de connaissances** ou un *
 
 ## 3. Parcours et sélection des documents
 
-Une fois le connecteur configuré, l'interface de navigation affiche deux dossiers racines :
+Une fois le connecteur configuré, l'interface de navigation affiche les dossiers racines suivants :
 
 - **Pages** — arborescence des pages du site
 - **Assets** — arborescence du DAM (images, PDF, documents)
+- **FAQs** — FAQs du site, uniquement si l'instance expose l'endpoint optionnel des FAQs (voir les [prérequis](./integration-api.md#faqs-optionnel))
 
 ![Vue racine Pages et Assets](../../assets/magnolia/assets4.png)
 
@@ -54,8 +55,10 @@ Une fois le connecteur configuré, l'interface de navigation affiche deux dossie
 - Cochez les éléments que vous souhaitez **importer** dans votre base de connaissances
 - Les **pages** sont importées avec leur contenu textuel (converti en Markdown)
 - Les **assets** sont importés en tant que fichiers binaires (PDF, images, etc.)
-- Cliquez sur **Importer** pour lancer la synchronisation des éléments sélectionnés
-- Le bouton **cloud** en haut permet de synchroniser **l'intégralité** du connecteur
+- Les **FAQs** sont importées en un fichier par langue traduite (question en titre, puis réponse). Une traduction ajoutée dans Magnolia est importée à la synchronisation suivante ; une traduction retirée est supprimée de la base
+- Cliquez sur **Importer** pour lancer la synchronisation des éléments sélectionnés. L'import se poursuit en arrière-plan : les fichiers apparaissent dans la base au fil de l'import
+- Une nouvelle sélection s'ajoute aux éléments déjà importés. Pour retirer un élément, décochez-le puis cliquez sur **Importer**
+- Pour tout importer, cochez les dossiers racines
 
 ![Navigation et sélection des documents](../../assets/magnolia/asset5.png)
 
@@ -83,7 +86,7 @@ Chaque filtre se compose de :
 | **Valeur** | Valeur attendue pour la comparaison |
 | **Mode** | `Strict (AND)` ou `Simple (OR)` |
 | **Accepter nullable** | Si coché, les éléments qui n'ont **pas** cette propriété passent le filtre |
-| **Appliquer sur** | `Pages`, `Assets`, ou les deux |
+| **Appliquer sur** | `Pages`, `Assets`, `FAQs`, ou plusieurs d'entre eux |
 
 ![Formulaire de création de filtre](../../assets/magnolia/asset6.png)
 
@@ -124,3 +127,34 @@ Pour récupérer cet identifiant :
 2. Naviguez jusqu'à la catégorie concernée
 3. Utilisez la fonction **Export** sur cette catégorie
 4. Dans le fichier exporté, repérez la clé **`jcr:uuid`** — c'est cette valeur qu'il faut utiliser dans le filtre
+
+---
+
+## 5. Liens sources
+
+Magnolia ne fournit pas l'adresse publique de ses contenus. La section **Liens sources** du dialogue de domaine permet de la reconstruire, pour que les réponses citent la page, l'asset ou la FAQ d'origine sur le site public. Tous les champs sont optionnels.
+
+| Champ | Usage | Si le champ est vide |
+|-------|-------|----------------------|
+| **URL du site public** | Adresse du site, ex. `https://www.mycompany.com` | Pas de lien pour les pages et les FAQs dont le modèle utilise `{siteUrl}` |
+| **Modèle d'URL des pages** | Adresse d'une page | `{siteUrl}{path}.html`, la convention Magnolia |
+| **URL publique des assets** | Domaine qui sert les fichiers, s'il diffère du site public | URL du site public, sinon domaine du connecteur |
+| **Modèle d'URL des FAQs** | Adresse d'une FAQ, ex. `{siteUrl}{langPath}/faq#{name}` | Pas de lien pour les FAQs |
+| **Langue par défaut** | Code de la langue par défaut du site, utilisé par `{lang}` | `{lang}` est vide pour la langue par défaut |
+
+### Variables des modèles
+
+| Variable | Valeur |
+|----------|--------|
+| `{siteUrl}` | URL du site public |
+| `{path}` | Chemin de l'élément dans Magnolia, ex. `/particuliers/cartes` |
+| `{name}` | Dernier segment du chemin |
+| `{lang}` | FAQs uniquement : code de la langue du fichier ; pour la langue par défaut, la valeur du champ **Langue par défaut** |
+| `{langPath}` | FAQs uniquement : vide pour la langue par défaut, `/fr` pour une traduction en français |
+| `{field:nom}` | FAQs uniquement : valeur du champ `nom` de la FAQ, dans la langue du fichier si ce champ est traduit |
+
+Exemple, pour un site qui ancre ses FAQs sur un identifiant propre : `{siteUrl}{langPath}/faq#{field:internalName}` donne `https://www.mycompany.com/de/faq#FAQ-0001` pour la version allemande.
+
+- Une variable inconnue est refusée à l'enregistrement.
+- Si le champ référencé par `{field:nom}` est absent d'une FAQ, le lien pointe vers la page, sans ancre.
+- Les liens des fichiers déjà importés sont recalculés à l'enregistrement des réglages et à chaque synchronisation, sans réimport.
