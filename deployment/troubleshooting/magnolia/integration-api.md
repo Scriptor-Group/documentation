@@ -18,13 +18,14 @@ La **Delivery API** doit être activée et configurée sur l'instance Magnolia :
 |----------|-------------|
 | `/.rest/delivery/pages` | Pages (workspace `website`) |
 | `/.rest/delivery/assets` | Assets / DAM (workspace `dam`) |
+| `/.rest/delivery/faqs` | FAQs (content type personnalisé), **optionnel** |
 
 > Les endpoints REST Nodes (`/.rest/nodes/v1/`) ne sont **pas** utilisés. Seule la Delivery API est nécessaire.
 
 ### Modules requis
 
 - **Magnolia REST module** (`magnolia-rest-services`)
-- **Delivery endpoint** configuré pour `pages` et `assets`
+- **Delivery endpoint** configuré pour `pages` et `assets` (et `faqs` si besoin)
 - **DAM module** pour le téléchargement binaire des assets
 
 ### Configuration des endpoints Delivery
@@ -66,6 +67,14 @@ references:
 >
 > `depth` doit couvrir la profondeur maximale de vos templates (page → area → component → sous-area → ...).
 
+### FAQs (optionnel)
+
+Si l'instance expose `/.rest/delivery/faqs`, le connecteur propose une racine **FAQs** ; sinon il se limite aux pages et aux assets. Le connecteur attend :
+
+- un champ `question` et un champ `answer` sur chaque FAQ. Les autres champs du content type ne sont pas importés ; ils restent utilisables dans les liens sources avec la variable `{field:nom}` ;
+- des traductions en champs i18n (`question_fr`, `answer_de`, etc.), telles que la Delivery API les renvoie avec `?lang=all`. Chaque langue devient un fichier distinct ;
+- `includeSystemProperties: true`, comme pour les pages et les assets. Les dossiers sont reconstruits à partir de `@path` : il n'est pas nécessaire d'exposer `mgnl:folder`.
+
 ---
 
 ## Authentification
@@ -89,10 +98,11 @@ Le connecteur envoie un header `Authorization: Basic <base64(username:password)>
 
 ## Routes API utilisées
 
-Le connecteur utilise les endpoints delivery standards (`/.rest/delivery/pages`, `/.rest/delivery/assets`) et le servlet DAM (`/dam/jcr:{uuid}`) pour le téléchargement binaire des assets.
+Le connecteur utilise les endpoints delivery standards (`/.rest/delivery/pages`, `/.rest/delivery/assets` et, s'il existe, `/.rest/delivery/faqs`) et le servlet DAM (`/dam/jcr:{uuid}`) pour le téléchargement binaire des assets.
 
 | Route | Usage |
 |-------|-------|
 | `/.rest/delivery/pages` | Navigation et contenu des pages |
 | `/.rest/delivery/assets` | Navigation et résolution des assets |
+| `/.rest/delivery/faqs` | Détection, navigation et contenu des FAQs (optionnel) |
 | `/dam/jcr:{uuid}` | Téléchargement binaire d'un asset |
