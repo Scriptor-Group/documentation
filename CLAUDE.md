@@ -38,11 +38,12 @@ Two independent product lines with **different file-naming conventions**:
 - Devana: `changelogs/devana/v1/v1.3.0.md` — `v`-prefixed. Older releases in `archive/v0.6/` and `archive/pre-v0.6/`.
 - Odin: `changelogs/odin/v2/2.0.26.md` — **no `v` prefix**. Odin v1 files in `changelogs/odin/v1/` *are* `v`-prefixed (`v0.1.25.md`).
 
-For each new release, touch three places:
+For each new release, touch four places:
 
 1. the version file itself;
 2. the product index `changelogs/<product>/README.md` (add the entry, move the "Dernière version" marker);
-3. root `README.md`: the version column of the « Dernières versions » table.
+3. root `README.md`: the version column of the « Dernières versions » table;
+4. `changelogs/README.md`: the « Dernière version » link of the product. It is the page the site opens from the « Notes de version » menu (without it, the site falls back to the first file by path, `devana/archive/pre-v0.6/`).
 
 ### Template — identique pour Devana et Odin
 
@@ -116,7 +117,7 @@ Un changement sans effet observable par le client n'a pas de ligne. Mieux vaut u
 
 1. Lire les release notes publiées (`gh release list` / `gh release view` sur le dépôt produit). C'est la source.
 2. Si une release note est vide, reconstituer depuis les commits (`gh api repos/<org>/<repo>/compare/<tagA>...<tagB>`) — puis appliquer le filtre ci-dessus, qui élimine généralement la majeure partie.
-3. Rédiger la fiche, mettre à jour les trois emplacements.
+3. Rédiger la fiche, mettre à jour les quatre emplacements.
 4. Une branche `docs/changelog-<sujet>`, un commit, une PR vers `main`.
 
 `changelogs/odin/v2/2.0.21.md` is a known anomaly — it holds v1→v2 refactor notes rather than that release's content.
