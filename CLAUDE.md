@@ -9,7 +9,7 @@ Content-only Markdown documentation for **Devana.ai** (enterprise AI platform) a
 There is **no build, lint, or test tooling** — no `package.json`, no static-site generator config. The site image (`devana-docs`) lives outside this repo and consumes these files. So:
 
 - "Testing a change" = reading the Markdown and checking relative links by hand.
-- **Merging to `main` publishes.** `.github/workflows/deploy-docs.yml` runs `kubectl rollout restart deployment/devana-docs -n devana-production` on every push to `main`. Work on a branch (`docs/<topic>`) and open a PR.
+- **Merging to `main` publishes.** `.github/workflows/deploy-docs.yml` builds the content image `ghcr.io/scriptor-group/documentation-content:<UTC timestamp>-<short sha>` on every push to `main`; Flux (infra-k8s, cluster devana-v2) picks up the new tag within minutes and rolls `devana-docs` (an initContainer copies the content into the pod). Nothing in this repo talks to the cluster. Work on a branch (`docs/<topic>`) and open a PR.
 
 ## Layout
 

@@ -1,23 +1,74 @@
-name: Restart doc.devana.ai
+name: Publish doc.devana.ai content
 
-concurrency:
-    group: deploy-production
-    cancel-in-progress: true
+# Chaque push sur main construit l'image de contenu
+# ghcr.io/scriptor-group/documentation-content:<horodatage UTC>-<sha court>.
+# Flux (infra-k8s, cluster devana-v2) repère le nouveau tag en quelques minutes,
+# met à jour le Deployment devana-docs, et un initContainer copie ce contenu dans
+# le pod : publier l'image EST le déploiement.
+#
+# Aucun accès au cluster depuis GitHub : l'API Kubernetes de devana-v2 refuse les
+# runners GitHub depuis son ACL (infra-k8s#211, 13/11/2026), ce qui avait cassé
+# l'ancien `kubectl rollout restart`. Pas de clé non plus : GITHUB_TOKEN suffit
+# pour pousser sur GHCR, et le package hérite de la visibilité publique du dépôt.
 
 on:
-    push:
-        branches:
-            - main
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Les builds passent l'un après l'autre : le plus récent obtient le plus grand
+# horodatage, et c'est lui que Flux déploie.
+concurrency:
+  group: content-image
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/scriptor-group/documentation-content
 
 jobs:
-    restart:
-        runs-on: ubuntu-latest
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
 
-        steps:
-            - name: Update Documentation image
-              uses: actions-hub/kubectl@master
-              env:
-                  KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-              with:
-                  args: rollout restart deployment/devana-docs --namespace=devana-production
+      # Relancer un vieux run construirait un ancien commit avec un horodatage
+      # récent, que Flux déploierait : on ne construit que la tête de main.
+      - name: Tag
+        id: tag
+        run: |
+          head=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "::notice::$GITHUB_SHA n'est plus la tête de main ($head) : rien à publier."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          tag="$(date -u +%Y%m%d%H%M%S)-${GITHUB_SHA::7}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Tag publié : $IMAGE:$tag"
+
+      - name: Login to GHCR
+        if: steps.tag.outputs.skip != 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push content image
+        if: steps.tag.outputs.skip != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .github/docker/content.Dockerfile
+          push: true
+          tags: ${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.description=Contenu de doc.devana.ai
