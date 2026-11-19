@@ -1,0 +1,10 @@
+# Ni l'historique git ni ce qui n'est pas publié sur le site (fichiers cachés,
+# CLAUDE.md, AGENTS.md).
+.git
+.github
+.claude
+.gitattributes
+.gitignore
+**/.DS_Store
+CLAUDE.md
+AGENTS.md
