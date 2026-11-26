@@ -4,7 +4,8 @@ Historique des versions et fonctionnalités de Devana.ai.
 
 ## 📋 Versions récentes (v1.x)
 
-- [v1.3.9](../../../v1/v1.3.9.md) - Dernière version
+- [v1.3.10](../../../v1/v1.3.10.md) - Dernière version
+- [v1.3.9](../../../v1/v1.3.9.md)
 - [v1.3.8](../../../v1/v1.3.8.md)
 - [v1.3.7](../../../v1/v1.3.7.md)
 - [v1.3.6](../../../v1/v1.3.6.md)
