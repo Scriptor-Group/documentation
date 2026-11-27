@@ -6,7 +6,8 @@ Les versions antérieures à 1.25.0 ne sont pas encore documentées ici.
 
 ## Versions (v1.x)
 
-- [v1.34.1](./v1/v1.34.1.md) - Dernière version
+- [v1.35.0](./v1/v1.35.0.md) - Dernière version
+- [v1.34.1](./v1/v1.34.1.md)
 - [v1.33.0](./v1/v1.33.0.md)
 - [v1.32.0](./v1/v1.32.0.md)
 - [v1.31.0](./v1/v1.31.0.md)

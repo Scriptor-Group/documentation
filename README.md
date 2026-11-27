@@ -63,7 +63,7 @@ Le champ `model` contient l'identifiant de l'agent qui répond. Paramètres, str
 |---|---|---|
 | Plateforme Devana | 1.3.9 | [Notes de version](./changelogs/devana/README.md) |
 | Odin | 2.0.32 | [Notes de version](./changelogs/odin/README.md) |
-| Suite 366 | 1.34.1 | [Notes de version](./changelogs/suite-366/README.md) |
+| Suite 366 | 1.35.0 | [Notes de version](./changelogs/suite-366/README.md) |
 
 ## Assistance
 
